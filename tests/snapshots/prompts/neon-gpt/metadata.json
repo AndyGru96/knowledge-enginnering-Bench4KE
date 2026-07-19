@@ -1,0 +1,83 @@
+{
+  "adapter_system_name": "neon-gpt",
+  "call_count": 2,
+  "call_order": [
+    "initial_assembly",
+    "syntax_check_repair"
+  ],
+  "calls": [
+    {
+      "assembled_prompt_sha256": "b13639e55ab85972fc1fabd3c1d8f875c2f78044c9c05e886d6b1e3c564bd53d",
+      "cq_id": null,
+      "prompt_bytes": 4659,
+      "snapshot_file": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_01.txt",
+      "stage": "initial_assembly",
+      "step": 1
+    },
+    {
+      "assembled_prompt_sha256": "7d4ff1dc1c923fa537e2d51f82eb1547ecb95cb0fd63d05852631aacbd8eee62",
+      "cq_id": null,
+      "prompt_bytes": 673,
+      "snapshot_file": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_02.txt",
+      "stage": "syntax_check_repair",
+      "step": 2
+    }
+  ],
+  "cq_ids_in_source_order": [
+    "SOURCECQ1",
+    "SOURCECQ2",
+    "SOURCECQ4",
+    "SOURCECQ5",
+    "SOURCECQ6"
+  ],
+  "dataset_id": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18",
+  "dataset_reconstruction_evidence": {
+    "cq_count": 74,
+    "scenario_count": 17,
+    "source_workbook": "external_resources/Onto-Generation/Dataset_OntoGen/Dataset.xlsx",
+    "source_workbook_sha256": "eb95f875fea9db67bd99096894d2dfbb9904d519a9d028287f502378aecd3625"
+  },
+  "dataset_record_sha256": "baff55ec082bab2169407d2bc916a8d8a866da650027ba245893a374a66585dd",
+  "final_output_parse_valid": true,
+  "final_output_sha256": "589aedd5d519eb6f8866bb3d464565fa4f80b03ff3410ebe86f119a1faea0c58",
+  "frozen_data_manifest_sha256": "e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf",
+  "manual_review": {
+    "basis": "Phase 3 golden snapshot review",
+    "review_date": "2026-07-15",
+    "status": "reviewed"
+  },
+  "method": "neon-gpt",
+  "odp_manifest_path": "datasets/ontology_generation/odp_manifest.json",
+  "odp_manifest_sha256": "3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05",
+  "odp_source_patterns_sha256": "4bf85a406713ca5e59f944bb70cb521fc3edbe460e2b8f6aadcce6602935b75d",
+  "phase": "3",
+  "procedure_path": "external_resources/Ontogenia/data/procedure.txt",
+  "procedure_sha256": "741b3b1fea5fb112bbdba29f4827e52d6d76848bb96ece8cf51e639c14802351",
+  "prompt_source": {
+    "source_file_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
+    "source_path": "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
+    "source_prompt_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a"
+  },
+  "provider": "deterministic-recording-mock",
+  "real_provider_calls": 0,
+  "scenario_id": "Paul#2_ResourceReliability;Ortenz#1_MusicAndChildhood",
+  "schema_version": 1,
+  "snapshot_scenario": "forced_syntax_repair_for_previous_output_validation",
+  "step_last_alias": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_last.txt",
+  "step_last_sha256": "7d4ff1dc1c923fa537e2d51f82eb1547ecb95cb0fd63d05852631aacbd8eee62",
+  "validation": {
+    "correct_cqs": true,
+    "correct_story": true,
+    "cq_order_preserved": true,
+    "cross_dataset_contamination_absent": true,
+    "odp_injected": false,
+    "odp_required": false,
+    "placeholders_resolved": true,
+    "previous_output_policy": "required_in_syntax_repair_prompt",
+    "previous_output_policy_validated": true,
+    "procedure_injected": false,
+    "procedure_required": false,
+    "required_placeholders": [],
+    "retained_source_literal_tokens": []
+  }
+}

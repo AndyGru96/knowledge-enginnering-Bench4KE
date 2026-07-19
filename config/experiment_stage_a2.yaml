@@ -1,0 +1,279 @@
+schema_version: stage-a2-frozen-config-v1
+stage: A2
+freeze_phase: Revised Phase 11
+freeze_date: '2026-07-15'
+proposed: false
+frozen: true
+execution_authorized: false
+status: frozen_pending_execution_authorization
+cache_identity_schema_version: 2
+cache_identity_contract: stage-a2-v1
+proposed_configuration:
+  path: config/experiment_stage_a2.proposed.yaml
+  file_sha256: b8bde49ffaf45f8fa37445823c1c356f9d50f53cbc99ce9aae0e8c7dd0f0e4c5
+  canonical_config_hash: 2ddd3a915ee98b1755105a97ce12717edbbcdb2cac43fe8bfb2d241541f8a2f1
+approval:
+  authority: project_owner
+  manifest: datasets/ontology_generation/prompts/variant_approval.json
+  manifest_sha256: cbf8dbed76b31e0a9cc9caa975904946b35e668580484ca7184d955ce9c2a2cd
+  candidate_manifest: results/a2_prompt_variant_candidate_manifest.json
+  candidate_manifest_sha256: bb6b992bf9656004bebbee746aa303f2c5b8d77725ec930075da8d67f15a2a3f
+  teammate_approval_required: false
+  teammate_approval_claimed: false
+  chayan_approval_attributed: false
+  future_prompt_change_requires_new_reviewed_manifest: true
+scope:
+  dataset_path: datasets/ontology_generation/normalized/project2_full_generation.jsonl
+  dataset_items: 17
+  competency_questions: 74
+  methods:
+  - ontogenia
+  - domain-ontogen
+  - neon-gpt
+  prompt_variants:
+  - P1
+  - P2
+  new_top_level_tasks: 102
+  P0_regeneration: false
+P0_baseline:
+  source: admitted immutable Stage A1 P0 evidence
+  historical_schema_v1_status: FAIL
+  schema_v2_admission_status: ADMITTED
+  admission_manifest: results/a1_evidence_admission_manifest.json
+  admission_manifest_sha256: 5826f6fe4eb788cdbe8c9b43f10a19f6e7c0139fcb497f15b424abb6d9e129f0
+  regenerate_P0: false
+  prompt_paths:
+    ontogenia: datasets/ontology_generation/prompts/ontogenia/P0_original.txt
+    domain-ontogen: datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt
+    neon-gpt: datasets/ontology_generation/prompts/neon-gpt/P0_original.txt
+  prompt_sha256:
+    ontogenia: f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965
+    domain-ontogen: f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e
+    neon-gpt: 40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a
+prompt_variants:
+  ontogenia:
+    P1:
+      source_file: datasets/ontology_generation/prompts/ontogenia/P1_candidate.txt
+      sha256: 56272bc6c42f3b38ad0f24c5cb742be10ae77799c673ff928a48effa7c1ad533
+      instruction_level_rationale: Append-only instruction requiring the requested ontology serialization alone and excluding
+        explanations, reasoning, headings, commentary, and Markdown fences.
+    P2:
+      source_file: datasets/ontology_generation/prompts/ontogenia/P2_candidate.txt
+      sha256: 7f3b8b268ef21c7b67f7dc6b6bc543182845e28123496141823f00c813dc46f8
+      instruction_level_rationale: Append-only instruction requiring silent prefix, RDF syntax, list, blank-node, and naming-consistency
+        verification before returning only the verified ontology serialization.
+  domain-ontogen:
+    P1:
+      source_file: datasets/ontology_generation/prompts/domain-ontogen/P1_candidate.txt
+      sha256: 7ef14255160bffbb10529c1338a576e5b0eba5faa8fdcd1557dc6af3ecbda2d6
+      instruction_level_rationale: Append-only instruction requiring the requested ontology serialization alone and excluding
+        explanations, reasoning, headings, commentary, and Markdown fences.
+    P2:
+      source_file: datasets/ontology_generation/prompts/domain-ontogen/P2_candidate.txt
+      sha256: c0b842f932837f9ddaf071f1f301cafa4553107bc38cb853bea7e7f8f132a0ca
+      instruction_level_rationale: Append-only instruction requiring silent prefix, RDF syntax, list, blank-node, and naming-consistency
+        verification before returning only the verified ontology serialization.
+  neon-gpt:
+    P1:
+      source_file: datasets/ontology_generation/prompts/neon-gpt/P1_candidate.txt
+      sha256: aec9a4c22d572cabf953bb31c3495fae519818dabd42ff789a8d5f83f2a62161
+      instruction_level_rationale: Append-only instruction requiring the requested ontology serialization alone and excluding
+        explanations, reasoning, headings, commentary, and Markdown fences.
+    P2:
+      source_file: datasets/ontology_generation/prompts/neon-gpt/P2_candidate.txt
+      sha256: 400b9100fff56c90245ebb044ae84a9a537680e292567f7175aae37eb928489f
+      instruction_level_rationale: Append-only instruction requiring silent prefix, RDF syntax, list, blank-node, and naming-consistency
+        verification before returning only the verified ontology serialization.
+provider:
+  name: ollama
+  base_url: http://localhost:11434
+  ollama_version: 0.32.0
+  model: qwen3:30b-a3b-instruct-2507-q4_K_M
+  model_digest: 19e422b0231392335cfc49cfd172de7034bb1aeabb08aa307cce745c60b272fe
+  parameter_size: 30.5B
+  quantization: Q4_K_M
+  model_size_bytes: 18556699186
+  native_context_length: 262144
+generation:
+  temperature: 0
+  seed: 42
+  num_ctx: 32768
+  num_predict: 8192
+  num_predict_policy: one_global_fixed_value_all_methods_and_variants
+  keep_alive: 30m
+  timeout_seconds: 1800
+  stream: false
+method_behavior:
+  prompt_assembly: approved_full_prompt_file_then_frozen_runtime_placeholder_substitution
+  cq_order: source_order
+  call_structure: unchanged_from_admitted_A1_P0
+  normalization_policy: unchanged_adapter_approved
+  repair_policy: adapter-approved
+  retry_policy:
+    http_scope: transient_only
+    http_maximum_attempts: 3
+    http_backoff_seconds:
+    - 2
+    - 4
+    - 8
+    http_transient_status_codes:
+    - 429
+    - 500
+    - 502
+    - 503
+    - 504
+    resume_success: skipped_success
+    resume_failure: held_failed
+    incomplete_corrupt_schema_mismatch: block_not_reused
+    retry_failed_requires_explicit_flag: true
+    force_supported: false
+execution_order:
+  policy: static_method_then_variant_blocks; frozen A1 context-rank within each block
+  dynamic_reordering_forbidden: true
+  blocks:
+  - block: 1
+    method: ontogenia
+    variant: P1
+    tasks: 17
+  - block: 2
+    method: ontogenia
+    variant: P2
+    tasks: 17
+  - block: 3
+    method: domain-ontogen
+    variant: P1
+    tasks: 17
+  - block: 4
+    method: domain-ontogen
+    variant: P2
+    tasks: 17
+  - block: 5
+    method: neon-gpt
+    variant: P1
+    tasks: 17
+  - block: 6
+    method: neon-gpt
+    variant: P2
+    tasks: 17
+identity:
+  fields:
+  - cache_identity_contract
+  - dataset_id
+  - dataset_record_hash
+  - method
+  - prompt_variant
+  - provider
+  - model
+  - model_digest
+  - prompt_hash
+  - temperature
+  - seed
+  - num_ctx
+  - max_output_tokens
+  - procedure_hash
+  - odp_manifest_hash
+  - repair_policy
+  - normalization_policy
+  - parser_output_contract_version
+  - repository_commit
+  - code_identity_hash
+  - dataset_manifest_hash
+  - experiment_config_hash
+  planner_runtime_function: cache_identity_v2_for_fields
+  parser_output_contract_version: project2-result-envelope-v2
+provenance:
+  repository_commit: 1488aed14b41305495d27435174d635e2ba2ebb4
+  dataset_audit_sha256: f9764b85125f51144a2e476a865a9b9d6a453393f62d33ab5644d5786a3f71d0
+  dataset_full_generation_sha256: 65826ac4dc0a0ddaf5300a401909f9686be9a7f3767e4ca3c0f1336e6bfa9632
+  dataset_manifest_sha256: e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf
+  phase3_snapshot_manifest_sha256: 9673b7f96a8c0e3c41a0dbd53e00dbc8933162e7a73dc8a1b4fa12f2951bf025
+  procedure_sha256: 741b3b1fea5fb112bbdba29f4827e52d6d76848bb96ece8cf51e639c14802351
+  odp_manifest_sha256: 3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05
+  historical_manifests:
+    phase5_output: c2eaad831a0e9fc74d337d5a1bd62fc182dbcfbae1d06f76ca4568abb17a064b
+    phase6_output: 3d395798b107136173eeb359b2a6dab1843207df5abe8f133278579673e7d80b
+    phase6_reports: cea26a2cf10df3ccf52f922098848c959a87e7d4e41f3fcfe0ba54c73f8de3a0
+    phase6_results: 5624b96549f00bee015875737da7ddc9cebf1b2b4f56665b088ae0be9fe49172
+    phase6r_output: aaad4dd8b6a2dccca9d6b12ea52e4f51eaedd05f072b50c96cc7c4764a358776
+    phase6r_reports: 743cfa53e1e47c836054e1c1e500ee05f643d43d9f5bfb78c87e89d96dbbd07f
+    phase6r_results: 73e432c19e5444cd3e804113db585a856faa9e7e9c7aee8be15d12e52c6d644e
+implementation_identity:
+  code_identity_hash: a9644cb2b1460b04f79036260f0d356e189ef08016f7dd45b03970d250eb1e0c
+  files:
+    ontology_artifacts:
+      path: restapi/app/utils/ontology_artifacts.py
+      sha256: 5f5e9fb6ac2ccdb51f59de4d5aa21dffe043bead9098902bfc9e7eaa1ff5f163
+    ontology_benchmark:
+      path: restapi/app/routers/ontology_benchmark.py
+      sha256: a8973868d6dbd4f2d32ec10d209d77af05e26428c8b0d5bc127cb550653d3978
+    ontology_adapter:
+      path: restapi/ontology_adapter.py
+      sha256: 4e8fd14d20412b2b695d097c1300431a2bd80842c9a6598f0e92ae5955e3198a
+    stage_a2_runner:
+      path: scripts/run_stage_a2.py
+      sha256: bf79dfdb224a13578f68976398a1214f3bd3ae050323012d3b6df0f274649357
+    stage_a2_contract:
+      path: scripts/phase11_a2_contract.py
+      sha256: b92e81004f8dd912b3060feaaefdea2fbc6703c123e82359c14c8c58d5f492c1
+frozen_files:
+  dataset_audit:
+    path: datasets/ontology_generation/dataset_audit.json
+    sha256: f9764b85125f51144a2e476a865a9b9d6a453393f62d33ab5644d5786a3f71d0
+  dataset:
+    path: datasets/ontology_generation/normalized/project2_full_generation.jsonl
+    sha256: 65826ac4dc0a0ddaf5300a401909f9686be9a7f3767e4ca3c0f1336e6bfa9632
+  output_contract:
+    path: docs/OUTPUT_CONTRACT.md
+    sha256: 27a6f61668447bed55db11291ccdc85a8d615bbab3847dfa75e9cec8be46efc5
+  c3_plan:
+    path: docs/C3_STATISTICAL_ANALYSIS_PLAN.md
+    sha256: 6baf02529d20ecf53ac09a7ac94f5a28e9fde6d5d5d3b1d7de182df57bc47701
+  c3_policy:
+    path: config/c3_analysis_policy.yaml
+    sha256: 1bb4db44d1f203fed040fcd36e00f50b7af015b131f39dd8ad0fd1c4f9d26fd9
+output:
+  root: outputs/stage_a2/project2
+  contract_version: project2-result-envelope-v2
+  atomic_write_required: true
+  raw_normalized_final_and_per_step_preservation_required: true
+  existing_result_policy: never silently accept or overwrite
+monitoring:
+  B6:
+    status: OPEN_non_blocking_monitored_model_output_quality_risk
+    method: ontogenia
+    fragment_and_merged_parse: true
+    individual_vs_cross_fragment_source: true
+    invalid_construct_category: true
+  length:
+    done_reason: true
+    eval_count: true
+    initial_vs_repair: true
+    raw_normalized_final_parse: true
+    num_predict_change_forbidden: true
+  prompt_sensitivity:
+    method: true
+    dataset: true
+    variant: true
+    exact_prompt_hash: true
+    admitted_P0_reference: true
+  never_silently_drop:
+  - parse_failure
+  - done_reason_length
+  - normalization_use
+  - repair_use
+  - complete_failure
+statistical_analysis:
+  execution_authorized: false
+  plan: docs/C3_STATISTICAL_ANALYSIS_PLAN.md
+  policy: config/c3_analysis_policy.yaml
+commands:
+  execute: .venv\Scripts\python.exe -m scripts.run_stage_a2 --config config/experiment_stage_a2.yaml --execute
+  resume: .venv\Scripts\python.exe -m scripts.run_stage_a2 --config config/experiment_stage_a2.yaml --resume
+  retry_failed: .venv\Scripts\python.exe -m scripts.run_stage_a2 --config config/experiment_stage_a2.yaml --retry-failed
+  phase11_executed: false
+authorization:
+  phase11_freeze_preflight_only: true
+  stage_a2_execution_authorized: false
+  statistical_result_analysis_authorized: false
+  generation_calls_permitted_in_phase11: 0
+experiment_config_hash: 8be4eb30bc0c86f5400437c0a5b7a62bece5f137fba20ccebbb6335fb89f64c9

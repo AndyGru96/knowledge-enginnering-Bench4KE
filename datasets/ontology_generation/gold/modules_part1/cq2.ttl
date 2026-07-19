@@ -1,0 +1,225 @@
+@prefix : <http://www.semanticweb.org/mohsa33/ActorActorODP#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/mohsa33/ActorActorODP> .
+
+<http://www.semanticweb.org/mohsa33/ActorActorODP> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/terms/contributor
+<http://purl.org/dc/terms/contributor> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/created
+<http://purl.org/dc/terms/created> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/creator
+<http://purl.org/dc/terms/creator> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/description
+<http://purl.org/dc/terms/description> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/license
+<http://purl.org/dc/terms/license> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/title
+<http://purl.org/dc/terms/title> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vocab/vann/preferredNamespacePrefix
+<http://purl.org/vocab/vann/preferredNamespacePrefix> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vocab/vann/preferredNamespaceUri
+<http://purl.org/vocab/vann/preferredNamespaceUri> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#coversRequirements
+<http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#coversRequirements> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+###  http://www.w3.org/2001/XMLSchema#gMonthYear
+xsd:gMonthYear rdf:type rdfs:Datatype .
+
+
+###  http://www.w3.org/2001/XMLSchema#gYear
+xsd:gYear rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://w3id.org/CEON/ontology/actorODP/participantRole
+<http://w3id.org/CEON/ontology/actorODP/participantRole> rdf:type owl:ObjectProperty ;
+                                                         rdfs:domain <http://w3id.org/CEON/ontology/actorODP/Participation> ;
+                                                         rdfs:range <http://w3id.org/CEON/ontology/actorODP/Role> ;
+                                                         rdfs:comment "Holds the value of the role of the participant in this participation relation." ;
+                                                         rdfs:label "has participant role" .
+
+
+###  http://w3id.org/CEON/ontology/actorODP/participatingActor
+<http://w3id.org/CEON/ontology/actorODP/participatingActor> rdf:type owl:ObjectProperty ;
+                                                            rdfs:domain <http://w3id.org/CEON/ontology/actorODP/Participation> ;
+                                                            rdfs:range <http://w3id.org/CEON/ontology/actorODP/Actor> ;
+                                                            rdfs:comment "Holds the value of the actor involved in this participation relation." ;
+                                                            rdfs:label "has participating actor" .
+
+
+###  http://w3id.org/CEON/ontology/actorODP/participationIn
+<http://w3id.org/CEON/ontology/actorODP/participationIn> rdf:type owl:ObjectProperty ;
+                                                         rdfs:domain <http://w3id.org/CEON/ontology/actorODP/CollaborationParticipation> ;
+                                                         rdfs:comment "The collaboration or process that this participation relates to." ;
+                                                         rdfs:label "is a participation in" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://w3id.org/CEON/ontology/actor/ActorCVNRole
+<http://w3id.org/CEON/ontology/actor/ActorCVNRole> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <http://w3id.org/CEON/ontology/actor/ActorCollaborationRole> ;
+                                                   rdfs:comment "The role(s) of an actor in a Circular Value Network, which is a specific type of collaboration." ;
+                                                   rdfs:label "Actor Circular Value Network role" .
+
+
+###  http://w3id.org/CEON/ontology/actor/ActorCollaborationRole
+<http://w3id.org/CEON/ontology/actor/ActorCollaborationRole> rdf:type owl:Class ;
+                                                             rdfs:subClassOf <http://w3id.org/CEON/ontology/actorODP/Role> ;
+                                                             rdfs:comment "The roles of an actor involved in a collaboration." ;
+                                                             rdfs:label "Actor collaboration role" .
+
+
+###  http://w3id.org/CEON/ontology/actor/CVNParticipation
+<http://w3id.org/CEON/ontology/actor/CVNParticipation> rdf:type owl:Class ;
+                                                       rdfs:subClassOf <http://w3id.org/CEON/ontology/actorODP/CollaborationParticipation> ;
+                                                       rdfs:comment "A participation-relation, that represents the participation of an actor in a CVN with a certain role. For instance, a specific company playing the role of recycler in a certain flow of a CVN. The participation may also be related to a certain time (or time interval)." ;
+                                                       rdfs:label "Circular Value Network Participation" .
+
+
+###  http://w3id.org/CEON/ontology/actorODP/Actor
+<http://w3id.org/CEON/ontology/actorODP/Actor> rdf:type owl:Class ;
+                                               rdfs:comment "An agent able to act in the context of a circular value network, e.g. an organisation, person." ;
+                                               rdfs:label "Actor" .
+
+
+###  http://w3id.org/CEON/ontology/actorODP/CollaborationParticipation
+<http://w3id.org/CEON/ontology/actorODP/CollaborationParticipation> rdf:type owl:Class ;
+                                                                    rdfs:subClassOf <http://w3id.org/CEON/ontology/actorODP/Participation> ;
+                                                                    rdfs:comment "The relation involving the role of a certain actor with respect to a value network or a process in such a network, e.g. an organisation (actor) acting as the recycler (role) in a glass recycling value netowrk (network) at a specific point or period in time. Or an organisation (actor) acting as the dismantler (role) in a dismantling step of a building deconstruction process (process step) at a specific point or period in time." ;
+                                                                    rdfs:label "Collaboration participation" .
+
+
+###  http://w3id.org/CEON/ontology/actorODP/Participation
+<http://w3id.org/CEON/ontology/actorODP/Participation> rdf:type owl:Class ;
+                                                       rdfs:label "Participation" .
+
+
+###  http://w3id.org/CEON/ontology/actorODP/Role
+<http://w3id.org/CEON/ontology/actorODP/Role> rdf:type owl:Class ;
+                                              rdfs:comment "A role that an actor can take in a specific context. Applies both to roles in the context of resources, such as owner, manufacturer, reseller etc. of that resource, as well as roles in relation to a circular value network, such as recycler, dismantler, transporter etc., in relation to a material flow." ;
+                                              rdfs:label "Role" .
+
+
+###  http://w3id.org/CEON/ontology/cvn/Collaboration
+<http://w3id.org/CEON/ontology/cvn/Collaboration> rdf:type owl:Class ;
+                                                  rdfs:comment "A collaboration between a set of actors." ;
+                                                  rdfs:label "Collaboration" .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://w3id.org/CEON/ontology/actor/buyer
+<http://w3id.org/CEON/ontology/actor/buyer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/collector
+<http://w3id.org/CEON/ontology/actor/collector> rdf:type owl:NamedIndividual ,
+                                                         <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/consumer
+<http://w3id.org/CEON/ontology/actor/consumer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/dismantler
+<http://w3id.org/CEON/ontology/actor/dismantler> rdf:type owl:NamedIndividual ,
+                                                          <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/issuer
+<http://w3id.org/CEON/ontology/actor/issuer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/manufacturer
+<http://w3id.org/CEON/ontology/actor/manufacturer> rdf:type owl:NamedIndividual ,
+                                                            <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/owner
+<http://w3id.org/CEON/ontology/actor/owner> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/producer
+<http://w3id.org/CEON/ontology/actor/producer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/provider
+<http://w3id.org/CEON/ontology/actor/provider> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/recycler
+<http://w3id.org/CEON/ontology/actor/recycler> rdf:type owl:NamedIndividual ,
+                                                        <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/reseller
+<http://w3id.org/CEON/ontology/actor/reseller> rdf:type owl:NamedIndividual ,
+                                                        <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/seller
+<http://w3id.org/CEON/ontology/actor/seller> rdf:type owl:NamedIndividual ,
+                                                      <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/supplier
+<http://w3id.org/CEON/ontology/actor/supplier> rdf:type owl:NamedIndividual ,
+                                                        <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/updater
+<http://w3id.org/CEON/ontology/actor/updater> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/user
+<http://w3id.org/CEON/ontology/actor/user> rdf:type owl:NamedIndividual ,
+                                                    <http://w3id.org/CEON/ontology/actor/ActorCVNRole> .
+
+
+###  http://w3id.org/CEON/ontology/actor/viewer
+<http://w3id.org/CEON/ontology/actor/viewer> rdf:type owl:NamedIndividual .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

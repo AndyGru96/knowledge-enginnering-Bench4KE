@@ -1,0 +1,21 @@
+You are an expert ontology engineer.
+Fix the following Turtle ontology.
+
+Stage: syntax_check
+Error/Issue:
+at line 4 of <>:
+Bad syntax (']' expected) at ^ in:
+"...b'owl:Class .\n:Broken owl:equivalentClass [ a owl:Restriction '^b'.'"
+
+Rules:
+- Output ONLY the corrected ontology in valid Turtle syntax.
+- Do not include explanations, markdown, or code fences.
+- Keep IRIs/prefixes stable where possible.
+
+- Use ONLY OWL 2 datatype-map datatypes for ranges (avoid xsd:gYear).
+
+Ontology:
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <http://example.org/ontology#> .
+:PHASE3_PREVIOUS_OUTPUT_SENTINEL a owl:Class .
+:Broken owl:equivalentClass [ a owl:Restriction .

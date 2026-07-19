@@ -1,0 +1,11 @@
+method,prompt_variant,tasks,internal_calls,http_attempts,retries,prompt_tokens,completion_tokens,total_tokens,task_wall_clock_seconds,mean_tokens_per_task,mean_wall_clock_seconds_per_task,cost_scope
+ontogenia,P0,17,74,74,0,160584,110780,271364,532.761337757,15962.588235294,31.338902221,native local telemetry; no monetary API cost
+ontogenia,P1,17,74,74,0,163322,122812,286134,594.150749207,16831.411764706,34.950044071,native local telemetry; no monetary API cost
+ontogenia,P2,17,74,74,0,166282,136927,303209,651.114007235,17835.823529412,38.300823955,native local telemetry; no monetary API cost
+domain-ontogen,P0,17,74,74,0,169142,70871,240013,337.42832303,14118.411764706,19.848724884,native local telemetry; no monetary API cost
+domain-ontogen,P1,17,74,74,0,171954,49234,221188,249.038967848,13011.058823529,14.64935105,native local telemetry; no monetary API cost
+domain-ontogen,P2,17,74,74,0,174914,55740,230654,268.731110811,13567.882352941,15.807712401,native local telemetry; no monetary API cost
+neon-gpt,P0,17,45,45,0,165240,226560,391800,540.968375206,23047.058823529,31.82166913,native local telemetry; no monetary API cost
+neon-gpt,P1,17,44,44,0,149032,196769,345801,528.101322889,20341.235294118,31.064783699,native local telemetry; no monetary API cost
+neon-gpt,P2,17,43,43,0,146715,197692,344407,760.189259052,20259.235294118,44.717015238,native local telemetry; no monetary API cost
+TOTAL,ALL,153,576,576,0,1467185,1167385,2634570,4462.483453035,17219.411764706,29.166558517,native local telemetry; no monetary API cost

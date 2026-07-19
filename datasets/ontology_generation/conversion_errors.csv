@@ -1,0 +1,130 @@
+category,source,identifier,detail
+missing_story_id,Dataset.xlsx:CQs,2,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,3,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,4,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,5,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,6,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,7,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,8,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,9,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,10,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,11,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,12,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,13,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,14,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,15,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,16,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,17,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,29,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,30,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,31,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,32,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,33,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,34,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,35,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,36,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,37,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,38,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,39,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,40,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,41,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,42,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,43,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,44,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,45,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,46,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,47,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,48,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,49,Excluded from full generation scope by explicit source evidence.
+missing_story_id,Dataset.xlsx:CQs,50,Excluded from full generation scope by explicit source evidence.
+empty_cq,Dataset.xlsx:CQs,53,Excluded from full generation scope by explicit source evidence.
+empty_cq,Dataset.xlsx:CQs,54,Excluded from full generation scope by explicit source evidence.
+empty_cq,Dataset.xlsx:CQs,55,Excluded from full generation scope by explicit source evidence.
+empty_cq,Dataset.xlsx:CQs,56,Excluded from full generation scope by explicit source evidence.
+empty_cq,Dataset.xlsx:CQs,57,Excluded from full generation scope by explicit source evidence.
+empty_cq,Dataset.xlsx:CQs,58,Excluded from full generation scope by explicit source evidence.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ1,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ2,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ3,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ4,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ5,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ6,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ7,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ8,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ9,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ10,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ11,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ12,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,JAMSCQ13,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MPROJCQ1,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MPROJCQ2,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MPROJCQ3,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ1,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ2,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ3,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ4,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ5,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ6,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ7,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ8,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ9,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MROCQ10,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ1,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ2,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ3,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ4,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ5,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ6,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ7,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ8,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ9,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ10,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ11,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,PCORECQ12,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,WHOWHYCQ1,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,cq20,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,cq21,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,cq22,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ1,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ2,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ3,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ4,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ5,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ6,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ7,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ8,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ9,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ10,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ11,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ12,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ13,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ14,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,FestSCQ15,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ1,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ2,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ3,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ4,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ5,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ6,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ7,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ8,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ9,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ10,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ11,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ12,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ13,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ14,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,MusicSCQ15,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ3,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ4,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ5,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ6,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ7,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ8,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ9,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ10,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ11,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ12,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ13,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ14,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.
+missing_gold_mapping,Dataset.xlsx:CQs,HospitalSCQ15,No case-insensitive exact CQID-to-filename-stem match; no identifier-prefix inference was attempted.

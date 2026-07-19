@@ -1,0 +1,167 @@
+schema_version: stage-a1-config-v1
+status: frozen
+phase: revised-phase-8-stage-a1-configuration-freeze-and-preflight
+target_stage: A1
+freeze_date: '2026-07-15'
+scope:
+  dataset_path: datasets/ontology_generation/normalized/project2_full_generation.jsonl
+  dataset_items: 17
+  competency_questions: 74
+  methods:
+  - ontogenia
+  - domain-ontogen
+  - neon-gpt
+  prompt_variant: P0
+  top_level_tasks: 51
+  execution_order: method group in frozen order, then ascending deterministic context rank
+provider:
+  name: ollama
+  base_url: http://localhost:11434
+  ollama_version: 0.32.0
+  model: qwen3:30b-a3b-instruct-2507-q4_K_M
+  model_digest: 19e422b0231392335cfc49cfd172de7034bb1aeabb08aa307cce745c60b272fe
+  parameter_size: 30.5B
+  quantization: Q4_K_M
+  model_size_bytes: 18556699186
+  native_context_length: 262144
+generation:
+  num_ctx: 32768
+  num_predict_policy: one_global_fixed_value_all_methods
+  num_predict: 8192
+  temperature: 0
+  seed: 42
+  keep_alive: 30m
+  timeout_seconds: 1800
+  stream: false
+method_behavior:
+  prompt_assembly: unchanged_frozen_P0
+  cq_order: source_order
+  normalization_policy: unchanged_adapter_approved
+  repair_policy: adapter-approved
+  external_hermit_execution: disabled_as_in_pilot
+  external_oops_execution: disabled_as_in_pilot
+  retry_policy:
+    automatic_pipeline_repair: unchanged_method_behavior
+    http_maximum_attempts: 3
+    http_backoff_seconds:
+    - 2
+    - 4
+    - 8
+    http_transient_status_codes:
+    - 429
+    - 500
+    - 502
+    - 503
+    - 504
+    failed_top_level_result_on_resume: held_failed
+    retry_failed_requires_explicit_flag: true
+    force_forbidden_for_standard_A1: true
+context_safety:
+  estimator: ceil(max(unicode_characters,utf8_bytes)*0.30)+32
+  worst_estimated_input_tokens: 9591
+  explicit_output_reserve_tokens: 8192
+  remaining_arithmetic_margin_tokens: 14985
+  remaining_margin_percent: 45.730591
+  caveat: reported-token arithmetic, not exact KV-cache occupancy
+  rejected_candidates:
+  - 8192/4096
+  - 16384/8192
+provenance:
+  repository_commit: 1488aed14b41305495d27435174d635e2ba2ebb4
+  PR_baseline_commit: 1488aed14b41305495d27435174d635e2ba2ebb4
+  official_main_commit: b4ce9421c135dc1a52c0ff78eb1666d8594832de
+  authoritative_resource_commits:
+    domain-ontogen: 894441e367acdbbd1ea662b6f1a6919d13533051
+    neon-gpt: bce7a6a805faa23dc169f691afb5aaaacad3d99d
+    ontogenia: PR10 baseline plus frozen Phase 2 prompt authority; no separate external repository commit
+  dataset_hashes:
+    dataset_audit_sha256: f9764b85125f51144a2e476a865a9b9d6a453393f62d33ab5644d5786a3f71d0
+    dataset_full_generation_sha256: 65826ac4dc0a0ddaf5300a401909f9686be9a7f3767e4ca3c0f1336e6bfa9632
+    dataset_manifest_sha256: e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf
+    phase3_snapshot_manifest_sha256: 9673b7f96a8c0e3c41a0dbd53e00dbc8933162e7a73dc8a1b4fa12f2951bf025
+    procedure_sha256: 741b3b1fea5fb112bbdba29f4827e52d6d76848bb96ece8cf51e639c14802351
+    odp_manifest_sha256: 3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05
+    odp_source_patterns_sha256: 4bf85a406713ca5e59f944bb70cb521fc3edbe460e2b8f6aadcce6602935b75d
+  prompt_sha256:
+    ontogenia: f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965
+    domain-ontogen: f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e
+    neon-gpt: 40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a
+  prompt_paths:
+    ontogenia: datasets/ontology_generation/prompts/ontogenia/P0_original.txt
+    domain-ontogen: datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt
+    neon-gpt: datasets/ontology_generation/prompts/neon-gpt/P0_original.txt
+  phase3_snapshot_paths:
+    ontogenia: tests/snapshots/prompts/ontogenia
+    domain-ontogen: tests/snapshots/prompts/domain-ontogen
+    neon-gpt: tests/snapshots/prompts/neon-gpt
+  historical_evidence:
+    phase5_report: reports/OLLAMA_SMOKE_TEST.md
+    phase6_report: reports/LOCAL_PILOT.md (historically INCOMPLETE; immutable)
+    phase6r_report: reports/LOCAL_PILOT_PHASE6R.md (post-fix evidence-recovery replicate)
+    phase7_report: reports/CONTEXT_PREFLIGHT.md
+    frozen_tree_manifests:
+      phase5_output: c2eaad831a0e9fc74d337d5a1bd62fc182dbcfbae1d06f76ca4568abb17a064b
+      phase6_output: 3d395798b107136173eeb359b2a6dab1843207df5abe8f133278579673e7d80b
+      phase6_reports: cea26a2cf10df3ccf52f922098848c959a87e7d4e41f3fcfe0ba54c73f8de3a0
+      phase6_results: 5624b96549f00bee015875737da7ddc9cebf1b2b4f56665b088ae0be9fe49172
+      phase6r_output: aaad4dd8b6a2dccca9d6b12ea52e4f51eaedd05f072b50c96cc7c4764a358776
+      phase6r_reports: 743cfa53e1e47c836054e1c1e500ee05f643d43d9f5bfb78c87e89d96dbbd07f
+      phase6r_results: 73e432c19e5444cd3e804113db585a856faa9e7e9c7aee8be15d12e52c6d644e
+output:
+  root: outputs/stage_a1/project2
+  run_summary_root: outputs/stage_a1/runs
+  separate_from:
+  - outputs/project2
+  - outputs/local_pilot
+  - outputs/local_pilot_phase6r
+  contract_version: project2-result-envelope-v2
+  contract_path: docs/OUTPUT_CONTRACT.md
+  contract_sha256: 5192f76e3606a7a69f769d4de84e0f39f374435f8aefd04bb95769148008e562
+  existing_result_policy: never overwrite; atomic archive before explicitly authorized retry/write
+implementation_identity:
+  parser_normalization_version: ontology-adapter-at-PR10-plus-frozen-local-infrastructure
+  ontology_adapter_sha256: e0582ae3a7950daf496dcba178bdf0ba4bc19e2530d213686f13853863ac877e
+  artifact_cache_code_sha256: d4af723fa92cbaa8d3455a94cd33031f8c981a5a1d00d11d3b27b929ea29d36e
+  dataset_loader_sha256: 82afda95235b3060db69bc1dfe87a4dd9f8fd44a963af57a69b5a264ef00a0fc
+  cache_fields:
+  - dataset_id
+  - method
+  - provider
+  - model
+  - model_digest
+  - prompt_hash
+  - temperature
+  - seed
+  - num_ctx
+  - max_output_tokens
+  - procedure_hash
+  - odp_manifest_hash
+  - repair_policy
+  - repository_commit
+  - dataset_manifest_hash
+  - experiment_config_hash
+monitoring:
+  B6:
+    status: open_non_blocking_monitored_model_quality_risk
+    method: ontogenia
+    per_step_raw_normalized_final_parse_required: true
+    top_level_failure_preserved_and_held: true
+    stop_escalation: do not reinterpret as implementation failure without deterministic evidence
+  length:
+    record_every_done_reason: true
+    report_per_method_and_overall_rates: true
+    record_prompt_eval_count_eval_count_and_arithmetic_margin: true
+    minimum_context_margin_reference: 14985
+cache:
+  canonicalization: UTF-8 JSON, ensure_ascii=false, sorted keys, compact separators
+  config_hash_rule: remove experiment_config_hash, canonicalize entire remaining YAML mapping, SHA-256 lowercase hex
+  resume_success: skipped_success
+  resume_failure: held_failed
+  incomplete_or_corrupt: invalidated_not_reused
+  semantic_mismatch: stale_not_reused
+authorization:
+  phase8_preflight_only: true
+  stage_a1_generation_authorized: false
+  stage_a2_or_later_authorized: false
+  real_generation_calls_permitted_in_phase8: 0
+experiment_config_hash: a3772fff9fadaf236dcb2b390b60a97ff4b220862bfc609fc2483013203e509e

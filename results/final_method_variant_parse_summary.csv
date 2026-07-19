@@ -1,0 +1,11 @@
+method,prompt_variant,tasks,raw_parse_success,raw_parse_rate,normalized_parse_success,normalized_parse_rate,final_parse_success,final_parse_rate,metric_unavailable_final_parse_failures,evidence_basis
+ontogenia,P0,17,0,0.0,4,0.235294118,4,0.235294118,13,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+ontogenia,P1,17,0,0.0,5,0.294117647,5,0.294117647,12,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+ontogenia,P2,17,0,0.0,5,0.294117647,5,0.294117647,12,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+domain-ontogen,P0,17,16,0.941176471,16,0.941176471,16,0.941176471,1,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+domain-ontogen,P1,17,17,1.0,17,1.0,17,1.0,0,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+domain-ontogen,P2,17,17,1.0,17,1.0,17,1.0,0,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+neon-gpt,P0,17,3,0.176470588,11,0.647058824,11,0.647058824,6,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+neon-gpt,P1,17,0,0.0,12,0.705882353,12,0.705882353,5,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+neon-gpt,P2,17,1,0.058823529,14,0.823529412,14,0.823529412,3,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2
+TOTAL,ALL,153,54,0.352941176,101,0.660130719,101,0.660130719,52,A1 schema-v2 admitted P0 plus A2 repair-aware admitted P1/P2

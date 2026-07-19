@@ -1,0 +1,40 @@
+schema_version: c3-analysis-policy-v1
+status: frozen_statistical_plan_only
+execution_authorized: false
+paired_unit:
+  keys: [method, dataset_id]
+  variants: [P0, P1, P2]
+primary_binary_endpoint:
+  field: final_parse_success
+  raw_parse_substitution_forbidden: true
+  omnibus: {test: cochran_q, stratify_by: method}
+  pairwise:
+    comparisons: [P0_vs_P1, P0_vs_P2, P1_vs_P2]
+    test: mcnemar
+    exact_when_total_discordant_below: 25
+    otherwise: continuity_corrected_asymptotic
+    multiplicity: holm_within_method
+primary_sensitivity_endpoint:
+  measure: P0_centred_ontology_term_jaccard
+  values: [J_P0_P1, J_P0_P2]
+  comparison: paired_two_sided_wilcoxon_signed_rank
+  zero_difference_method: pratt
+  bootstrap: {resamples: 10000, seed: 42, confidence_level: 0.95}
+  effect_size: matched_rank_biserial
+term_extraction:
+  source: final_ontology.ttl
+  include_declared_types: [owl:Class, rdfs:Class, owl:ObjectProperty, owl:DatatypeProperty, owl:AnnotationProperty, rdf:Property, owl:NamedIndividual]
+  include_relation_positions: [rdfs:domain, rdfs:range, rdfs:subClassOf, owl:equivalentClass, owl:disjointWith, owl:inverseOf]
+  blank_nodes: excluded_as_terms
+  built_in_namespaces: [rdf, rdfs, owl, xsd]
+  ontology_document_iri: excluded
+  iri_normalization: unicode_NFC_lowercase_scheme_host_remove_default_port_decode_unreserved_only
+  both_empty_jaccard: 1.0
+  unparsable_output: missing_not_empty_not_zero
+missingness:
+  missing_generation_evidence: exclude_and_report
+  complete_unparseable_output_binary_endpoint: failure
+  complete_unparseable_output_term_endpoint: missing
+exploratory_multiplicity: BH_FDR_within_documented_endpoint_method_family
+publication_claims_authorized: false
+

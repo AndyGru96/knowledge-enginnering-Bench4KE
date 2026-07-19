@@ -1,0 +1,17 @@
+{
+  "applicable_methods": [],
+  "entries": [],
+  "lookup_contract": {
+    "candidate_order": [
+      "name",
+      "name.ttl",
+      "name.owl",
+      "name.rdf"
+    ],
+    "directory": "datasets/ontology_generation/raw/ontogenia/odps"
+  },
+  "not_applicable_reason": "No approved Phase 2 course method calls _load_odps_text; ontogenia-mp is explicitly excluded from the approved three.",
+  "schema_version": 1,
+  "source_patterns_csv": "external_resources/Ontogenia/data/patterns.csv",
+  "source_patterns_sha256": "4bf85a406713ca5e59f944bb70cb521fc3edbe460e2b8f6aadcce6602935b75d"
+}

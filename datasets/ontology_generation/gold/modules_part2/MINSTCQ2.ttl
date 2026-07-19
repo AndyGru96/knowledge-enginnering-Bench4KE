@@ -1,0 +1,62 @@
+@prefix : <https://w3id.org/polifonia/ontology/music-instrument/> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix core: <https://w3id.org/polifonia/ontology/core/> .
+@prefix inst: <https://w3id.org/polifonia/ontology/music-instrument/> .
+@prefix opla: <http://ontologydesignpatterns.org/opla/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix catalogue: <https://w3id.org/arco/ontology/catalogue/> .
+@base <https://w3id.org/polifonia/ontology/music-instrument/> .
+
+<https://w3id.org/polifonia/ontology/music-instrument/> rdf:type owl:Ontology ;
+                                                         owl:versionIRI <https://w3id.org/polifonia/ontology/music-instrument/1.0/> ;
+                                                         owl:imports <https://w3id.org/arco/ontology/location/1.2> ,
+                                                                     <https://w3id.org/polifonia/ontology/core/1.0> ,
+                                                                     <https://w3id.org/polifonia/ontology/music-meta/1.0/> ;
+                                                         cc:license <https://creativecommons.org/licenses/by-sa/4.0/> ;
+                                                         dc:creator "Jacopo de Berardinis"@en ,
+                                                                    "Valentina Carriero"@en ,
+                                                                    "Valentina Presutti"@en ;
+                                                         dc:description "This ontology describes musical instruments as mediums of performance and their technical properties. Given that numerous taxonomies of instruments into groups and families exist (e.g. Hornbostel-Sachs, MIMO, MusicBrainz) and finding common categorisations is an open problem, our module provides an abstraction capable to express arbitrary classifications."@en ;
+                                                         dc:license <https://creativecommons.org/licenses/by-sa/4.0/> ;
+                                                         dc:title "Music Instrument Ontology"@en ;
+                                                         terms:issued "\"2023-04-12\"^^xsd:date" ;
+                                                         terms:license <https://creativecommons.org/licenses/by-sa/4.0/> ;
+                                                         terms:modified "\"2023-05-19\"^^xsd:date" ;
+                                                         vann:preferredNamespacePrefix "mi:" ;
+                                                         vann:preferredNamespaceUri "https://w3id.org/polifonia/ontology/music-instrument/" ;
+                                                         rdfs:comment "This ontology describes musical instruments as mediums of performance and their technical properties. Given that numerous taxonomies of instruments into groups and families exist (e.g. Hornbostel-Sachs, MIMO, MusicBrainz) and finding common categorisations is an open problem, our module provides an abstraction capable to express arbitrary classifications."@en ;
+                                                         rdfs:label "Music Instrument Ontology"@en ;
+                                                         owl:versionInfo "1.0"@en .
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://w3id.org/polifonia/ontology/instrument/Instrument
+<https://w3id.org/polifonia/ontology/instrument/Instrument> rdf:type owl:Class ;
+                                                            rdfs:subClassOf core:InformationObject ,
+                                                                            <https://w3id.org/polifonia/ontology/music-meta/MediumOfPerformance> ;
+                                                            rdfs:comment "An instrument intended as an information object (e.g. the guitar as an information object), regardless its physical realizations (e.g. the specific guitar at my place)."@en ;
+                                                            rdfs:label "Instrument"@en .
+
+
+###  https://w3id.org/polifonia/ontology/instrument/InstrumentPart
+<https://w3id.org/polifonia/ontology/instrument/InstrumentPart> rdf:type owl:Class ;
+                                                                rdfs:comment "The part of an instrument."@en ;
+                                                                rdfs:label "Instrument part"@en .
+
+
+###  https://w3id.org/polifonia/ontology/instrument/Voice
+<https://w3id.org/polifonia/ontology/instrument/Voice> rdf:type owl:Class ;
+                                                       rdfs:subClassOf <https://w3id.org/polifonia/ontology/music-meta/MediumOfPerformance> ;
+                                                       rdfs:label "Voice"@en .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

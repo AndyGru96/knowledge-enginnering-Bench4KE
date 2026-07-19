@@ -1,0 +1,860 @@
+{
+  "approved_methods": [
+    "ontogenia",
+    "domain-ontogen",
+    "neon-gpt"
+  ],
+  "authoritative_prompt_repositories": {
+    "domain-ontogen": {
+      "branch": "main",
+      "commit_sha": "894441e367acdbbd1ea662b6f1a6919d13533051",
+      "licence": "Not declared in the repository (no licence file or README statement)",
+      "local_path": "external_resources/Domain-OntoGen",
+      "repository": "https://github.com/dersuchendee/Domain-OntoGen",
+      "retrieval_date": "2026-07-15"
+    },
+    "neon-gpt": {
+      "branch": "main",
+      "commit_sha": "bce7a6a805faa23dc169f691afb5aaaacad3d99d",
+      "licence": "MIT (repository LICENSE)",
+      "local_path": "external_resources/NEON-GPT",
+      "repository": "https://github.com/andreamust/NEON-GPT",
+      "retrieval_date": "2026-07-15"
+    }
+  },
+  "data_manifest_hash": "e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf",
+  "gold_modules": [
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq11.ttl",
+      "filename": "cq11.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq11.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "38d99cce2bfe412cf9738397e1859a4e0febed85a378b94a83abde9311385e42",
+      "stem": "cq11",
+      "triple_count": 54
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq12.ttl",
+      "filename": "cq12.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq12.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "91acf4982df26fc0b63cff6e842ed0efd6798c22facd9f076195025dbcf99649",
+      "stem": "cq12",
+      "triple_count": 56
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq13.ttl",
+      "filename": "cq13.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq13.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "91acf4982df26fc0b63cff6e842ed0efd6798c22facd9f076195025dbcf99649",
+      "stem": "cq13",
+      "triple_count": 56
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq14.ttl",
+      "filename": "cq14.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq14.ttl",
+      "parse_error": null,
+      "parse_format": "xml",
+      "parse_success": true,
+      "source_sha256": "88f764be6f197baa495e4d62fd3c616a7545899b36228237a0880ec52ecae64b",
+      "stem": "cq14",
+      "triple_count": 104
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq15.ttl",
+      "filename": "cq15.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq15.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "005061c543fc9f306b19678cf195d27e94149ce8b918b9d06bd686d85003c909",
+      "stem": "cq15",
+      "triple_count": 195
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq17.ttl",
+      "filename": "cq17.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq17.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "bfdcd5e293ebd68cafa025c947683e2f2a5b4e848553b1c85e6abe0ce8a36bd0",
+      "stem": "cq17",
+      "triple_count": 56
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq19.ttl",
+      "filename": "cq19.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq19.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "9d6b6347f3d748e6dacda3f7e09eda9e910776afe05eef009b3dbd12f63cd8f1",
+      "stem": "cq19",
+      "triple_count": 77
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq2.ttl",
+      "filename": "cq2.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq2.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "983a27b7f5445ce76faa1bcf793216fd2ec0bcf041e519f6ea91076c0d8e89e5",
+      "stem": "cq2",
+      "triple_count": 78
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq4.ttl",
+      "filename": "cq4.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq4.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "6ae017d1862967e3e04fde042f1c6f07a66874ba01267ef9e3249d30fc565d65",
+      "stem": "cq4",
+      "triple_count": 48
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq6.ttl",
+      "filename": "cq6.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq6.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "cfe81e043ae68e2116bed564c9f3f9258d06ebe8092713ab5e79448101a7319b",
+      "stem": "cq6",
+      "triple_count": 40
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq7.ttl",
+      "filename": "cq7.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq7.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "855b2a243163f9530713f4d37c6bac3812b7942cc760e39c42a9509c4a147c2c",
+      "stem": "cq7",
+      "triple_count": 40
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq8.ttl",
+      "filename": "cq8.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq8.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "38d99cce2bfe412cf9738397e1859a4e0febed85a378b94a83abde9311385e42",
+      "stem": "cq8",
+      "triple_count": 54
+    },
+    {
+      "archive": "modules_part1.zip",
+      "archive_member": "cq9.ttl",
+      "filename": "cq9.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part1/cq9.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "493b893929d2f34557684bb13939327bb1f5ad7c1172569193989420d23e1ad0",
+      "stem": "cq9",
+      "triple_count": 85
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/SOURCECQ5.ttl",
+      "filename": "SOURCECQ5.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/SOURCECQ5.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "38a90c38eed80e0210c61ce764f88ca97656cdc2279b4d575f43db1bba5b39d6",
+      "stem": "SOURCECQ5",
+      "triple_count": 38
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/MINSTCQ5.ttl",
+      "filename": "MINSTCQ5.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ5.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "3373162f53d906f1a372962062ea87382947e1e4ae0c4fc7095e7d090a310e09",
+      "stem": "MINSTCQ5",
+      "triple_count": 31
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/SOURCECQ4.ttl",
+      "filename": "SOURCECQ4.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/SOURCECQ4.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "5e92dcc3e5301ec4808b4c94f804d384d4f717f8f1583946740d32a4a7e5c9ba",
+      "stem": "SOURCECQ4",
+      "triple_count": 17
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/SOURCECQ6.ttl",
+      "filename": "SOURCECQ6.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/SOURCECQ6.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "38a90c38eed80e0210c61ce764f88ca97656cdc2279b4d575f43db1bba5b39d6",
+      "stem": "SOURCECQ6",
+      "triple_count": 38
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/MINSTCQ1.ttl",
+      "filename": "MINSTCQ1.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ1.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "4d7dc32efb15b9550692747be43d7db242296c7575b46241425d28e85a12e15d",
+      "stem": "MINSTCQ1",
+      "triple_count": 34
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/SOURCECQ1.ttl",
+      "filename": "SOURCECQ1.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/SOURCECQ1.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "67592af90f3822b408c9652f8f16e07d67246254e26eca10359ab4795abf29fd",
+      "stem": "SOURCECQ1",
+      "triple_count": 31
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/theatre.ttl",
+      "filename": "theatre.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatre.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "5cb585568ce9fc21f4b4e5c1b4d9742490ef2ccaf460a54e017e7174801a1fbc",
+      "stem": "theatre",
+      "triple_count": 21
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/theatrecq1.ttl",
+      "filename": "theatrecq1.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq1.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "490406247ddfaab9fc35e9e9c27a325e847fb503ef29c172e8edd8480c6a6ce8",
+      "stem": "theatrecq1",
+      "triple_count": 22
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/MINSTCQ3.ttl",
+      "filename": "MINSTCQ3.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ3.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "11cfd9e326a5f1f6dfe9782d455ff839b50d03765479e416c579b124c3151649",
+      "stem": "MINSTCQ3",
+      "triple_count": 819
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/hospitalscq1.ttl",
+      "filename": "hospitalscq1.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/hospitalscq1.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "b128c28519d9a60171d82fe72c4a1ea76dd0fd0d297c900f1a90c96656a18b2d",
+      "stem": "hospitalscq1",
+      "triple_count": 11
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/MINSTCQ6.ttl",
+      "filename": "MINSTCQ6.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ6.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "44bd298f42aa81194de784fc07b88aa194f4730c48a2a6ca9f8310a2ceb21776",
+      "stem": "MINSTCQ6",
+      "triple_count": 35
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/MINSTCQ4.ttl",
+      "filename": "MINSTCQ4.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ4.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "127addd47a1c263a62f3fe41c9c7c53a3c27a42b32a29c0f9f22bbad42a6aeca",
+      "stem": "MINSTCQ4",
+      "triple_count": 36
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/WHOWHYCQ4.ttl",
+      "filename": "WHOWHYCQ4.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/WHOWHYCQ4.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "b158f3d630febfb64f6d8baebe9d92ddaf16320585ca77c63d758dfc7d4bb32e",
+      "stem": "WHOWHYCQ4",
+      "triple_count": 67
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/theatrecq2.ttl",
+      "filename": "theatrecq2.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq2.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "365ba5a5b3f563c010bc366893b7cc68b5bca0ad5ebd80af5121afd548330eda",
+      "stem": "theatrecq2",
+      "triple_count": 1
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/hospitals.ttl",
+      "filename": "hospitals.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/hospitals.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "9fdebe5ebb8ff4741e25b0c9c85712dc6d700e549a8642f05a8413b854e3557d",
+      "stem": "hospitals",
+      "triple_count": 34
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/theatrecq4.ttl",
+      "filename": "theatrecq4.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq4.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "cd8951f10bd82a81798b4da52742c8dcfebe0f4a5ee96addc08914e114a79a0e",
+      "stem": "theatrecq4",
+      "triple_count": 7
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/theatrecq3.ttl",
+      "filename": "theatrecq3.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq3.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "1843660e0687599fa02972369b9538460de4355b6c89ccc3c7a155cb46882941",
+      "stem": "theatrecq3",
+      "triple_count": 8
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/theatrecq5.ttl",
+      "filename": "theatrecq5.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq5.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "ff8073325dd0e04a65213fdf03c8715dfd55e10459352ea6b40a4f19b93a7c2f",
+      "stem": "theatrecq5",
+      "triple_count": 7
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/MINSTCQ7.ttl",
+      "filename": "MINSTCQ7.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ7.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "9cdbde79a551b6a3a9cceb0ca24150c91dcd71e8049fc9413bc08fcc31028901",
+      "stem": "MINSTCQ7",
+      "triple_count": 39
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/SOURCECQ2.ttl",
+      "filename": "SOURCECQ2.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/SOURCECQ2.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "b524f3d94473bf84a6f3645bea49585ae4a76e6e2bae3b0657fdbbce39a148fa",
+      "stem": "SOURCECQ2",
+      "triple_count": 38
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/hospitalscq2.ttl",
+      "filename": "hospitalscq2.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/hospitalscq2.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "4f84289b9867957276cb7503967a6910fef93f77df7c69f3bf5cf4ba4c95fae6",
+      "stem": "hospitalscq2",
+      "triple_count": 11
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/theatrecq6.ttl",
+      "filename": "theatrecq6.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq6.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "e215862c279b1d1cc5c9a0cb37e5c94615b60249914e5318ce009c9dcdb777e2",
+      "stem": "theatrecq6",
+      "triple_count": 7
+    },
+    {
+      "archive": "modules_part2.zip",
+      "archive_member": "modules_part2/MINSTCQ2.ttl",
+      "filename": "MINSTCQ2.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ2.ttl",
+      "parse_error": null,
+      "parse_format": "turtle",
+      "parse_success": true,
+      "source_sha256": "6557074600c01badcddbcaf3b4cb53db78412a917cc09ed2ae546a52c6a30d0d",
+      "stem": "MINSTCQ2",
+      "triple_count": 31
+    }
+  ],
+  "odp_manifest": "datasets/ontology_generation/odp_manifest.json",
+  "outputs": [
+    {
+      "bytes": 17225,
+      "path": "conversion_errors.csv",
+      "sha256": "595a1102779cf22b674245d0d69c63430414ec6bfe1f4478be3f4efd22515135"
+    },
+    {
+      "bytes": 43530,
+      "path": "dataset_audit.json",
+      "sha256": "f9764b85125f51144a2e476a865a9b9d6a453393f62d33ab5644d5786a3f71d0"
+    },
+    {
+      "bytes": 8250,
+      "path": "gold/modules_part1/cq11.ttl",
+      "sha256": "38d99cce2bfe412cf9738397e1859a4e0febed85a378b94a83abde9311385e42"
+    },
+    {
+      "bytes": 6213,
+      "path": "gold/modules_part1/cq12.ttl",
+      "sha256": "91acf4982df26fc0b63cff6e842ed0efd6798c22facd9f076195025dbcf99649"
+    },
+    {
+      "bytes": 6213,
+      "path": "gold/modules_part1/cq13.ttl",
+      "sha256": "91acf4982df26fc0b63cff6e842ed0efd6798c22facd9f076195025dbcf99649"
+    },
+    {
+      "bytes": 13658,
+      "path": "gold/modules_part1/cq14.ttl",
+      "sha256": "88f764be6f197baa495e4d62fd3c616a7545899b36228237a0880ec52ecae64b"
+    },
+    {
+      "bytes": 24932,
+      "path": "gold/modules_part1/cq15.ttl",
+      "sha256": "005061c543fc9f306b19678cf195d27e94149ce8b918b9d06bd686d85003c909"
+    },
+    {
+      "bytes": 9133,
+      "path": "gold/modules_part1/cq17.ttl",
+      "sha256": "bfdcd5e293ebd68cafa025c947683e2f2a5b4e848553b1c85e6abe0ce8a36bd0"
+    },
+    {
+      "bytes": 11342,
+      "path": "gold/modules_part1/cq19.ttl",
+      "sha256": "9d6b6347f3d748e6dacda3f7e09eda9e910776afe05eef009b3dbd12f63cd8f1"
+    },
+    {
+      "bytes": 11602,
+      "path": "gold/modules_part1/cq2.ttl",
+      "sha256": "983a27b7f5445ce76faa1bcf793216fd2ec0bcf041e519f6ea91076c0d8e89e5"
+    },
+    {
+      "bytes": 7608,
+      "path": "gold/modules_part1/cq4.ttl",
+      "sha256": "6ae017d1862967e3e04fde042f1c6f07a66874ba01267ef9e3249d30fc565d65"
+    },
+    {
+      "bytes": 6080,
+      "path": "gold/modules_part1/cq6.ttl",
+      "sha256": "cfe81e043ae68e2116bed564c9f3f9258d06ebe8092713ab5e79448101a7319b"
+    },
+    {
+      "bytes": 6186,
+      "path": "gold/modules_part1/cq7.ttl",
+      "sha256": "855b2a243163f9530713f4d37c6bac3812b7942cc760e39c42a9509c4a147c2c"
+    },
+    {
+      "bytes": 8250,
+      "path": "gold/modules_part1/cq8.ttl",
+      "sha256": "38d99cce2bfe412cf9738397e1859a4e0febed85a378b94a83abde9311385e42"
+    },
+    {
+      "bytes": 11583,
+      "path": "gold/modules_part1/cq9.ttl",
+      "sha256": "493b893929d2f34557684bb13939327bb1f5ad7c1172569193989420d23e1ad0"
+    },
+    {
+      "bytes": 3500,
+      "path": "gold/modules_part2/hospitals.ttl",
+      "sha256": "9fdebe5ebb8ff4741e25b0c9c85712dc6d700e549a8642f05a8413b854e3557d"
+    },
+    {
+      "bytes": 1908,
+      "path": "gold/modules_part2/hospitalscq1.ttl",
+      "sha256": "b128c28519d9a60171d82fe72c4a1ea76dd0fd0d297c900f1a90c96656a18b2d"
+    },
+    {
+      "bytes": 1954,
+      "path": "gold/modules_part2/hospitalscq2.ttl",
+      "sha256": "4f84289b9867957276cb7503967a6910fef93f77df7c69f3bf5cf4ba4c95fae6"
+    },
+    {
+      "bytes": 5903,
+      "path": "gold/modules_part2/MINSTCQ1.ttl",
+      "sha256": "4d7dc32efb15b9550692747be43d7db242296c7575b46241425d28e85a12e15d"
+    },
+    {
+      "bytes": 5360,
+      "path": "gold/modules_part2/MINSTCQ2.ttl",
+      "sha256": "6557074600c01badcddbcaf3b4cb53db78412a917cc09ed2ae546a52c6a30d0d"
+    },
+    {
+      "bytes": 58115,
+      "path": "gold/modules_part2/MINSTCQ3.ttl",
+      "sha256": "11cfd9e326a5f1f6dfe9782d455ff839b50d03765479e416c579b124c3151649"
+    },
+    {
+      "bytes": 6184,
+      "path": "gold/modules_part2/MINSTCQ4.ttl",
+      "sha256": "127addd47a1c263a62f3fe41c9c7c53a3c27a42b32a29c0f9f22bbad42a6aeca"
+    },
+    {
+      "bytes": 5639,
+      "path": "gold/modules_part2/MINSTCQ5.ttl",
+      "sha256": "3373162f53d906f1a372962062ea87382947e1e4ae0c4fc7095e7d090a310e09"
+    },
+    {
+      "bytes": 6073,
+      "path": "gold/modules_part2/MINSTCQ6.ttl",
+      "sha256": "44bd298f42aa81194de784fc07b88aa194f4730c48a2a6ca9f8310a2ceb21776"
+    },
+    {
+      "bytes": 6452,
+      "path": "gold/modules_part2/MINSTCQ7.ttl",
+      "sha256": "9cdbde79a551b6a3a9cceb0ca24150c91dcd71e8049fc9413bc08fcc31028901"
+    },
+    {
+      "bytes": 4123,
+      "path": "gold/modules_part2/SOURCECQ1.ttl",
+      "sha256": "67592af90f3822b408c9652f8f16e07d67246254e26eca10359ab4795abf29fd"
+    },
+    {
+      "bytes": 4834,
+      "path": "gold/modules_part2/SOURCECQ2.ttl",
+      "sha256": "b524f3d94473bf84a6f3645bea49585ae4a76e6e2bae3b0657fdbbce39a148fa"
+    },
+    {
+      "bytes": 2587,
+      "path": "gold/modules_part2/SOURCECQ4.ttl",
+      "sha256": "5e92dcc3e5301ec4808b4c94f804d384d4f717f8f1583946740d32a4a7e5c9ba"
+    },
+    {
+      "bytes": 4734,
+      "path": "gold/modules_part2/SOURCECQ5.ttl",
+      "sha256": "38a90c38eed80e0210c61ce764f88ca97656cdc2279b4d575f43db1bba5b39d6"
+    },
+    {
+      "bytes": 4734,
+      "path": "gold/modules_part2/SOURCECQ6.ttl",
+      "sha256": "38a90c38eed80e0210c61ce764f88ca97656cdc2279b4d575f43db1bba5b39d6"
+    },
+    {
+      "bytes": 2919,
+      "path": "gold/modules_part2/theatre.ttl",
+      "sha256": "5cb585568ce9fc21f4b4e5c1b4d9742490ef2ccaf460a54e017e7174801a1fbc"
+    },
+    {
+      "bytes": 2766,
+      "path": "gold/modules_part2/theatrecq1.ttl",
+      "sha256": "490406247ddfaab9fc35e9e9c27a325e847fb503ef29c172e8edd8480c6a6ce8"
+    },
+    {
+      "bytes": 790,
+      "path": "gold/modules_part2/theatrecq2.ttl",
+      "sha256": "365ba5a5b3f563c010bc366893b7cc68b5bca0ad5ebd80af5121afd548330eda"
+    },
+    {
+      "bytes": 2065,
+      "path": "gold/modules_part2/theatrecq3.ttl",
+      "sha256": "1843660e0687599fa02972369b9538460de4355b6c89ccc3c7a155cb46882941"
+    },
+    {
+      "bytes": 1311,
+      "path": "gold/modules_part2/theatrecq4.ttl",
+      "sha256": "cd8951f10bd82a81798b4da52742c8dcfebe0f4a5ee96addc08914e114a79a0e"
+    },
+    {
+      "bytes": 1479,
+      "path": "gold/modules_part2/theatrecq5.ttl",
+      "sha256": "ff8073325dd0e04a65213fdf03c8715dfd55e10459352ea6b40a4f19b93a7c2f"
+    },
+    {
+      "bytes": 1381,
+      "path": "gold/modules_part2/theatrecq6.ttl",
+      "sha256": "e215862c279b1d1cc5c9a0cb37e5c94615b60249914e5318ce009c9dcdb777e2"
+    },
+    {
+      "bytes": 7688,
+      "path": "gold/modules_part2/WHOWHYCQ4.ttl",
+      "sha256": "b158f3d630febfb64f6d8baebe9d92ddaf16320585ca77c63d758dfc7d4bb32e"
+    },
+    {
+      "bytes": 23452,
+      "path": "gold_mapping.csv",
+      "sha256": "8a1462231b8219140329099b2174293fba0f10173167b47af0a408ef87185822"
+    },
+    {
+      "bytes": 61632,
+      "path": "normalized/project2.jsonl",
+      "sha256": "65826ac4dc0a0ddaf5300a401909f9686be9a7f3767e4ca3c0f1336e6bfa9632"
+    },
+    {
+      "bytes": 61632,
+      "path": "normalized/project2_full_generation.jsonl",
+      "sha256": "65826ac4dc0a0ddaf5300a401909f9686be9a7f3767e4ca3c0f1336e6bfa9632"
+    },
+    {
+      "bytes": 584,
+      "path": "odp_manifest.json",
+      "sha256": "3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05"
+    },
+    {
+      "bytes": 137,
+      "path": "odps/README.md",
+      "sha256": "34663e2cd37b1bd4936580210cd3cd03d211b8d3e5b64203b241be03f8ee1c3d"
+    },
+    {
+      "bytes": 7122,
+      "path": "prompts/domain-ontogen/P0_original.txt",
+      "sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e"
+    },
+    {
+      "bytes": 2953,
+      "path": "prompts/neon-gpt/P0_original.txt",
+      "sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a"
+    },
+    {
+      "bytes": 8837,
+      "path": "prompts/ontogenia/P0_original.txt",
+      "sha256": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965"
+    },
+    {
+      "bytes": 7122,
+      "path": "raw/domain-ontogen/prompt.txt",
+      "sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e"
+    },
+    {
+      "bytes": 2953,
+      "path": "raw/neon-gpt/day1_gpt_prompt_list.txt",
+      "sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a"
+    },
+    {
+      "bytes": 8837,
+      "path": "raw/ontogenia/memoryless_cqbycq_prompt.txt",
+      "sha256": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965"
+    },
+    {
+      "bytes": 12865,
+      "path": "source_row_reconciliation.csv",
+      "sha256": "004a470c6091f5b3d3f68a0a85af327205204b97554ff67378380b2952c36db7"
+    }
+  ],
+  "prompt_resources": [
+    {
+      "canonical_path": "datasets/ontology_generation/prompts/ontogenia/P0_original.txt",
+      "copied_sha256": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965",
+      "expected_adapter_path": "datasets/ontology_generation/raw/ontogenia/memoryless_cqbycq_prompt.txt",
+      "method": "ontogenia",
+      "missing_placeholders": [],
+      "placeholder_counts": {
+        "{CQ}": 1,
+        "{rdf}": 1,
+        "{story}": 1
+      },
+      "provenance": {
+        "classification": "published_exact",
+        "extraction_boundaries": "README.md section 'Memoryless CQbyCQ', Python fenced string literal",
+        "transformations": {
+          "markdown_fence_removed": true,
+          "python_escape_sequences_decoded": true,
+          "python_string_delimiters_removed": true,
+          "semantic_modification": false
+        }
+      },
+      "required_placeholders": [
+        "{story}",
+        "{CQ}",
+        "{rdf}"
+      ],
+      "sha256": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965",
+      "source_and_copy_hashes_match": null,
+      "source_path": "external_resources/Onto-Generation/PromptingTechniques/README.md",
+      "source_sha256": "8547a3c9a3f2124e0634eeb5590ec81fef774f02906df53b5ce95ca38161cdae",
+      "status": "ready"
+    },
+    {
+      "canonical_path": "datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt",
+      "copied_sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e",
+      "expected_adapter_path": "datasets/ontology_generation/raw/domain-ontogen/prompt.txt",
+      "method": "domain-ontogen",
+      "missing_placeholders": [],
+      "placeholder_counts": {
+        "{CQ}": 1,
+        "{OS}": 1
+      },
+      "provenance": {
+        "branch": "main",
+        "classification": "published_exact",
+        "commit_sha": "894441e367acdbbd1ea662b6f1a6919d13533051",
+        "extraction_boundaries": "README.md section 'Prompt used for ontology generation', Python fenced string literal",
+        "licence": "Not declared in the repository (no licence file or README statement)",
+        "local_path": "external_resources/Domain-OntoGen",
+        "only_markdown_indentation_or_fence_removed": false,
+        "repository": "https://github.com/dersuchendee/Domain-OntoGen",
+        "retrieval_date": "2026-07-15",
+        "source_file": "external_resources/Domain-OntoGen/README.md",
+        "source_readme_sha256": "c99516fb4af75d7f414c550855a28b7ced90cfbb1b6fa5d73986e270cc3e4e17",
+        "transformations": {
+          "markdown_fence_removed": true,
+          "python_escape_sequences_decoded": true,
+          "python_string_delimiters_removed": true,
+          "semantic_modification": false
+        }
+      },
+      "required_placeholders": [
+        "{OS}",
+        "{CQ}"
+      ],
+      "sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e",
+      "source_and_copy_hashes_match": null,
+      "source_path": "external_resources/Domain-OntoGen/README.md",
+      "source_sha256": "c99516fb4af75d7f414c550855a28b7ced90cfbb1b6fa5d73986e270cc3e4e17",
+      "status": "ready"
+    },
+    {
+      "canonical_path": "datasets/ontology_generation/prompts/neon-gpt/P0_original.txt",
+      "copied_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
+      "expected_adapter_path": "datasets/ontology_generation/raw/neon-gpt/day1_gpt_prompt_list.txt",
+      "method": "neon-gpt",
+      "missing_placeholders": [],
+      "placeholder_counts": {},
+      "provenance": {
+        "branch": "main",
+        "classification": "published_exact",
+        "commit_sha": "bce7a6a805faa23dc169f691afb5aaaacad3d99d",
+        "copy_mode": "byte-for-byte",
+        "licence": "MIT (repository LICENSE)",
+        "local_path": "external_resources/NEON-GPT",
+        "repository": "https://github.com/andreamust/NEON-GPT",
+        "retrieval_date": "2026-07-15",
+        "source_file": "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
+        "source_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a"
+      },
+      "required_placeholders": [],
+      "sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
+      "source_and_copy_hashes_match": true,
+      "source_path": "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
+      "source_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
+      "status": "ready"
+    }
+  ],
+  "schema_version": 1,
+  "source_files": [
+    {
+      "bytes": 38984,
+      "path": "external_resources/Onto-Generation/Dataset_OntoGen/Dataset.xlsx",
+      "sha256": "eb95f875fea9db67bd99096894d2dfbb9904d519a9d028287f502378aecd3625"
+    },
+    {
+      "bytes": 22935,
+      "path": "external_resources/Onto-Generation/Dataset_OntoGen/modules_part1.zip",
+      "sha256": "4961b25ca46471dc2739153bd591e5a697f49489c196f017d347cec9b3069d20"
+    },
+    {
+      "bytes": 31220,
+      "path": "external_resources/Onto-Generation/Dataset_OntoGen/modules_part2.zip",
+      "sha256": "44e4b6e2b1fe9dc8f8b1175faa4a8e6eeb853f121e48ed39f0dcfaf29fb1e229"
+    },
+    {
+      "bytes": 14427,
+      "path": "external_resources/Onto-Generation/PromptingTechniques/README.md",
+      "sha256": "8547a3c9a3f2124e0634eeb5590ec81fef774f02906df53b5ce95ca38161cdae"
+    },
+    {
+      "bytes": 68291,
+      "path": "external_resources/Ontogenia/data/patterns.csv",
+      "sha256": "4bf85a406713ca5e59f944bb70cb521fc3edbe460e2b8f6aadcce6602935b75d"
+    },
+    {
+      "bytes": 1990,
+      "path": "external_resources/Ontogenia/data/procedure.txt",
+      "sha256": "741b3b1fea5fb112bbdba29f4827e52d6d76848bb96ece8cf51e639c14802351"
+    },
+    {
+      "bytes": 7813,
+      "path": "external_resources/Domain-OntoGen/README.md",
+      "sha256": "c99516fb4af75d7f414c550855a28b7ced90cfbb1b6fa5d73986e270cc3e4e17"
+    },
+    {
+      "bytes": 2953,
+      "path": "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
+      "sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a"
+    },
+    {
+      "bytes": 1096,
+      "path": "external_resources/NEON-GPT/LICENSE",
+      "sha256": "d2f666532ab978511acdd3218bd4de73cdee80bec9e7ebcd2792af290e9c266f"
+    }
+  ]
+}

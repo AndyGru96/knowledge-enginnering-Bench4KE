@@ -1,0 +1,6 @@
+status: future_experiment_identity_policy
+cache_identity_schema_version: 2
+historical_schema_v1_automatic_hit: false
+legacy_evidence_admission_manifest_required: true
+note: This policy file is not an A2 plan and authorizes no generation.
+

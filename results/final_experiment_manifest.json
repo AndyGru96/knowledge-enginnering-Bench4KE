@@ -1,0 +1,150 @@
+{
+  "api_chat_calls_made_in_phase13": 0,
+  "audit_code": {
+    "path": "scripts/prepare_phase13_final_integration.py",
+    "sha256": "546c725b49b0cb615a6e1037f9c7fdcf6961d267626fac96b76572b6760a4c49"
+  },
+  "c2": {
+    "denominator_policy": "entity coverage uses known entities in parseable final ontologies; every unparseable task remains an explicit metric-unavailable task in the task denominator",
+    "metric_available_tasks": 101,
+    "metric_unavailable_tasks": 52,
+    "nontrivial_threshold": {
+      "minimum_unicode_characters": 20,
+      "minimum_words": 3
+    }
+  },
+  "c3": {
+    "admitted_A2_tasks": 102,
+    "binary_complete_triplets": {
+      "domain-ontogen": 17,
+      "neon-gpt": 17,
+      "ontogenia": 17
+    },
+    "exports": {
+      "c3_repair_aware_cochran_q_results.csv": "5e22bfc1224ab6670717bb41e49681e968e84d50e2241092549e92efb5e055cf",
+      "c3_repair_aware_effect_sizes.csv": "074d28683b989b80c23054be14d8697da19fadf35396ca37ced90099c130533c",
+      "c3_repair_aware_mcnemar_results.csv": "b9e1bbb616d73fc2b72ce2a5790cb23aed469505a138c832c7eb5e7620e67fb5",
+      "c3_repair_aware_parse_success_panel.csv": "ae3ac869f62cc3b5249a0c13de9cf478192d07e5acfe7248c1cc5f06e5aa9941",
+      "c3_repair_aware_term_jaccard.csv": "3c365854dfa7f33194c051949db14c3107dfc0309077ddd7e06f1fcce596beb0",
+      "c3_repair_aware_wilcoxon_results.csv": "71a1e7d17d12414edc5ed082fb076ba201efb45472569c5306e452a1b3d4336b"
+    },
+    "generation_calls": 0,
+    "historical_A2_strict_classification": "FAIL",
+    "phase": "Revised Phase 12B",
+    "phase12_strict_sidecar_admission": "PARTIALLY ADMITTED",
+    "phase12b_repair_aware_admission": "ADMITTED",
+    "plan_sha256": "6baf02529d20ecf53ac09a7ac94f5a28e9fde6d5d5d3b1d7de182df57bc47701",
+    "policy_sha256": "1bb4db44d1f203fed040fcd36e00f50b7af015b131f39dd8ad0fd1c4f9d26fd9",
+    "publication_claims_authorized": false,
+    "rejected_A2_tasks": 0,
+    "schema_version": "c3-repair-aware-analysis-manifest-v1",
+    "term_jaccard_pairs": {
+      "domain-ontogen": 16,
+      "neon-gpt": 6,
+      "ontogenia": 0
+    }
+  },
+  "classifications": {
+    "A1_historical_schema_v1": "FAIL",
+    "A1_schema_v2_evidence_admission": "ADMITTED",
+    "A2_historical_strict_schema_v2": "FAIL",
+    "A2_phase12_strict_sidecar": "PARTIALLY ADMITTED",
+    "A2_phase12b_repair_aware_sidecar": "ADMITTED",
+    "B10": "RESOLVED",
+    "B6": "OPEN_NON_BLOCKING_MONITORED_QUALITY_RISK"
+  },
+  "created_at": "2026-07-16T12:16:09.312862+00:00",
+  "evidence_preservation": {
+    "A1_admission_manifest_sha256": "5826f6fe4eb788cdbe8c9b43f10a19f6e7c0139fcb497f15b424abb6d9e129f0",
+    "A1_bytes": 41602395,
+    "A1_files": 2243,
+    "A1_generation_manifest": "03beb1d1f8da5824c511614662eaf53cf8ceabf3b412eddbdfc263529e1d109e",
+    "A1_legacy_tree_sha256": "6b72414f2ed78bbd50a5020e791467d4199bd32cdb553af0e53b1ba04a9f881d",
+    "A2_bytes": 82263585,
+    "A2_complete_canonical_manifest": "97f4529823646751501f202877a39d109f646fa86d785ebf7fcd0e7142a70e8f",
+    "A2_files": 4663,
+    "A2_legacy_tree_sha256": "4dd413748b704a71592f65413fcf355b0161c5ce6e7a37904d080f7858b1b650",
+    "all_expected_frozen_values_match": true,
+    "dataset_audit_sha256": "f9764b85125f51144a2e476a865a9b9d6a453393f62d33ab5644d5786a3f71d0",
+    "dataset_full_generation_sha256": "65826ac4dc0a0ddaf5300a401909f9686be9a7f3767e4ca3c0f1336e6bfa9632",
+    "historical_phase5_6_6r": {
+      "phase5_output": "c2eaad831a0e9fc74d337d5a1bd62fc182dbcfbae1d06f76ca4568abb17a064b",
+      "phase6_output": "3d395798b107136173eeb359b2a6dab1843207df5abe8f133278579673e7d80b",
+      "phase6_reports": "cea26a2cf10df3ccf52f922098848c959a87e7d4e41f3fcfe0ba54c73f8de3a0",
+      "phase6_results": "5624b96549f00bee015875737da7ddc9cebf1b2b4f56665b088ae0be9fe49172",
+      "phase6r_output": "aaad4dd8b6a2dccca9d6b12ea52e4f51eaedd05f072b50c96cc7c4764a358776",
+      "phase6r_reports": "743cfa53e1e47c836054e1c1e500ee05f643d43d9f5bfb78c87e89d96dbbd07f",
+      "phase6r_results": "73e432c19e5444cd3e804113db585a856faa9e7e9c7aee8be15d12e52c6d644e"
+    },
+    "phase3_snapshot_manifest_sha256": "9673b7f96a8c0e3c41a0dbd53e00dbc8933162e7a73dc8a1b4fa12f2951bf025"
+  },
+  "generation_calls_made_in_phase13": 0,
+  "limitations": [
+    "single quantized local model",
+    "17 dataset items and one seed",
+    "C2 entity coverage conditional on parseable outputs",
+    "parseability is not conceptual ontology quality",
+    "Ontogenia C3 term sensitivity not estimable",
+    "repair-aware admission does not rewrite historical A2 strict FAIL"
+  ],
+  "model": {
+    "digest": "19e422b0231392335cfc49cfd172de7034bb1aeabb08aa307cce745c60b272fe",
+    "name": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+    "num_ctx": 32768,
+    "num_predict": 8192,
+    "provider": "ollama",
+    "seed": 42,
+    "temperature": 0
+  },
+  "outputs": {
+    "reports/C2_DOCUMENTATION_COMPLETENESS.md": "9e440cdb2e1289ab5544e7e49daa244295c882a7687db72ce58e8c2d39de94f0",
+    "reports/FINAL_DELIVERY_CHECKLIST.md": "900a1947f5ce8fa76c1cb94be6c3e2cdc9a2181435f09d3d2fb50d06ae568735",
+    "reports/FINAL_REPORT_DRAFT.md": "1a820a4dd11a00d379123dcc0679dee493f41e240014cc2f65e6d8b32b4bed0f",
+    "results/c2_documentation_completeness.csv": "6f448112b928c23d7ba30ab531439a52bd70bbee98b6dc040341f0e16e35e50c",
+    "results/c2_documentation_summary.csv": "82330104386fc57af450337f61566a28b14b50b2a6f5a4a9a56e8c8bc00983be",
+    "results/final_c2_c3_summary.csv": "1153ac375276ff3ae7fd6a098e40793ff33b5e0b453dbcf78233839b2fad844c",
+    "results/final_generation_cost_summary.csv": "96a69b855b59688c4201240983463037937c831ab5aa7fe1937e42aa2716c259",
+    "results/final_method_variant_parse_summary.csv": "cc9ccfc709dcdd453a14805eab603622d8198a368f0f2ad2c5164b3fed99bb71",
+    "results/final_repair_length_summary.csv": "f857ef60e332bb79a1e6c30396c153c07c0de040039f871d630657625b3d01ca"
+  },
+  "phase": "Revised Phase 13",
+  "schema_version": "final-experiment-manifest-v1",
+  "scope": {
+    "A1_tasks": 51,
+    "A2_tasks": 102,
+    "admitted_tasks": 153,
+    "dataset_items": 17,
+    "methods": [
+      "ontogenia",
+      "domain-ontogen",
+      "neon-gpt"
+    ],
+    "variants": [
+      "P0",
+      "P1",
+      "P2"
+    ]
+  },
+  "source_files": {
+    "config/c3_analysis_policy.yaml": "1bb4db44d1f203fed040fcd36e00f50b7af015b131f39dd8ad0fd1c4f9d26fd9",
+    "docs/C3_STATISTICAL_ANALYSIS_PLAN.md": "6baf02529d20ecf53ac09a7ac94f5a28e9fde6d5d5d3b1d7de182df57bc47701",
+    "project_notes/BLOCKERS.md": "5da87c3c3297be3ae50ffdb5faaa355447e0342f61b5739e82daa603a6c16e75",
+    "project_notes/DECISIONS.md": "85de36cb164056749c6fe2ec4698d8c7272979bc78347ccf73ddad0ff4aac70d",
+    "project_notes/STATE.md": "a02d92c3dc3a879ff50080e3d4dfecfb062a490aebddd23306ac721d1fc8cb1c",
+    "reports/A1_RESULT_INTEGRATION.md": "48d52be878f86c8401a1585d062d0603ca93cb20c24bc59ec85635d741727096",
+    "reports/A2_EXECUTION.md": "e64a7fc1b6d4f7d038a253731e110a30db66fa06a9d27273b73337391b966381",
+    "reports/B10_REMEDIATION.md": "375a07f8ea1d821966fc1f1f1e67008e2f221edeb694454af99ff081300e9ef3",
+    "reports/B10_REPAIR_AWARE_ADMISSION.md": "8f5872a7d3ded80656a38506991f3a7ae3bbd4909d49dec8824ed22c46980287",
+    "reports/C3_PROMPT_SENSITIVITY_REPAIR_AWARE.md": "ae8a4666b9515db5132be95cd7165b868138b1b623b33fd0d68518d54a4b8a79",
+    "results/a1_admitted_step_results.csv": "540cf70cbc90525f341fc62cb70307ce54da248d64f673a36bcab067fe981756",
+    "results/a1_admitted_task_results.csv": "5a32b87efd78a2be641d6ca697143031b513198be1bb095dfcff205211e57ebc",
+    "results/a2_repair_aware_admission_manifest.json": "f4d5ba4c1bf8d291458598b5557ddda576b9874c0f8b5a60b4e39d5a08a09ae4",
+    "results/c3_repair_aware_analysis_manifest.json": "e87534e2848da4dacd7d7c00b6d2f62f58fbebd10a0fb19206578aad6faf359e"
+  },
+  "statement": "Phase 13 reads admitted immutable evidence and writes only deterministic metrics, summaries, manifests, and report drafts. No raw A1/A2 evidence was modified.",
+  "tests": {
+    "compileall": "PASS for restapi and scripts",
+    "full_pytest": "133 passed, 0 failed, 0 skipped (1 deprecation warning)",
+    "phase13_targeted": "46 passed, 0 failed, 0 skipped (1 deprecation warning)"
+  }
+}

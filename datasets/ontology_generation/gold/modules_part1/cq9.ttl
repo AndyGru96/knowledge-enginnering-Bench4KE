@@ -1,0 +1,207 @@
+@prefix : <http://www.semanticweb.org/mohsa33/CVNactoractorODP#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/mohsa33/CVNactoractorODP> .
+
+<http://www.semanticweb.org/mohsa33/CVNactoractorODP> rdf:type owl:Ontology ;
+                                                       owl:imports <http://w3id.org/CEON/ontology/actor/0.1/> ,
+                                                                   <http://w3id.org/CEON/ontology/actorODP/0.1/> ;
+                                                       <http://purl.org/dc/terms/contributor> "Huanyu Li" ,
+                                                                                              "Mikael Lindecrantz" ,
+                                                                                              "Robin Keskisärkkä" ;
+                                                       <http://purl.org/dc/terms/created> "2023-03-16" ,
+                                                                                          "2023-03-17"^^xsd:date ,
+                                                                                          "2023-03-22" ;
+                                                       <http://purl.org/dc/terms/creator> "Eva Blomqvist" ;
+                                                       <http://purl.org/dc/terms/description> "A core ODP of the CEON ontology network, defining aspects of the actor concept." ,
+                                                                                              "A core module of the CEON ontology network, defining aspects of the circular value network (CVN) itself." ,
+                                                                                              "The Actor module of CEON (Circular Economy Ontology Network)." ;
+                                                       <http://purl.org/dc/terms/license> "https://creativecommons.org/licenses/by/4.0/" ;
+                                                       <http://purl.org/dc/terms/title> "Circular Economy Ontology Network (CEON) - Actor Module" ,
+                                                                                        "Circular Economy Ontology Network (CEON) - Actor ODP" ,
+                                                                                        "Circular Economy Ontology Network (CEON) - Circular Value Network Module" ;
+                                                       <http://purl.org/vocab/vann/preferredNamespacePrefix> "actor" ,
+                                                                                                             "actorODP" ,
+                                                                                                             "cvn" ;
+                                                       <http://purl.org/vocab/vann/preferredNamespaceUri> "http://w3id.org/CEON/ontology/actor/" ,
+                                                                                                          "http://w3id.org/CEON/ontoloy/cvn/" ,
+                                                                                                          "https://w3id.org/CEON/ontoloy/actorODP/" ;
+                                                       <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#coversRequirements> "Covers the following requirements from Onto-DESIDE D3.1: CVN-Process-3, CVN-Actor-1,4,6,7, CVN-Competency-3, CVN-Information-4, C11-1, C11-3, E1-6,6,6,9, E4-10" ,
+                                                                                                                                                 "In addition to requirements covered by imported ODPs, covers the following requirements from Onto-DESIDE D3.1: C0-1, C0-2, C3-4, T3-4" ,
+                                                                                                                                                 "In addition to requirements covered by imported ODPs, covers the following requirements from Onto-DESIDE D3.1: CVN-CVN-1, CVN-Process-1,6, CVN-VP-1, CVN-Type-3, C0-1." ;
+                                                       rdfs:comment "A core ODP of the CEON ontology network, defining aspects of the actor concept." ,
+                                                                    "A core module of the CEON ontology network, defining aspects of the circular value network (CVN) itself." ;
+                                                       rdfs:seeAlso <https://github.com/LiUSemWeb/CEON> ;
+                                                       owl:versionInfo "0.1" ,
+                                                                       0.2 .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/terms/contributor
+<http://purl.org/dc/terms/contributor> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/created
+<http://purl.org/dc/terms/created> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/creator
+<http://purl.org/dc/terms/creator> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/description
+<http://purl.org/dc/terms/description> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/license
+<http://purl.org/dc/terms/license> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/title
+<http://purl.org/dc/terms/title> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vocab/vann/preferredNamespacePrefix
+<http://purl.org/vocab/vann/preferredNamespacePrefix> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vocab/vann/preferredNamespaceUri
+<http://purl.org/vocab/vann/preferredNamespaceUri> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#coversRequirements
+<http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#coversRequirements> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+###  http://www.w3.org/2001/XMLSchema#gMonthYear
+xsd:gMonthYear rdf:type rdfs:Datatype .
+
+
+###  http://www.w3.org/2001/XMLSchema#gYear
+xsd:gYear rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://w3id.org/CEON/ontology/cvn/composedOf
+<http://w3id.org/CEON/ontology/cvn/composedOf> rdf:type owl:ObjectProperty ;
+                                               rdfs:domain [ rdf:type owl:Class ;
+                                                             owl:unionOf ( <http://w3id.org/CEON/ontology/cvn/CVN>
+                                                                           <http://w3id.org/CEON/ontology/process/Process>
+                                                                         )
+                                                           ] ;
+                                               rdfs:range [ rdf:type owl:Class ;
+                                                            owl:unionOf ( <http://w3id.org/CEON/ontology/cvn/CVN>
+                                                                          <http://w3id.org/CEON/ontology/process/Process>
+                                                                        )
+                                                          ] ;
+                                               rdfs:comment "Both a CVN and a process can be composed of other CVNs or processes." ;
+                                               rdfs:label "composed of" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://w3id.org/CEON/ontology/cvn/CVN
+<http://w3id.org/CEON/ontology/cvn/CVN> rdf:type owl:Class ;
+                                        rdfs:subClassOf <http://w3id.org/CEON/ontology/cvn/Collaboration> ;
+                                        rdfs:comment "A collaboration between actors that constitute a Circular Value Newtworks, implicitly or explicitly set up." ,
+                                                     "An instantiation of a circular value network, i.e. a concrete network of different actors collaborating to achieve some goal." ;
+                                        rdfs:label "Circular Value Network" .
+
+
+###  http://w3id.org/CEON/ontology/cvn/Collaboration
+<http://w3id.org/CEON/ontology/cvn/Collaboration> rdf:type owl:Class ;
+                                                  rdfs:comment "A collaboration between a set of actors." ;
+                                                  rdfs:label "Collaboration" .
+
+
+###  http://w3id.org/CEON/ontology/process/Process
+<http://w3id.org/CEON/ontology/process/Process> rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://w3id.org/CEON/ontology/actor/buyer
+<http://w3id.org/CEON/ontology/actor/buyer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/collector
+<http://w3id.org/CEON/ontology/actor/collector> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/consumer
+<http://w3id.org/CEON/ontology/actor/consumer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/dismantler
+<http://w3id.org/CEON/ontology/actor/dismantler> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/issuer
+<http://w3id.org/CEON/ontology/actor/issuer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/manufacturer
+<http://w3id.org/CEON/ontology/actor/manufacturer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/owner
+<http://w3id.org/CEON/ontology/actor/owner> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/producer
+<http://w3id.org/CEON/ontology/actor/producer> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/provider
+<http://w3id.org/CEON/ontology/actor/provider> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/recycler
+<http://w3id.org/CEON/ontology/actor/recycler> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/reseller
+<http://w3id.org/CEON/ontology/actor/reseller> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/seller
+<http://w3id.org/CEON/ontology/actor/seller> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/supplier
+<http://w3id.org/CEON/ontology/actor/supplier> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/updater
+<http://w3id.org/CEON/ontology/actor/updater> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/user
+<http://w3id.org/CEON/ontology/actor/user> rdf:type owl:NamedIndividual .
+
+
+###  http://w3id.org/CEON/ontology/actor/viewer
+<http://w3id.org/CEON/ontology/actor/viewer> rdf:type owl:NamedIndividual .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

@@ -1,0 +1,24 @@
+methods:
+  ontogenia:
+    display_name: Ontogenia (Memoryless CQ-by-CQ)
+    system_id: ontogenia
+    behavior: one independent generation call per competency question
+    implementation: restapi/ontology_adapter.py
+    prompt: datasets/ontology_generation/prompts/ontogenia/P0_original.txt
+    prompt_sha256: f91ec50dd4d6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965
+
+  domain_ontogen:
+    display_name: Domain-OntoGen
+    system_id: domain-ontogen
+    behavior: scenario plus independent competency-question generation
+    implementation: restapi/ontology_adapter.py
+    prompt: datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt
+    prompt_sha256: f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e
+
+  neon_gpt:
+    display_name: NeOn-GPT
+    system_id: neon-gpt
+    behavior: staged generation with recorded validation and repair calls
+    implementation: restapi/ontology_adapter.py
+    prompt: datasets/ontology_generation/prompts/neon-gpt/P0_original.txt
+    prompt_sha256: 40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a

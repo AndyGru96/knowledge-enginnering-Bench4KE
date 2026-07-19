@@ -1,0 +1,93 @@
+*** Day 1 prompt list (OLD)
+
+
+Prompt 1:
+You are an experience knowledge engineer, and you are going to model the wine domain. Following the NeOn methodology, specify: 
+- the Purpose of the ontology 
+- the Scope of the ontology 
+- the Target Group of the ontology 
+- the implementation language 
+- the intended uses 
+- the Functional Requirements 
+- the Non-functional Requirements
+
+
+Prompt 2:
+Based on the generated Specifications of Ontology Requirements write a list of Competency Questions that the wine ontology should be able to answer to. 
+Make it as complete as possible.
+
+
+Prompt 3:
+For each Competency Question extract entities and properties that have to be introduced in the ontology. Provide an output like this:
+{ 
+{"cq1" : "What are the different types of wines (e.g., red, white, rose, sparkling) available in the ontology?", "Entity" : [ "Wine", "RedWine", "RoseWine", "SparklingWine" ] , "Property" : ["subClassOf" ]}, {"cq2" : "What grape varieties are used to produce a specific type of wine?", "Entity": ["GrapeVariety, "Wine"] "Property": ["usedToProduce", "subClassOf"] } 
+}
+
+
+Prompt 4:
+Considering entities and properties, generate a conceptual model expressing in form of triples the entities and properties and their relations.
+
+
+Prompt 5:
+Considering the conceptual model you generated, generate a full ontology serialized in Turtle syntax.
+
+
+Prompt 6:
+For all object properties, if lacking, generate also the inverse property, keeping the ontology consistent restricting domain and range where meaningful.
+Print only the new triples.
+
+
+Prompt 7:
+Considering the classes that you have in the ontology, introduce some Data Property when meaningful, such as: 
+
+wine:hasPriceValue rdf:type owl:DatatypeProperty ; rdfs:range xsd:positiveInteger . 
+
+Modify the domain and range according to the type of value requested by the Data Property.
+Print only the new triples.
+
+
+Prompt 8:
+For all the classes introduce some axiomatisation in the ontology when meaningful and relevant, like these: 
+
+:GrapeVariety EquivalentTo usedToProduce some Wine 
+:Wine EquivalentTo hasVintage some Vintage 
+:Wine SubClassOf hasRating some Rating 
+
+Make sure that the ontology is consistent.
+Do it for all the classes for which it makes sense having an axiomatisation.
+Print only the new triples.
+
+
+Prompt 9:
+Now for all the classes and properties add a triple that describes in natural language its meaning, using the annotation property rdfs:comment.
+Print only the new triples.
+
+
+Prompt 10:
+Now populate the ontology with meaningful individuals, such as these: 
+
+:RieslingGrape rdf:type :GrapeVariety 
+:SancerreRegion rdf:type :WineRegion 
+:Selaks rdf:type :Wine 
+:SevreEtMaine rdf:type :Wine 
+
+Make it as complete as possible, introducing all the types of wine that you can as individuals, as well as wine regions, awards, and wine producers. 
+Print only the new triples.
+
+Scenario:
+[Paul#2_ResourceReliability]
+In this scenario Paul has to plan a similar restoration. However, from his already extensive knowledge about organs, he is uncertain about some of the information that was provided by the encyclopaedia. That is, some of the mentioned components and technicalities such as the pitch seemed illogical when compared to the other organs from the same organ builder. If it would somehow be possible to mark facts that are unreliable or untrue, that would save Paul a lot of time checking, verifying, and notating.
+
+[Ortenz#1_MusicAndChildhood]
+Ortenz wants to characterize children’s experience of music as witnessed in bibliographic and artistic sources. She is looking for primary sources (e.g. Personal journals, literary texts) wherein to find evidence of listening experiences.
+
+She needs to collect and analyze large corpora of texts and images recording or depicting children’s experience with music. Documents include official sources (e.g. newspaper articles, reviews of concerts, paintings) and sources produced by “ordinary people”. She prefers the latter as they provide more reliable feedback, and she looks at the context of production of such sources (where, when, who created the source, the goal, which related events exist), contents (recurring motifs and themes), and elicited emotional responses. She collects sources belonging to different historical periods so as to characterize the development of identified phenomena.
+
+Competency Questions:
+- Which is the subject of a source?
+- Which is the credibility of a source?
+- Which is the type of a source?
+- Which is the context of production of a source?
+- Which is the context of usage of a source?
+
+Generate a complete ontology in ttl format. Output only the ontology.

@@ -1,0 +1,113 @@
+{
+  "adapter_system_name": "domain-ontogen",
+  "call_count": 5,
+  "call_order": [
+    "initial_assembly",
+    "initial_assembly",
+    "initial_assembly",
+    "initial_assembly",
+    "initial_assembly"
+  ],
+  "calls": [
+    {
+      "assembled_prompt_sha256": "406803071ddc9be8bfb50a3254af8ccc5485b0817aa483a01489d8ab81716c17",
+      "cq_id": "SOURCECQ1",
+      "prompt_bytes": 8619,
+      "snapshot_file": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_01.txt",
+      "stage": "initial_assembly",
+      "step": 1
+    },
+    {
+      "assembled_prompt_sha256": "2fd267215955f42ee3e626001ce5bf4ee758502545090b8605573300bdf36a3b",
+      "cq_id": "SOURCECQ2",
+      "prompt_bytes": 8623,
+      "snapshot_file": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_02.txt",
+      "stage": "initial_assembly",
+      "step": 2
+    },
+    {
+      "assembled_prompt_sha256": "92c1ceb6f9b4f019162a2fc6dc96c63c6bbdbb4bbcad91405bab6114a9022c3e",
+      "cq_id": "SOURCECQ4",
+      "prompt_bytes": 8616,
+      "snapshot_file": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_03.txt",
+      "stage": "initial_assembly",
+      "step": 3
+    },
+    {
+      "assembled_prompt_sha256": "8fe960e519d0cfb066335a68c39cc6f70f583f660585b124f09d71c4037d1ebc",
+      "cq_id": "SOURCECQ5",
+      "prompt_bytes": 8633,
+      "snapshot_file": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_04.txt",
+      "stage": "initial_assembly",
+      "step": 4
+    },
+    {
+      "assembled_prompt_sha256": "105d09fe89ac36aa73763a877706e5879f91892addf1ee43064ce4ac069c6a13",
+      "cq_id": "SOURCECQ6",
+      "prompt_bytes": 8628,
+      "snapshot_file": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_05.txt",
+      "stage": "initial_assembly",
+      "step": 5
+    }
+  ],
+  "cq_ids_in_source_order": [
+    "SOURCECQ1",
+    "SOURCECQ2",
+    "SOURCECQ4",
+    "SOURCECQ5",
+    "SOURCECQ6"
+  ],
+  "dataset_id": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18",
+  "dataset_reconstruction_evidence": {
+    "cq_count": 74,
+    "scenario_count": 17,
+    "source_workbook": "external_resources/Onto-Generation/Dataset_OntoGen/Dataset.xlsx",
+    "source_workbook_sha256": "eb95f875fea9db67bd99096894d2dfbb9904d519a9d028287f502378aecd3625"
+  },
+  "dataset_record_sha256": "baff55ec082bab2169407d2bc916a8d8a866da650027ba245893a374a66585dd",
+  "final_output_parse_valid": true,
+  "final_output_sha256": "bed2c80439c3186789ade5a37f0dfd55ee72d7c8cbfffdfbcc4889ae8581313e",
+  "frozen_data_manifest_sha256": "e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf",
+  "manual_review": {
+    "basis": "Phase 3 golden snapshot review",
+    "review_date": "2026-07-15",
+    "status": "reviewed"
+  },
+  "method": "domain-ontogen",
+  "odp_manifest_path": "datasets/ontology_generation/odp_manifest.json",
+  "odp_manifest_sha256": "3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05",
+  "odp_source_patterns_sha256": "4bf85a406713ca5e59f944bb70cb521fc3edbe460e2b8f6aadcce6602935b75d",
+  "phase": "3",
+  "procedure_path": "external_resources/Ontogenia/data/procedure.txt",
+  "procedure_sha256": "741b3b1fea5fb112bbdba29f4827e52d6d76848bb96ece8cf51e639c14802351",
+  "prompt_source": {
+    "source_file_sha256": "c99516fb4af75d7f414c550855a28b7ced90cfbb1b6fa5d73986e270cc3e4e17",
+    "source_path": "external_resources/Domain-OntoGen/README.md",
+    "source_prompt_sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e"
+  },
+  "provider": "deterministic-recording-mock",
+  "real_provider_calls": 0,
+  "scenario_id": "Paul#2_ResourceReliability;Ortenz#1_MusicAndChildhood",
+  "schema_version": 1,
+  "snapshot_scenario": "all_cq_calls",
+  "step_last_alias": "project2_Paul_2_ResourceReliability_Ortenz_1_MusicAndChildhood_c781c82a18_P0_step_last.txt",
+  "step_last_sha256": "105d09fe89ac36aa73763a877706e5879f91892addf1ee43064ce4ac069c6a13",
+  "validation": {
+    "correct_cqs": true,
+    "correct_story": true,
+    "cq_order_preserved": true,
+    "cross_dataset_contamination_absent": true,
+    "odp_injected": false,
+    "odp_required": false,
+    "placeholders_resolved": true,
+    "previous_output_policy": "forbidden_independent_cq_calls",
+    "previous_output_policy_validated": true,
+    "procedure_injected": false,
+    "procedure_required": false,
+    "required_placeholders": [
+      "{OS}",
+      "{CQ}"
+    ],
+    "retained_source_literal_tokens": []
+  }
+}

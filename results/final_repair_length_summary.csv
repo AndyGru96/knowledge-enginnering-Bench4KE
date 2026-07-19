@@ -1,0 +1,11 @@
+method,prompt_variant,tasks,repair_used_tasks,repair_calls,repair_call_rate,length_terminated_tasks,length_terminations,length_termination_call_rate,internal_calls,limitation
+ontogenia,P0,17,0,0,0.0,0,0,0.0,74,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+ontogenia,P1,17,0,0,0.0,2,4,0.054054054,74,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+ontogenia,P2,17,0,0,0.0,3,4,0.054054054,74,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+domain-ontogen,P0,17,0,0,0.0,1,1,0.013513514,74,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+domain-ontogen,P1,17,0,0,0.0,0,0,0.0,74,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+domain-ontogen,P2,17,0,0,0.0,0,0,0.0,74,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+neon-gpt,P0,17,15,28,0.622222222,10,11,0.244444444,45,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+neon-gpt,P1,17,14,27,0.613636364,9,9,0.204545455,44,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+neon-gpt,P2,17,13,26,0.604651163,12,12,0.279069767,43,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"
+TOTAL,ALL,153,42,81,0.140625,37,41,0.071180556,576,"repair calls are variant-agnostic under Phase 12B; length termination records model stop reason, not automatic evidence rejection"

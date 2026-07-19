@@ -1,0 +1,49 @@
+# Generated model outputs and bulky evidence
+outputs/
+raw_responses/
+response_dumps/
+
+# Python environments, bytecode, caches, and test temporaries
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.py[cod]
+.pytest_cache/
+.pytest_tmp*/
+.cache/
+.coverage
+htmlcov/
+
+# Scratch and local work areas
+cache/
+scratch/
+tmp/
+temp/
+
+# Logs and runtime residue
+*.log
+*.pid
+
+# Submission/release bundles (kept outside the source repository)
+sub/
+final_delivery/
+*.zip
+
+# LaTeX build intermediates; keep report source, figures, and final PDF
+report/build/
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.out
+*.synctex.gz
+*.toc
+
+# Editor and operating-system metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,85 @@
+{
+  "api_chat_calls": 0,
+  "claims": {
+    "historical_stage_a2_strict_status": "FAIL",
+    "phase12_strict_sidecar": "PARTIALLY ADMITTED",
+    "phase12b_repair_aware_sidecar": "ADMITTED",
+    "statistically_significant_prompt_superiority": false
+  },
+  "figures": [
+    {
+      "height_px": 854,
+      "path": "reports/figures/parse_success_by_method_variant.png",
+      "sha256": "53151fac7b01f3b7fef8e323b673f89bb8b01f25f58b4d152b55834c75f55312",
+      "source_files": [
+        "results/final_method_variant_parse_summary.csv"
+      ],
+      "title": "Final parse success varies more by method than prompt variant",
+      "width_px": 1466
+    },
+    {
+      "height_px": 891,
+      "path": "reports/figures/raw_normalized_final_parse.png",
+      "sha256": "acd5c88040b0fbccd38d105f67a69066d1be06a9afc886e3fedf7cec9166c3ea",
+      "source_files": [
+        "results/final_method_variant_parse_summary.csv"
+      ],
+      "title": "Normalization and repair recover many parseable outputs",
+      "width_px": 2006
+    },
+    {
+      "height_px": 891,
+      "path": "reports/figures/repair_length_summary.png",
+      "sha256": "069fac03f29c5a1a87c1731a88b09feeb51d366c7d71e8d7e9003ea239e751bc",
+      "source_files": [
+        "results/final_repair_length_summary.csv"
+      ],
+      "title": "Repairs are concentrated in NeOn-GPT; length stops affect multiple pipelines",
+      "width_px": 2006
+    },
+    {
+      "height_px": 874,
+      "path": "reports/figures/c2_documentation_coverage.png",
+      "sha256": "263bca8fb5e9f91d65d7bf30443d0c4a6489be0f96d72ea2411a04161952b024",
+      "source_files": [
+        "results/c2_documentation_summary.csv"
+      ],
+      "title": "C2 documentation coverage among parseable final ontologies",
+      "width_px": 1466
+    },
+    {
+      "height_px": 854,
+      "path": "reports/figures/c3_prompt_sensitivity_summary.png",
+      "sha256": "5cf1c95643cdedca5d44780cc1ecc57b2b0757d5a36629976488691cf57cfea6",
+      "source_files": [
+        "results/final_c2_c3_summary.csv",
+        "results/c3_repair_aware_analysis_manifest.json"
+      ],
+      "title": "C3 inferential tests: no significant parse-success or P1\u2013P2 drift-magnitude difference",
+      "width_px": 1467
+    }
+  ],
+  "generation_mode": "deterministic existing-evidence visualization only",
+  "generator": {
+    "dpi": 180,
+    "matplotlib_version": "3.10.9",
+    "path": "scripts/prepare_phase14_delivery.py",
+    "sha256": "dd00ee61bac8e85b97c09cda88fb1766a918e607a49b525da70aa63f280907ef"
+  },
+  "model_generation_calls": 0,
+  "phase": "Revised Phase 14",
+  "report_tables": {
+    "path": "reports/final_tables.md",
+    "sha256": "61386dc5c85052a5370eae19662f68aad17a28cb6bd7836194e8e391c018a4a6"
+  },
+  "schema_version": "phase14-figure-manifest-v1",
+  "source_files": {
+    "results/c2_documentation_summary.csv": "82330104386fc57af450337f61566a28b14b50b2a6f5a4a9a56e8c8bc00983be",
+    "results/c3_repair_aware_analysis_manifest.json": "e87534e2848da4dacd7d7c00b6d2f62f58fbebd10a0fb19206578aad6faf359e",
+    "results/c3_repair_aware_term_jaccard.csv": "3c365854dfa7f33194c051949db14c3107dfc0309077ddd7e06f1fcce596beb0",
+    "results/final_c2_c3_summary.csv": "1153ac375276ff3ae7fd6a098e40793ff33b5e0b453dbcf78233839b2fad844c",
+    "results/final_generation_cost_summary.csv": "96a69b855b59688c4201240983463037937c831ab5aa7fe1937e42aa2716c259",
+    "results/final_method_variant_parse_summary.csv": "cc9ccfc709dcdd453a14805eab603622d8198a368f0f2ad2c5164b3fed99bb71",
+    "results/final_repair_length_summary.csv": "f857ef60e332bb79a1e6c30396c153c07c0de040039f871d630657625b3d01ca"
+  }
+}
