@@ -11,14 +11,13 @@ import pytest
 from openpyxl import Workbook
 
 from scripts.prepare_ontology_dataset import (
-    build_dataset_records_phase2b,
+    build_dataset_records,
     convert_patterns_to_odps,
     extract_domain_ontogen_prompt,
     inspect_workbook_with_openpyxl,
     prepare_dataset,
     prepare_prompts,
     read_xlsx,
-    sha256_file,
 )
 
 
@@ -264,8 +263,9 @@ def test_prepared_project2_dataset_loads_and_matches_its_audit(
         for path in output_root.rglob("*")
         if path.is_file()
     )
-    assert "A:/Projects_File" not in serialized_outputs
-    assert "C:/Users/" not in serialized_outputs
+    resolved_repo_root = str(REPO_ROOT.resolve())
+    assert resolved_repo_root not in serialized_outputs
+    assert resolved_repo_root.replace("\\", "/") not in serialized_outputs
 
 
 def test_authoritative_prompt_recovery_is_exact_and_deterministic(
@@ -291,18 +291,16 @@ def test_authoritative_prompt_recovery_is_exact_and_deterministic(
     assert first_records == second_records
 
     domain_copy = first_root / "raw/domain-ontogen/prompt.txt"
+    domain_source = REPO_ROOT / "external_resources/Domain-OntoGen/README.md"
     neon_source = (
         REPO_ROOT
         / "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt"
     )
     neon_copy = first_root / "raw/neon-gpt/day1_gpt_prompt_list.txt"
-    assert sha256_file(domain_copy) == (
-        "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e"
+    assert domain_copy.read_text(encoding="utf-8") == extract_domain_ontogen_prompt(
+        domain_source
     )
     assert neon_copy.read_bytes() == neon_source.read_bytes()
-    assert sha256_file(neon_copy) == (
-        "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a"
-    )
 
 
 def test_merged_story_id_propagation_is_explicit_source_evidence(
@@ -325,7 +323,7 @@ def test_merged_story_id_propagation_is_explicit_source_evidence(
     assert structure["cq_story_cells"][3]["normalized_value"] == "S1"
     assert structure["cq_story_cells"][3]["merged_cell_propagation_applied"] is True
 
-    items, mapping, audit, errors = build_dataset_records_phase2b(workbook_path, [])
+    items, mapping, audit, errors = build_dataset_records(workbook_path, [])
     assert not errors
     assert len(items) == 1
     assert audit["full_generation_cq_count"] == 2

@@ -1,0 +1,312 @@
+{
+  "ODP_manifest_hash": "3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05",
+  "Ollama_version": null,
+  "PR_baseline_commit": "1488aed14b41305495d27435174d635e2ba2ebb4",
+  "adapter_metadata": {
+    "duration_ms": 5883,
+    "internal_call_count": 2,
+    "internal_calls": [
+      {
+        "assembled_prompt": "<instruction>\nYou are a helpful assistant designed to generate ontologies. You receive a Competency Question (CQ) and an Ontology Story (OS). \n\nBased on CQ, which is a requirement for the ontology, and OS, which tells you what the context of the ontology is, your task is generating one ontology (O). The goal is to generate O that models the CQ properly. This means there is a way to write a SPARQL query to extract the answer to this CQ in O.  \n\nUse the following prefixes: \n\n@prefix : <http://www.example.org/test#> .\n\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n\nDon't put any A-Box (instances) in the ontology and just generate the OWL file using Turtle syntax. Include the entities mentioned in the CQ. Remember to use restrictions when the CQ implies it. The output should be self-contained without any errors. Outside of the code box don't put any comment.\n</instruction>\n<example>\nI will give you an example now:\nCQ: For an aquatic resource, what species, in what fishing areas, climatic zones, bottom types, depth zones, geo forms, horizontal and vertical distribution, and for what standardized abundance level, exploitation state and rate, have been observed? for what reference year? At what year the observation has been recorded?\n\nOS: The aquatic resource for Skipjack tuna in Northern Atlantic in 2004 (as reported in 2008) was observed with low abundance level. \n\nO:\n@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:AquaticResource a owl:Class ;\n\trdfs:label \"Aquatic Resource\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasObservation ;\n    \towl:someValuesFrom :AquaticResourceObservation\n\t] .\n:AquaticResourceObservation a owl:Class ;\n\trdfs:label \"Aquatic Resource Observation\" ;\n\trdfs:subClassOf :Observation ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :isObservationOf ;\n    \towl:onClass :AquaticResource ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :forReferenceYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasReportingYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofSpecies ;\n    \towl:onClass :Species ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofFishingArea ;\n    \towl:onClass :FAO_fishing_area ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofClimaticZone ;\n    \towl:onClass :ClimaticZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofBottomType ;\n    \towl:onClass :BottomType ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofDepthZone ;\n    \towl:onClass :DepthZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofGeoForm ;\n    \towl:onClass :GeoForm ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofHorizontalDistribution ;\n    \towl:onClass :HorizontalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofVerticalDistribution ;\n    \towl:onClass :VerticalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdAbundanceLevel ;\n    \towl:onClass :StdAbundanceLevel ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationState ;\n    \towl:onClass :StdExploitationState ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationRate ;\n    \towl:onClass :StdExploitationRate ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] .\n:Species a owl:Class .\n:FAO_fishing_area a owl:Class .\n:ClimaticZone a owl:Class .\n:BottomType a owl:Class .\n:DepthZone a owl:Class .\n:GeoForm a owl:Class .\n:HorizontalDistribution a owl:Class .\n:VerticalDistribution a owl:Class .\n:StdAbundanceLevel a owl:Class .\n:StdExploitationState a owl:Class .\n:StdExploitationRate a owl:Class .\n:ofSpecies a owl:ObjectProperty ;\n\trdfs:label \"ofSpecies\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :Species .\n\n:ofFishingArea a owl:ObjectProperty ;\n\trdfs:label \"ofFishingArea\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :FAO_fishing_area .\n\n:ofClimaticZone a owl:ObjectProperty ;\n\trdfs:label \"ofClimaticZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :ClimaticZone .\n\n:ofBottomType a owl:ObjectProperty ;\n\trdfs:label \"ofBottomType\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :BottomType .\n\n:ofDepthZone a owl:ObjectProperty ;\n\trdfs:label \"ofDepthZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :DepthZone .\n\n:ofGeoForm a owl:ObjectProperty ;\n\trdfs:label \"ofGeoForm\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :GeoForm .\n\n:ofHorizontalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofHorizontalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :HorizontalDistribution .\n\n:ofVerticalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofVerticalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :VerticalDistribution .\n\n:ofStdAbundanceLevel a owl:ObjectProperty ;\n\trdfs:label \"ofStdAbundanceLevel\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdAbundanceLevel .\n\n:ofStdExploitationState a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationState\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationState .\n\n:ofStdExploitationRate a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationRate\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationRate .\n:forReferenceYear a owl:DatatypeProperty ;\n\trdfs:label \"forReferenceYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n\n:hasReportingYear a owl:DatatypeProperty ;\n\trdfs:label \"hasReportingYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n:hasObservation a owl:ObjectProperty .\n:isObservationOf a owl:ObjectProperty .\n:Observation a owl:Class .\n\n\n\n</example>\n\nCQ: What is the chemical composition of this material?\nOS: Recycling of a product may depend on its material composition, efficiency of recycling.\nO: \n\nAdditional instruction:\n\nFollow all instructions in the base prompt exactly. Return only the requested\nontology serialization. Do not include explanations, reasoning, headings,\ncommentary, or Markdown code fences.",
+        "attempts": 1,
+        "call_index": 1,
+        "competency_question": "What is the chemical composition of this material?",
+        "cq_index": 1,
+        "final_ontology": "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix : <http://www.example.org/test#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Material a owl:Class ;\n\trdfs:label \"Material\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasChemicalComposition ;\n    \towl:someValuesFrom :ChemicalComposition\n\t] .\n:ChemicalComposition a owl:Class ;\n\trdfs:label \"Chemical Composition\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :comprisesElement ;\n    \towl:onClass :ChemicalElement ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasConcentration ;\n    \towl:onDataRange xsd:float ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:ChemicalElement a owl:Class ;\n\trdfs:label \"Chemical Element\" .\n:hasChemicalComposition a owl:ObjectProperty ;\n\trdfs:label \"hasChemicalComposition\" ;\n\trdfs:domain :Material ;\n\trdfs:range :ChemicalComposition .\n:comprisesElement a owl:ObjectProperty ;\n\trdfs:label \"comprisesElement\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range :ChemicalElement .\n:hasConcentration a owl:DatatypeProperty ;\n\trdfs:label \"hasConcentration\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range xsd:float .",
+        "keep_alive": "30m",
+        "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+        "normalized_output": "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix : <http://www.example.org/test#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Material a owl:Class ;\n\trdfs:label \"Material\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasChemicalComposition ;\n    \towl:someValuesFrom :ChemicalComposition\n\t] .\n:ChemicalComposition a owl:Class ;\n\trdfs:label \"Chemical Composition\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :comprisesElement ;\n    \towl:onClass :ChemicalElement ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasConcentration ;\n    \towl:onDataRange xsd:float ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:ChemicalElement a owl:Class ;\n\trdfs:label \"Chemical Element\" .\n:hasChemicalComposition a owl:ObjectProperty ;\n\trdfs:label \"hasChemicalComposition\" ;\n\trdfs:domain :Material ;\n\trdfs:range :ChemicalComposition .\n:comprisesElement a owl:ObjectProperty ;\n\trdfs:label \"comprisesElement\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range :ChemicalElement .\n:hasConcentration a owl:DatatypeProperty ;\n\trdfs:label \"hasConcentration\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range xsd:float .",
+        "num_ctx": 32768,
+        "num_predict": 8192,
+        "pipeline_stage": "cq_generation",
+        "previous_output_input": null,
+        "provider": "ollama",
+        "raw_output": "@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Material a owl:Class ;\n\trdfs:label \"Material\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasChemicalComposition ;\n    \towl:someValuesFrom :ChemicalComposition\n\t] .\n:ChemicalComposition a owl:Class ;\n\trdfs:label \"Chemical Composition\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :comprisesElement ;\n    \towl:onClass :ChemicalElement ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasConcentration ;\n    \towl:onDataRange xsd:float ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:ChemicalElement a owl:Class ;\n\trdfs:label \"Chemical Element\" .\n:hasChemicalComposition a owl:ObjectProperty ;\n\trdfs:label \"hasChemicalComposition\" ;\n\trdfs:domain :Material ;\n\trdfs:range :ChemicalComposition .\n:comprisesElement a owl:ObjectProperty ;\n\trdfs:label \"comprisesElement\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range :ChemicalElement .\n:hasConcentration a owl:DatatypeProperty ;\n\trdfs:label \"hasConcentration\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range xsd:float .",
+        "raw_response": {
+          "created_at": "2026-07-15T21:13:03.8634844Z",
+          "done": true,
+          "done_reason": "stop",
+          "eval_count": 444,
+          "eval_duration": 1789368000,
+          "load_duration": 155660500,
+          "message": {
+            "content": "@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Material a owl:Class ;\n\trdfs:label \"Material\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasChemicalComposition ;\n    \towl:someValuesFrom :ChemicalComposition\n\t] .\n:ChemicalComposition a owl:Class ;\n\trdfs:label \"Chemical Composition\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :comprisesElement ;\n    \towl:onClass :ChemicalElement ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasConcentration ;\n    \towl:onDataRange xsd:float ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:ChemicalElement a owl:Class ;\n\trdfs:label \"Chemical Element\" .\n:hasChemicalComposition a owl:ObjectProperty ;\n\trdfs:label \"hasChemicalComposition\" ;\n\trdfs:domain :Material ;\n\trdfs:range :ChemicalComposition .\n:comprisesElement a owl:ObjectProperty ;\n\trdfs:label \"comprisesElement\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range :ChemicalElement .\n:hasConcentration a owl:DatatypeProperty ;\n\trdfs:label \"hasConcentration\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range xsd:float .",
+            "role": "assistant"
+          },
+          "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+          "prompt_eval_count": 2111,
+          "prompt_eval_duration": 239958000,
+          "total_duration": 2332873100
+        },
+        "request": {
+          "keep_alive": "30m",
+          "messages": [
+            {
+              "content": "<instruction>\nYou are a helpful assistant designed to generate ontologies. You receive a Competency Question (CQ) and an Ontology Story (OS). \n\nBased on CQ, which is a requirement for the ontology, and OS, which tells you what the context of the ontology is, your task is generating one ontology (O). The goal is to generate O that models the CQ properly. This means there is a way to write a SPARQL query to extract the answer to this CQ in O.  \n\nUse the following prefixes: \n\n@prefix : <http://www.example.org/test#> .\n\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n\nDon't put any A-Box (instances) in the ontology and just generate the OWL file using Turtle syntax. Include the entities mentioned in the CQ. Remember to use restrictions when the CQ implies it. The output should be self-contained without any errors. Outside of the code box don't put any comment.\n</instruction>\n<example>\nI will give you an example now:\nCQ: For an aquatic resource, what species, in what fishing areas, climatic zones, bottom types, depth zones, geo forms, horizontal and vertical distribution, and for what standardized abundance level, exploitation state and rate, have been observed? for what reference year? At what year the observation has been recorded?\n\nOS: The aquatic resource for Skipjack tuna in Northern Atlantic in 2004 (as reported in 2008) was observed with low abundance level. \n\nO:\n@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:AquaticResource a owl:Class ;\n\trdfs:label \"Aquatic Resource\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasObservation ;\n    \towl:someValuesFrom :AquaticResourceObservation\n\t] .\n:AquaticResourceObservation a owl:Class ;\n\trdfs:label \"Aquatic Resource Observation\" ;\n\trdfs:subClassOf :Observation ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :isObservationOf ;\n    \towl:onClass :AquaticResource ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :forReferenceYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasReportingYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofSpecies ;\n    \towl:onClass :Species ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofFishingArea ;\n    \towl:onClass :FAO_fishing_area ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofClimaticZone ;\n    \towl:onClass :ClimaticZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofBottomType ;\n    \towl:onClass :BottomType ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofDepthZone ;\n    \towl:onClass :DepthZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofGeoForm ;\n    \towl:onClass :GeoForm ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofHorizontalDistribution ;\n    \towl:onClass :HorizontalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofVerticalDistribution ;\n    \towl:onClass :VerticalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdAbundanceLevel ;\n    \towl:onClass :StdAbundanceLevel ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationState ;\n    \towl:onClass :StdExploitationState ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationRate ;\n    \towl:onClass :StdExploitationRate ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] .\n:Species a owl:Class .\n:FAO_fishing_area a owl:Class .\n:ClimaticZone a owl:Class .\n:BottomType a owl:Class .\n:DepthZone a owl:Class .\n:GeoForm a owl:Class .\n:HorizontalDistribution a owl:Class .\n:VerticalDistribution a owl:Class .\n:StdAbundanceLevel a owl:Class .\n:StdExploitationState a owl:Class .\n:StdExploitationRate a owl:Class .\n:ofSpecies a owl:ObjectProperty ;\n\trdfs:label \"ofSpecies\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :Species .\n\n:ofFishingArea a owl:ObjectProperty ;\n\trdfs:label \"ofFishingArea\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :FAO_fishing_area .\n\n:ofClimaticZone a owl:ObjectProperty ;\n\trdfs:label \"ofClimaticZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :ClimaticZone .\n\n:ofBottomType a owl:ObjectProperty ;\n\trdfs:label \"ofBottomType\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :BottomType .\n\n:ofDepthZone a owl:ObjectProperty ;\n\trdfs:label \"ofDepthZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :DepthZone .\n\n:ofGeoForm a owl:ObjectProperty ;\n\trdfs:label \"ofGeoForm\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :GeoForm .\n\n:ofHorizontalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofHorizontalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :HorizontalDistribution .\n\n:ofVerticalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofVerticalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :VerticalDistribution .\n\n:ofStdAbundanceLevel a owl:ObjectProperty ;\n\trdfs:label \"ofStdAbundanceLevel\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdAbundanceLevel .\n\n:ofStdExploitationState a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationState\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationState .\n\n:ofStdExploitationRate a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationRate\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationRate .\n:forReferenceYear a owl:DatatypeProperty ;\n\trdfs:label \"forReferenceYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n\n:hasReportingYear a owl:DatatypeProperty ;\n\trdfs:label \"hasReportingYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n:hasObservation a owl:ObjectProperty .\n:isObservationOf a owl:ObjectProperty .\n:Observation a owl:Class .\n\n\n\n</example>\n\nCQ: What is the chemical composition of this material?\nOS: Recycling of a product may depend on its material composition, efficiency of recycling.\nO: \n\nAdditional instruction:\n\nFollow all instructions in the base prompt exactly. Return only the requested\nontology serialization. Do not include explanations, reasoning, headings,\ncommentary, or Markdown code fences.",
+              "role": "user"
+            }
+          ],
+          "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+          "options": {
+            "num_ctx": 32768,
+            "num_predict": 8192,
+            "seed": 42,
+            "temperature": 0.0
+          },
+          "stream": false
+        },
+        "seed": 42,
+        "stream": false,
+        "telemetry": {
+          "created_at": "2026-07-15T21:13:03.8634844Z",
+          "done": true,
+          "done_reason": "stop",
+          "eval_count": 444,
+          "eval_duration": 1789368000,
+          "load_duration": 155660500,
+          "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+          "prompt_eval_count": 2111,
+          "prompt_eval_duration": 239958000,
+          "total_duration": 2332873100
+        },
+        "temperature": 0.0,
+        "timeout_seconds": 1800.0
+      },
+      {
+        "assembled_prompt": "<instruction>\nYou are a helpful assistant designed to generate ontologies. You receive a Competency Question (CQ) and an Ontology Story (OS). \n\nBased on CQ, which is a requirement for the ontology, and OS, which tells you what the context of the ontology is, your task is generating one ontology (O). The goal is to generate O that models the CQ properly. This means there is a way to write a SPARQL query to extract the answer to this CQ in O.  \n\nUse the following prefixes: \n\n@prefix : <http://www.example.org/test#> .\n\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n\nDon't put any A-Box (instances) in the ontology and just generate the OWL file using Turtle syntax. Include the entities mentioned in the CQ. Remember to use restrictions when the CQ implies it. The output should be self-contained without any errors. Outside of the code box don't put any comment.\n</instruction>\n<example>\nI will give you an example now:\nCQ: For an aquatic resource, what species, in what fishing areas, climatic zones, bottom types, depth zones, geo forms, horizontal and vertical distribution, and for what standardized abundance level, exploitation state and rate, have been observed? for what reference year? At what year the observation has been recorded?\n\nOS: The aquatic resource for Skipjack tuna in Northern Atlantic in 2004 (as reported in 2008) was observed with low abundance level. \n\nO:\n@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:AquaticResource a owl:Class ;\n\trdfs:label \"Aquatic Resource\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasObservation ;\n    \towl:someValuesFrom :AquaticResourceObservation\n\t] .\n:AquaticResourceObservation a owl:Class ;\n\trdfs:label \"Aquatic Resource Observation\" ;\n\trdfs:subClassOf :Observation ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :isObservationOf ;\n    \towl:onClass :AquaticResource ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :forReferenceYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasReportingYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofSpecies ;\n    \towl:onClass :Species ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofFishingArea ;\n    \towl:onClass :FAO_fishing_area ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofClimaticZone ;\n    \towl:onClass :ClimaticZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofBottomType ;\n    \towl:onClass :BottomType ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofDepthZone ;\n    \towl:onClass :DepthZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofGeoForm ;\n    \towl:onClass :GeoForm ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofHorizontalDistribution ;\n    \towl:onClass :HorizontalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofVerticalDistribution ;\n    \towl:onClass :VerticalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdAbundanceLevel ;\n    \towl:onClass :StdAbundanceLevel ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationState ;\n    \towl:onClass :StdExploitationState ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationRate ;\n    \towl:onClass :StdExploitationRate ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] .\n:Species a owl:Class .\n:FAO_fishing_area a owl:Class .\n:ClimaticZone a owl:Class .\n:BottomType a owl:Class .\n:DepthZone a owl:Class .\n:GeoForm a owl:Class .\n:HorizontalDistribution a owl:Class .\n:VerticalDistribution a owl:Class .\n:StdAbundanceLevel a owl:Class .\n:StdExploitationState a owl:Class .\n:StdExploitationRate a owl:Class .\n:ofSpecies a owl:ObjectProperty ;\n\trdfs:label \"ofSpecies\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :Species .\n\n:ofFishingArea a owl:ObjectProperty ;\n\trdfs:label \"ofFishingArea\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :FAO_fishing_area .\n\n:ofClimaticZone a owl:ObjectProperty ;\n\trdfs:label \"ofClimaticZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :ClimaticZone .\n\n:ofBottomType a owl:ObjectProperty ;\n\trdfs:label \"ofBottomType\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :BottomType .\n\n:ofDepthZone a owl:ObjectProperty ;\n\trdfs:label \"ofDepthZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :DepthZone .\n\n:ofGeoForm a owl:ObjectProperty ;\n\trdfs:label \"ofGeoForm\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :GeoForm .\n\n:ofHorizontalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofHorizontalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :HorizontalDistribution .\n\n:ofVerticalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofVerticalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :VerticalDistribution .\n\n:ofStdAbundanceLevel a owl:ObjectProperty ;\n\trdfs:label \"ofStdAbundanceLevel\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdAbundanceLevel .\n\n:ofStdExploitationState a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationState\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationState .\n\n:ofStdExploitationRate a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationRate\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationRate .\n:forReferenceYear a owl:DatatypeProperty ;\n\trdfs:label \"forReferenceYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n\n:hasReportingYear a owl:DatatypeProperty ;\n\trdfs:label \"hasReportingYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n:hasObservation a owl:ObjectProperty .\n:isObservationOf a owl:ObjectProperty .\n:Observation a owl:Class .\n\n\n\n</example>\n\nCQ: What are the materials of this component or product?\nOS: Recycling of a product may depend on its material composition, efficiency of recycling.\nO: \n\nAdditional instruction:\n\nFollow all instructions in the base prompt exactly. Return only the requested\nontology serialization. Do not include explanations, reasoning, headings,\ncommentary, or Markdown code fences.",
+        "attempts": 1,
+        "call_index": 2,
+        "competency_question": "What are the materials of this component or product?",
+        "cq_index": 2,
+        "final_ontology": "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix : <http://www.example.org/test#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Material a owl:Class ;\n\trdfs:label \"Material\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasChemicalComposition ;\n    \towl:someValuesFrom :ChemicalComposition\n\t] .\n:ChemicalComposition a owl:Class ;\n\trdfs:label \"Chemical Composition\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :comprisesElement ;\n    \towl:onClass :ChemicalElement ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasConcentration ;\n    \towl:onDataRange xsd:float ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:ChemicalElement a owl:Class ;\n\trdfs:label \"Chemical Element\" .\n:hasChemicalComposition a owl:ObjectProperty ;\n\trdfs:label \"hasChemicalComposition\" ;\n\trdfs:domain :Material ;\n\trdfs:range :ChemicalComposition .\n:comprisesElement a owl:ObjectProperty ;\n\trdfs:label \"comprisesElement\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range :ChemicalElement .\n:hasConcentration a owl:DatatypeProperty ;\n\trdfs:label \"hasConcentration\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range xsd:float .\n\n<http://www.example.org/test#> a owl:Ontology .\n:Component a owl:Class ;\n\trdfs:label \"Component\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Product a owl:Class ;\n\trdfs:label \"Product\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Material a owl:Class ;\n\trdfs:label \"Material\" .\n:hasMaterialComposition a owl:ObjectProperty ;\n\trdfs:label \"hasMaterialComposition\" ;\n\trdfs:domain :Component, :Product ;\n\trdfs:range :Material .",
+        "keep_alive": "30m",
+        "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+        "normalized_output": "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix : <http://www.example.org/test#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Component a owl:Class ;\n\trdfs:label \"Component\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Product a owl:Class ;\n\trdfs:label \"Product\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Material a owl:Class ;\n\trdfs:label \"Material\" .\n:hasMaterialComposition a owl:ObjectProperty ;\n\trdfs:label \"hasMaterialComposition\" ;\n\trdfs:domain :Component, :Product ;\n\trdfs:range :Material .",
+        "num_ctx": 32768,
+        "num_predict": 8192,
+        "pipeline_stage": "cq_generation",
+        "previous_output_input": null,
+        "provider": "ollama",
+        "raw_output": "@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Component a owl:Class ;\n\trdfs:label \"Component\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Product a owl:Class ;\n\trdfs:label \"Product\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Material a owl:Class ;\n\trdfs:label \"Material\" .\n:hasMaterialComposition a owl:ObjectProperty ;\n\trdfs:label \"hasMaterialComposition\" ;\n\trdfs:domain :Component, :Product ;\n\trdfs:range :Material .",
+        "raw_response": {
+          "created_at": "2026-07-15T21:13:05.3364509Z",
+          "done": true,
+          "done_reason": "stop",
+          "eval_count": 318,
+          "eval_duration": 1283036000,
+          "load_duration": 126417100,
+          "message": {
+            "content": "@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Component a owl:Class ;\n\trdfs:label \"Component\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Product a owl:Class ;\n\trdfs:label \"Product\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Material a owl:Class ;\n\trdfs:label \"Material\" .\n:hasMaterialComposition a owl:ObjectProperty ;\n\trdfs:label \"hasMaterialComposition\" ;\n\trdfs:domain :Component, :Product ;\n\trdfs:range :Material .",
+            "role": "assistant"
+          },
+          "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+          "prompt_eval_count": 2112,
+          "prompt_eval_duration": 51789000,
+          "total_duration": 1470197100
+        },
+        "request": {
+          "keep_alive": "30m",
+          "messages": [
+            {
+              "content": "<instruction>\nYou are a helpful assistant designed to generate ontologies. You receive a Competency Question (CQ) and an Ontology Story (OS). \n\nBased on CQ, which is a requirement for the ontology, and OS, which tells you what the context of the ontology is, your task is generating one ontology (O). The goal is to generate O that models the CQ properly. This means there is a way to write a SPARQL query to extract the answer to this CQ in O.  \n\nUse the following prefixes: \n\n@prefix : <http://www.example.org/test#> .\n\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n\nDon't put any A-Box (instances) in the ontology and just generate the OWL file using Turtle syntax. Include the entities mentioned in the CQ. Remember to use restrictions when the CQ implies it. The output should be self-contained without any errors. Outside of the code box don't put any comment.\n</instruction>\n<example>\nI will give you an example now:\nCQ: For an aquatic resource, what species, in what fishing areas, climatic zones, bottom types, depth zones, geo forms, horizontal and vertical distribution, and for what standardized abundance level, exploitation state and rate, have been observed? for what reference year? At what year the observation has been recorded?\n\nOS: The aquatic resource for Skipjack tuna in Northern Atlantic in 2004 (as reported in 2008) was observed with low abundance level. \n\nO:\n@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:AquaticResource a owl:Class ;\n\trdfs:label \"Aquatic Resource\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasObservation ;\n    \towl:someValuesFrom :AquaticResourceObservation\n\t] .\n:AquaticResourceObservation a owl:Class ;\n\trdfs:label \"Aquatic Resource Observation\" ;\n\trdfs:subClassOf :Observation ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :isObservationOf ;\n    \towl:onClass :AquaticResource ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :forReferenceYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasReportingYear ;\n    \towl:onDataRange xsd:int ;\n    \towl:qualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n    \n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofSpecies ;\n    \towl:onClass :Species ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofFishingArea ;\n    \towl:onClass :FAO_fishing_area ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofClimaticZone ;\n    \towl:onClass :ClimaticZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofBottomType ;\n    \towl:onClass :BottomType ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofDepthZone ;\n    \towl:onClass :DepthZone ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofGeoForm ;\n    \towl:onClass :GeoForm ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofHorizontalDistribution ;\n    \towl:onClass :HorizontalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofVerticalDistribution ;\n    \towl:onClass :VerticalDistribution ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdAbundanceLevel ;\n    \towl:onClass :StdAbundanceLevel ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationState ;\n    \towl:onClass :StdExploitationState ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :ofStdExploitationRate ;\n    \towl:onClass :StdExploitationRate ;\n    \towl:minQualifiedCardinality \"0\"^^xsd:nonNegativeInteger\n\t] .\n:Species a owl:Class .\n:FAO_fishing_area a owl:Class .\n:ClimaticZone a owl:Class .\n:BottomType a owl:Class .\n:DepthZone a owl:Class .\n:GeoForm a owl:Class .\n:HorizontalDistribution a owl:Class .\n:VerticalDistribution a owl:Class .\n:StdAbundanceLevel a owl:Class .\n:StdExploitationState a owl:Class .\n:StdExploitationRate a owl:Class .\n:ofSpecies a owl:ObjectProperty ;\n\trdfs:label \"ofSpecies\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :Species .\n\n:ofFishingArea a owl:ObjectProperty ;\n\trdfs:label \"ofFishingArea\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :FAO_fishing_area .\n\n:ofClimaticZone a owl:ObjectProperty ;\n\trdfs:label \"ofClimaticZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :ClimaticZone .\n\n:ofBottomType a owl:ObjectProperty ;\n\trdfs:label \"ofBottomType\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :BottomType .\n\n:ofDepthZone a owl:ObjectProperty ;\n\trdfs:label \"ofDepthZone\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :DepthZone .\n\n:ofGeoForm a owl:ObjectProperty ;\n\trdfs:label \"ofGeoForm\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :GeoForm .\n\n:ofHorizontalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofHorizontalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :HorizontalDistribution .\n\n:ofVerticalDistribution a owl:ObjectProperty ;\n\trdfs:label \"ofVerticalDistribution\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :VerticalDistribution .\n\n:ofStdAbundanceLevel a owl:ObjectProperty ;\n\trdfs:label \"ofStdAbundanceLevel\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdAbundanceLevel .\n\n:ofStdExploitationState a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationState\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationState .\n\n:ofStdExploitationRate a owl:ObjectProperty ;\n\trdfs:label \"ofStdExploitationRate\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range :StdExploitationRate .\n:forReferenceYear a owl:DatatypeProperty ;\n\trdfs:label \"forReferenceYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n\n:hasReportingYear a owl:DatatypeProperty ;\n\trdfs:label \"hasReportingYear\" ;\n\trdfs:domain :AquaticResourceObservation ;\n\trdfs:range xsd:int .\n:hasObservation a owl:ObjectProperty .\n:isObservationOf a owl:ObjectProperty .\n:Observation a owl:Class .\n\n\n\n</example>\n\nCQ: What are the materials of this component or product?\nOS: Recycling of a product may depend on its material composition, efficiency of recycling.\nO: \n\nAdditional instruction:\n\nFollow all instructions in the base prompt exactly. Return only the requested\nontology serialization. Do not include explanations, reasoning, headings,\ncommentary, or Markdown code fences.",
+              "role": "user"
+            }
+          ],
+          "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+          "options": {
+            "num_ctx": 32768,
+            "num_predict": 8192,
+            "seed": 42,
+            "temperature": 0.0
+          },
+          "stream": false
+        },
+        "seed": 42,
+        "stream": false,
+        "telemetry": {
+          "created_at": "2026-07-15T21:13:05.3364509Z",
+          "done": true,
+          "done_reason": "stop",
+          "eval_count": 318,
+          "eval_duration": 1283036000,
+          "load_duration": 126417100,
+          "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+          "prompt_eval_count": 2112,
+          "prompt_eval_duration": 51789000,
+          "total_duration": 1470197100
+        },
+        "temperature": 0.0,
+        "timeout_seconds": 1800.0
+      }
+    ],
+    "keep_alive": "30m",
+    "max_output_tokens": 8192,
+    "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+    "normalized_output": "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix : <http://www.example.org/test#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Material a owl:Class ;\n\trdfs:label \"Material\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasChemicalComposition ;\n    \towl:someValuesFrom :ChemicalComposition\n\t] .\n:ChemicalComposition a owl:Class ;\n\trdfs:label \"Chemical Composition\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :comprisesElement ;\n    \towl:onClass :ChemicalElement ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasConcentration ;\n    \towl:onDataRange xsd:float ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:ChemicalElement a owl:Class ;\n\trdfs:label \"Chemical Element\" .\n:hasChemicalComposition a owl:ObjectProperty ;\n\trdfs:label \"hasChemicalComposition\" ;\n\trdfs:domain :Material ;\n\trdfs:range :ChemicalComposition .\n:comprisesElement a owl:ObjectProperty ;\n\trdfs:label \"comprisesElement\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range :ChemicalElement .\n:hasConcentration a owl:DatatypeProperty ;\n\trdfs:label \"hasConcentration\" ;\n\trdfs:domain :ChemicalComposition ;\n\trdfs:range xsd:float .\n\n<http://www.example.org/test#> a owl:Ontology .\n:Component a owl:Class ;\n\trdfs:label \"Component\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Product a owl:Class ;\n\trdfs:label \"Product\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Material a owl:Class ;\n\trdfs:label \"Material\" .\n:hasMaterialComposition a owl:ObjectProperty ;\n\trdfs:label \"hasMaterialComposition\" ;\n\trdfs:domain :Component, :Product ;\n\trdfs:range :Material .",
+    "num_ctx": 32768,
+    "provider": "ollama",
+    "retry_policy": {
+      "backoff_seconds": [
+        2.0,
+        4.0,
+        8.0
+      ],
+      "maximum_attempts": 3,
+      "transient_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ]
+    },
+    "seed": 42,
+    "stream": false,
+    "system_name": "domain-ontogen",
+    "temperature": 0.0,
+    "timeout_seconds": 1800.0
+  },
+  "assembled_prompt_hash": "9ec639a5bb0b8da6183a195ef5f6c9e9cfd891cc36cf51ce2e5ac7ea9d270d8b",
+  "attempt_count": 2,
+  "cache_identity": {
+    "cache_identity_contract": "stage-a2-v1",
+    "cache_identity_schema_version": 2,
+    "code_identity_hash": "a9644cb2b1460b04f79036260f0d356e189ef08016f7dd45b03970d250eb1e0c",
+    "dataset_id": "project2_12_6b51d431df",
+    "dataset_manifest_hash": "e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf",
+    "dataset_record_hash": "d0368735f5546e12ea351fa7ad70ed88cbdaba2659b80b0338403a97f6bc6b64",
+    "experiment_config_hash": "8be4eb30bc0c86f5400437c0a5b7a62bece5f137fba20ccebbb6335fb89f64c9",
+    "max_output_tokens": 8192,
+    "method": "domain-ontogen",
+    "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+    "model_digest": "19e422b0231392335cfc49cfd172de7034bb1aeabb08aa307cce745c60b272fe",
+    "normalization_policy": "unchanged_adapter_approved",
+    "num_ctx": 32768,
+    "odp_manifest_hash": "3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05",
+    "parser_output_contract_version": "project2-result-envelope-v2",
+    "procedure_hash": "741b3b1fea5fb112bbdba29f4827e52d6d76848bb96ece8cf51e639c14802351",
+    "prompt_hash": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e",
+    "prompt_variant": "P1",
+    "provider": "ollama",
+    "repair_policy": "adapter-approved",
+    "repository_commit": "1488aed14b41305495d27435174d635e2ba2ebb4",
+    "seed": 42,
+    "temperature": 0.0
+  },
+  "cache_identity_contract": "stage-a2-v1",
+  "cache_identity_fields": [
+    "cache_identity_contract",
+    "dataset_id",
+    "dataset_record_hash",
+    "method",
+    "prompt_variant",
+    "provider",
+    "model",
+    "model_digest",
+    "prompt_hash",
+    "temperature",
+    "seed",
+    "num_ctx",
+    "max_output_tokens",
+    "procedure_hash",
+    "odp_manifest_hash",
+    "repair_policy",
+    "normalization_policy",
+    "parser_output_contract_version",
+    "repository_commit",
+    "code_identity_hash",
+    "dataset_manifest_hash",
+    "experiment_config_hash"
+  ],
+  "cache_identity_schema_version": 2,
+  "cache_key": "6ac48496a6fa5be55bfcbd23cca1f1957a66b939363d1f72e284a9eacaa004d2",
+  "code_identity_hash": "a9644cb2b1460b04f79036260f0d356e189ef08016f7dd45b03970d250eb1e0c",
+  "completion_tokens": 762,
+  "dataset_id": "project2_12_6b51d431df",
+  "dataset_manifest_hash": "e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf",
+  "dataset_record_hash": "d0368735f5546e12ea351fa7ad70ed88cbdaba2659b80b0338403a97f6bc6b64",
+  "editable_instruction_characters": null,
+  "end_time": "2026-07-15T21:13:05Z",
+  "experiment_config_hash": "8be4eb30bc0c86f5400437c0a5b7a62bece5f137fba20ccebbb6335fb89f64c9",
+  "final_output_characters": 2088,
+  "instruction_boundary_id": null,
+  "internal_call_count": 2,
+  "keep_alive": "30m",
+  "max_output_tokens": 8192,
+  "method": "domain-ontogen",
+  "method_family": "domain-ontogen",
+  "method_system_id": "domain-ontogen",
+  "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+  "model_digest": "19e422b0231392335cfc49cfd172de7034bb1aeabb08aa307cce745c60b272fe",
+  "normalization_policy": "unchanged_adapter_approved",
+  "normalized_edit_distance": null,
+  "num_ctx": 32768,
+  "odp_manifest_hash": "3378a536d38a1f2e10c47df2cd04f6107214d90f6ec9c2f176c1ddeab3639c05",
+  "official_main_commit": null,
+  "original_cq_ids": [
+    "cq14",
+    "cq22"
+  ],
+  "original_story_id": "12",
+  "output_contract_version": "project2-result-envelope-v2",
+  "parser_output_contract_version": "project2-result-envelope-v2",
+  "procedure_hash": "741b3b1fea5fb112bbdba29f4827e52d6d76848bb96ece8cf51e639c14802351",
+  "prompt_characters": 14932,
+  "prompt_hash": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e",
+  "prompt_snapshot_path": null,
+  "prompt_tokens": 4223,
+  "prompt_variant": "P1",
+  "provider": "ollama",
+  "provider_telemetry": [
+    {
+      "created_at": "2026-07-15T21:13:03.8634844Z",
+      "done": true,
+      "done_reason": "stop",
+      "eval_count": 444,
+      "eval_duration": 1789368000,
+      "load_duration": 155660500,
+      "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+      "prompt_eval_count": 2111,
+      "prompt_eval_duration": 239958000,
+      "total_duration": 2332873100
+    },
+    {
+      "created_at": "2026-07-15T21:13:05.3364509Z",
+      "done": true,
+      "done_reason": "stop",
+      "eval_count": 318,
+      "eval_duration": 1283036000,
+      "load_duration": 126417100,
+      "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+      "prompt_eval_count": 2112,
+      "prompt_eval_duration": 51789000,
+      "total_duration": 1470197100
+    }
+  ],
+  "raw_output_characters": 2406,
+  "repair_policy": "adapter-approved",
+  "repository_commit": "1488aed14b41305495d27435174d635e2ba2ebb4",
+  "resource_repository_commits": null,
+  "retry_policy": {
+    "backoff_seconds": [
+      2.0,
+      4.0,
+      8.0
+    ],
+    "maximum_attempts": 3,
+    "transient_status_codes": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ]
+  },
+  "run_id": "run_1784149979_95b035a4",
+  "seed": 42,
+  "source_prompt_path": "datasets/ontology_generation/prompts/domain-ontogen/P1_candidate.txt",
+  "start_time": "2026-07-15T21:12:59Z",
+  "temperature": 0.0,
+  "timeout_seconds": 1800.0,
+  "wall_clock_seconds": 5.885253667831421
+}

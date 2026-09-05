@@ -1,0 +1,15 @@
+{
+  "cache_identity_schema_version": 2,
+  "cache_key": "6ac48496a6fa5be55bfcbd23cca1f1957a66b939363d1f72e284a9eacaa004d2",
+  "required_files": [
+    "assembled_prompt.txt",
+    "raw_response.json",
+    "raw_output.txt",
+    "normalized_output.txt",
+    "final_ontology.ttl",
+    "generation_metadata.json",
+    "parse_metadata.json",
+    "error.json"
+  ],
+  "status": "success"
+}

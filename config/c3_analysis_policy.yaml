@@ -1,6 +1,4 @@
-schema_version: c3-analysis-policy-v1
-status: frozen_statistical_plan_only
-execution_authorized: false
+analysis: prompt_sensitivity
 paired_unit:
   keys: [method, dataset_id]
   variants: [P0, P1, P2]
@@ -36,5 +34,3 @@ missingness:
   complete_unparseable_output_binary_endpoint: failure
   complete_unparseable_output_term_endpoint: missing
 exploratory_multiplicity: BH_FDR_within_documented_endpoint_method_family
-publication_claims_authorized: false
-

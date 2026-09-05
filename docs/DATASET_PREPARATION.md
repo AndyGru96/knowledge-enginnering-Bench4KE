@@ -1,16 +1,25 @@
-# Phase 2B Dataset and Prompt Preparation
+# Dataset and Prompt Preparation
 
 ## Reproduce
 
-Use the project environment and run:
+The submitted repository contains the authoritative `Dataset.xlsx`, the
+prepared normalized JSONL files, and the extracted gold ontology modules. The
+two password-protected ZIP archives supplied with the course material are not
+redistributed in this repository.
+
+To reproduce the complete prepared dataset, first place those two original ZIP
+archives beside `Dataset.xlsx` under
+`external_resources/Onto-Generation/Dataset_OntoGen`. Then use the project
+environment and run:
 
 ```powershell
 .venv\Scripts\python.exe scripts\prepare_ontology_dataset.py
 ```
 
-The script reads the authoritative `Dataset.xlsx` and both password-protected
-module archives under `external_resources/Onto-Generation/Dataset_OntoGen`.
-The archive password is the one supplied by the course specification. Output
+The script reads the workbook and any ZIP archives found in that directory.
+The archive password is the one supplied with the course material. Running the
+script without the two archives can rebuild the workbook-derived records and
+prompts, but it cannot reproduce the submitted gold-module set. Output
 replacement is staged and atomic at the managed-directory level.
 
 ## Relationship and mapping rules
@@ -33,9 +42,9 @@ replacement is staged and atomic at the managed-directory level.
 - RDF parsing is content-aware because one source `.ttl` is RDF/XML. The
   detected parse format is recorded per gold file.
 
-## Audited result
+## Prepared dataset
 
-The audited source boundaries are `CQs!A1:D119` and `Story!A1:B38`. Phase 2B
+The source boundaries are `CQs!A1:D119` and `Story!A1:B38`. The preparation
 observed 118 CQ source rows, 112 non-empty CQs, 35 non-empty stories, and 36
 gold modules.
 
@@ -90,31 +99,19 @@ in:
 - `datasets/ontology_generation/gold_mapping.csv`
 - `datasets/ontology_generation/source_row_reconciliation.csv`
 - `datasets/ontology_generation/conversion_errors.csv`
-- `datasets/ontology_generation/resource_manifest.json`
 
-The current data manifest hash is
-`e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf`.
-Two consecutive Phase 2B preparations produced this same hash, and the actual
-PR #10 loader accepted `project2_full_generation.jsonl`.
+The loader accepts `project2_full_generation.jsonl`.
 
 ## Authoritative prompt recovery
 
 All three approved methods now have runtime prompt resources.
 
-- Domain-OntoGen: repository commit
-  `894441e367acdbbd1ea662b6f1a6919d13533051`, `main`, retrieved 2026-07-15.
-  The repository declares no licence. README SHA-256 is
-  `c99516fb4af75d7f414c550855a28b7ced90cfbb1b6fa5d73986e270cc3e4e17`.
-  The exact Python string under “Prompt used for ontology generation” was
-  evaluated without semantic edits. Markdown fences and Python delimiters were
-  removed and Python escapes decoded. Prompt SHA-256 is
-  `f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e`;
-  `{CQ}` and `{OS}` each occur exactly once and the final `O:` is retained.
-- Original NeOn-GPT: repository commit
-  `bce7a6a805faa23dc169f691afb5aaaacad3d99d`, `main`, MIT licence, retrieved
-  2026-07-15. `gpt_wine_ont_day1/day1_gpt_prompt_list.txt` was copied
-  byte-for-byte. Source and copy SHA-256 both equal
-  `40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a`.
+- Domain-OntoGen: the Python string under “Prompt used for ontology generation”
+  was extracted from the public companion README. Markdown fences and Python
+  delimiters were removed and Python escapes decoded. `{CQ}` and `{OS}` each
+  occur once, and the final `O:` is retained.
+- NeOn-GPT: `gpt_wine_ont_day1/day1_gpt_prompt_list.txt` was copied from the
+  public companion resource without text changes.
 
 The earlier blocker was caused by an incomplete authoritative resource
 inventory, not by unavailable published prompts.

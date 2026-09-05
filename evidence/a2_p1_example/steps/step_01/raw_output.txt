@@ -1,0 +1,41 @@
+@prefix : <http://www.example.org/test#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+<http://www.example.org/test#> a owl:Ontology .
+:Material a owl:Class ;
+	rdfs:label "Material" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasChemicalComposition ;
+    	owl:someValuesFrom :ChemicalComposition
+	] .
+:ChemicalComposition a owl:Class ;
+	rdfs:label "Chemical Composition" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :comprisesElement ;
+    	owl:onClass :ChemicalElement ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasConcentration ;
+    	owl:onDataRange xsd:float ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] .
+:ChemicalElement a owl:Class ;
+	rdfs:label "Chemical Element" .
+:hasChemicalComposition a owl:ObjectProperty ;
+	rdfs:label "hasChemicalComposition" ;
+	rdfs:domain :Material ;
+	rdfs:range :ChemicalComposition .
+:comprisesElement a owl:ObjectProperty ;
+	rdfs:label "comprisesElement" ;
+	rdfs:domain :ChemicalComposition ;
+	rdfs:range :ChemicalElement .
+:hasConcentration a owl:DatatypeProperty ;
+	rdfs:label "hasConcentration" ;
+	rdfs:domain :ChemicalComposition ;
+	rdfs:range xsd:float .

@@ -17,5 +17,5 @@ Rules:
 Ontology:
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix : <http://example.org/ontology#> .
-:PHASE3_PREVIOUS_OUTPUT_SENTINEL a owl:Class .
+:PREVIOUS_OUTPUT_SENTINEL a owl:Class .
 :Broken owl:equivalentClass [ a owl:Restriction .

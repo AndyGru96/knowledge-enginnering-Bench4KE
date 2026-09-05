@@ -146,10 +146,7 @@ def _resolve_prompt_override(system: str, prompt_template: str) -> Optional[Path
             raise HTTPException(status_code=400, detail="prompt_template must be under the repository root.")
         return candidate if candidate.is_file() else None
 
-    # Frozen experiment configurations use repository-relative approved prompt
-    # paths. Resolve those paths directly while retaining the repository-root
-    # containment check; bare legacy filenames continue through the historical
-    # raw-resource lookup below.
+    # Resolve repository-relative prompt paths while enforcing root containment.
     if candidate.parent != Path("."):
         repository_candidate = (root / candidate).resolve()
         try:
@@ -300,11 +297,11 @@ def _constraints_hint(constraints: Optional[OntologyConstraints]) -> str:
     return "Constraints: " + "; ".join(parts)
 
 
-def _call_openai(prompt: str, model: str, temperature: float, max_tokens: int) -> str:
+def _call_model(prompt: str, model: str, temperature: float, max_tokens: int) -> str:
     context = _LLM_CALL_CONTEXT.get()
-    provider = str(context.get("provider") or os.getenv("LLM_PROVIDER", "openai"))
+    provider = str(context.get("provider") or os.getenv("LLM_PROVIDER", "ollama"))
     messages = []
-    system_message = os.getenv("OPENAI_SYSTEM_MESSAGE", "").strip()
+    system_message = os.getenv("OLLAMA_SYSTEM_MESSAGE", "").strip()
     if system_message:
         messages.append({"role": "system", "content": system_message})
     messages.append({"role": "user", "content": prompt})
@@ -945,7 +942,7 @@ def _fix_turtle_with_llm(
         "Ontology:\n"
         f"{ontology_text}\n"
     )
-    fixed = _call_openai(prompt, model, temperature, max_tokens)
+    fixed = _call_model(prompt, model, temperature, max_tokens)
     extracted = _extract_turtle(fixed).strip()
     _annotate_last_internal_call(
         pipeline_stage=stage,
@@ -1034,7 +1031,7 @@ def _format_target_metrics(metrics: Dict[str, Any]) -> str:
 def _compute_basic_turtle_counts(ttl: str) -> Dict[str, int]:
     """
     Lightweight local counts (not a full OntoMetrics clone). Used only for
-    re-prompting decisions in NeOn-GPT LLMs4Life extended mode.
+    re-prompting choices in NeOn-GPT LLMs4Life extended mode.
     """
     try:
         g = Graph()
@@ -1162,7 +1159,7 @@ def _auto_categorize_keywords(
         "- Keep category names short.\n"
         "- Do not include any text outside JSON.\n"
     )
-    raw = _call_openai(prompt, model, temperature, max_tokens)
+    raw = _call_model(prompt, model, temperature, max_tokens)
     try:
         obj = json.loads(raw.strip())
     except Exception:
@@ -1430,7 +1427,7 @@ def _llms4life_fix_syntax(
             "AFFECTED_PART": affected_part.strip(),
         },
     )
-    return _call_openai(prompt, model, temperature, max_tokens).strip()
+    return _call_model(prompt, model, temperature, max_tokens).strip()
 
 
 def _llms4life_fix_inconsistency(
@@ -1449,7 +1446,7 @@ def _llms4life_fix_inconsistency(
             "AFFECTED_PART": affected_part.strip(),
         },
     )
-    return _call_openai(prompt, model, temperature, max_tokens).strip()
+    return _call_model(prompt, model, temperature, max_tokens).strip()
 
 
 def _llms4life_fix_pitfall(
@@ -1468,7 +1465,7 @@ def _llms4life_fix_pitfall(
             "AFFECTED_PART": affected_part.strip(),
         },
     )
-    return _call_openai(prompt, model, temperature, max_tokens).strip()
+    return _call_model(prompt, model, temperature, max_tokens).strip()
 
 
 def _llms4life_verify_with_tools(
@@ -1631,13 +1628,13 @@ def _run_llms4life_paper_pipeline_for_category(
     # Prompt 1: requirements specification
     p1 = _load_llms4life_paper_prompt("prompt_01_requirements.txt")
     prompt1 = _render_llms4life_paper_prompt(p1, mapping_base)
-    spec_raw = _call_openai(prompt1, model, temperature, max_tokens).strip()
+    spec_raw = _call_model(prompt1, model, temperature, max_tokens).strip()
     meta["steps"]["01_requirements"] = {"output_length": len(spec_raw)}
 
     # Prompt 2: reuse guidance
     p2 = _load_llms4life_paper_prompt("prompt_02_reuse.txt")
     prompt2 = _render_llms4life_paper_prompt(p2, {**mapping_base})
-    reuse_raw = _call_openai(prompt2, model, temperature, max_tokens).strip()
+    reuse_raw = _call_model(prompt2, model, temperature, max_tokens).strip()
     meta["steps"]["02_reuse"] = {"output_length": len(reuse_raw)}
 
     # Prompt 3: generate CQs (must include required_cqs)
@@ -1650,7 +1647,7 @@ def _run_llms4life_paper_pipeline_for_category(
             "REQUIRED_CQS": _format_bullets(required_cqs) or "(none)",
         },
     )
-    cqs_raw = _call_openai(prompt3, model, temperature, max_tokens).strip()
+    cqs_raw = _call_model(prompt3, model, temperature, max_tokens).strip()
     generated_cqs = _parse_bulleted_lines(cqs_raw)
     combined_cqs = _ensure_required_items(generated_cqs, required_cqs)
     meta["steps"]["03_cqs"] = {"generated_count": len(generated_cqs), "combined_count": len(combined_cqs)}
@@ -1664,7 +1661,7 @@ def _run_llms4life_paper_pipeline_for_category(
             "COMPETENCY_QUESTIONS": _format_bullets(combined_cqs) or "(none)",
         },
     )
-    ep_raw = _call_openai(prompt4, model, temperature, max_tokens).strip()
+    ep_raw = _call_model(prompt4, model, temperature, max_tokens).strip()
     ep_json_text = ep_raw
     ep_obj: Any = None
     ep_parse_error: Optional[str] = None
@@ -1692,7 +1689,7 @@ def _run_llms4life_paper_pipeline_for_category(
             "ENTITY_PROPERTY_JSON": ep_json_text,
         },
     )
-    triples_raw = _call_openai(prompt5, model, temperature, max_tokens).strip()
+    triples_raw = _call_model(prompt5, model, temperature, max_tokens).strip()
     meta["steps"]["05_triples"] = {"output_length": len(triples_raw)}
 
     # Prompt 6: base ontology generation
@@ -1706,7 +1703,7 @@ def _run_llms4life_paper_pipeline_for_category(
             "CONCEPTUAL_TRIPLES": triples_raw,
         },
     )
-    ontology_raw = _call_openai(prompt6, model, temperature, max_tokens).strip()
+    ontology_raw = _call_model(prompt6, model, temperature, max_tokens).strip()
     ontology_ttl = _normalize_turtle(_extract_turtle(ontology_raw), strip_abox=strip_abox)
     meta["steps"]["06_ontology"] = {"output_length": len(ontology_raw)}
 
@@ -1725,7 +1722,7 @@ def _run_llms4life_paper_pipeline_for_category(
     for step_key, filename in incremental_templates:
         template = _load_llms4life_paper_prompt(filename)
         prompt = _render_llms4life_paper_prompt(template, {**mapping_base, "ONTOLOGY": ontology_ttl})
-        fragment_raw = _call_openai(prompt, model, temperature, max_tokens).strip()
+        fragment_raw = _call_model(prompt, model, temperature, max_tokens).strip()
         fragment_ttl = _normalize_turtle(_extract_turtle(fragment_raw), strip_abox=strip_abox)
         merged, merge_err = _merge_turtle_with_fragment(base_ttl=ontology_ttl, fragment_ttl=fragment_ttl)
         ontology_ttl = merged
@@ -1756,7 +1753,7 @@ def _run_llms4life_paper_pipeline_for_category(
                 "REQUIRED_CQS": _format_bullets(required_cqs) or "(none)",
             },
         )
-        refined_raw = _call_openai(prompt16, model, temperature, max_tokens).strip()
+        refined_raw = _call_model(prompt16, model, temperature, max_tokens).strip()
         refined_candidate = _normalize_turtle(_extract_turtle(refined_raw), strip_abox=strip_abox)
         ok_refine, err_refine = _syntax_check_turtle(refined_candidate)
         if not ok_refine:
@@ -1945,7 +1942,7 @@ def _neon_gpt_pipeline(
                 "Ontology:\n"
                 f"{ttl}\n"
             )
-            fixed = _call_openai(fix_prompt, model, temperature, max_tokens)
+            fixed = _call_model(fix_prompt, model, temperature, max_tokens)
             ttl = _normalize_turtle(_extract_turtle(fixed), strip_abox=strip_abox)
             ok, err = _syntax_check_turtle(ttl)
             syntax_fix_tries = 0
@@ -2062,14 +2059,19 @@ def generate_ontology(req: OntologyGenerationRequest) -> OntologyGenerationRespo
     if constraints_hint and not append_constraints:
         logger.info("Constraints provided but ignored (set ONTOLOGY_APPEND_CONSTRAINTS=true to append)")
 
-    model = str(metadata.get("model") or os.getenv("OPENAI_MODEL", "gpt-4o-mini")).strip()
-    temperature = float(metadata.get("temperature", os.getenv("OPENAI_TEMPERATURE", "0.2")))
+    model = str(
+        metadata.get("model")
+        or os.getenv("OLLAMA_MODEL", "qwen3:30b-a3b-instruct-2507-q4_K_M")
+    ).strip()
+    temperature = float(metadata.get("temperature", os.getenv("OLLAMA_TEMPERATURE", "0")))
     max_tokens = int(
         metadata.get("max_output_tokens")
         or metadata.get("num_predict")
-        or os.getenv("OPENAI_MAX_TOKENS", "2000")
+        or os.getenv("OLLAMA_MAX_TOKENS", "4096")
     )
-    provider = str(metadata.get("provider") or os.getenv("LLM_PROVIDER", "openai")).strip().lower()
+    provider = str(metadata.get("provider") or os.getenv("LLM_PROVIDER", "ollama")).strip().lower()
+    if provider != "ollama":
+        raise HTTPException(status_code=400, detail=f"Unsupported provider: {provider}")
     seed_value = metadata.get("seed", os.getenv("OLLAMA_SEED", "42"))
     num_ctx_value = metadata.get("num_ctx", os.getenv("OLLAMA_NUM_CTX", "8192"))
     call_context: Dict[str, Any] = {
@@ -2100,7 +2102,7 @@ def generate_ontology(req: OntologyGenerationRequest) -> OntologyGenerationRespo
             )
             if constraints_hint and append_constraints:
                 prompt = f"{prompt}\n\n{constraints_hint}"
-            raw = _call_openai(prompt, model, temperature, max_tokens)
+            raw = _call_model(prompt, model, temperature, max_tokens)
             if raw_output:
                 normalized_call_output = raw.strip()
             else:
@@ -2128,7 +2130,7 @@ def generate_ontology(req: OntologyGenerationRequest) -> OntologyGenerationRespo
             )
             if constraints_hint and append_constraints:
                 prompt = f"{prompt}\n\n{constraints_hint}"
-            raw = _call_openai(prompt, model, temperature, max_tokens)
+            raw = _call_model(prompt, model, temperature, max_tokens)
             if raw_output:
                 previous = raw.strip()
             else:
@@ -2152,7 +2154,7 @@ def generate_ontology(req: OntologyGenerationRequest) -> OntologyGenerationRespo
             prompt = prompt_template.replace("{OS}", story).replace("{CQ}", cq)
             if constraints_hint and append_constraints:
                 prompt = f"{prompt}\n\n{constraints_hint}"
-            raw = _call_openai(prompt, model, temperature, max_tokens)
+            raw = _call_model(prompt, model, temperature, max_tokens)
             if raw_output:
                 normalized_call_output = raw.strip()
             else:
@@ -2264,7 +2266,7 @@ def generate_ontology(req: OntologyGenerationRequest) -> OntologyGenerationRespo
         )
         if constraints_hint and append_constraints:
             prompt = f"{prompt}\n\n{constraints_hint}"
-        raw = _call_openai(prompt, model, temperature, max_tokens)
+        raw = _call_model(prompt, model, temperature, max_tokens)
         if raw_output:
             content = raw.strip()
             pipeline_meta = {}

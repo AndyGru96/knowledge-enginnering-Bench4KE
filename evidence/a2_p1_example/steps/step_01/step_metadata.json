@@ -1,0 +1,29 @@
+{
+  "assembled_prompt_sha256": "98f6c9c262d2906f90f43c2cef2cf291169f3a84c65d56d8e0d706050ede8e33",
+  "attempts": 1,
+  "call_index": 1,
+  "competency_question": "What is the chemical composition of this material?",
+  "cq_index": 1,
+  "keep_alive": "30m",
+  "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+  "num_ctx": 32768,
+  "num_predict": 8192,
+  "pipeline_stage": "cq_generation",
+  "provider": "ollama",
+  "seed": 42,
+  "stream": false,
+  "telemetry": {
+    "created_at": "2026-07-15T21:13:03.8634844Z",
+    "done": true,
+    "done_reason": "stop",
+    "eval_count": 444,
+    "eval_duration": 1789368000,
+    "load_duration": 155660500,
+    "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+    "prompt_eval_count": 2111,
+    "prompt_eval_duration": 239958000,
+    "total_duration": 2332873100
+  },
+  "temperature": 0.0,
+  "timeout_seconds": 1800.0
+}

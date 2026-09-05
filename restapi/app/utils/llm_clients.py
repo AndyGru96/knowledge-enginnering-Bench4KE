@@ -213,7 +213,7 @@ class OllamaAdapter(BaseLLMClient):
     ) -> LLMResponse:
         if options.stream:
             raise ProviderError(
-                "invalid_request", "Phase 4 native Ollama requires stream=false"
+                "invalid_request", "Ollama requests require stream=false"
             )
         if not options.model.strip() or not messages:
             raise ProviderError(
@@ -325,62 +325,8 @@ class OllamaAdapter(BaseLLMClient):
         }
 
 
-class OpenAIAdapter(BaseLLMClient):
-    provider_name = "openai"
-
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
-        try:
-            from openai import OpenAI
-        except Exception as exc:
-            raise RuntimeError("OpenAI SDK not available (install `openai`).") from exc
-        kwargs: Dict[str, Any] = {}
-        if api_key:
-            kwargs["api_key"] = api_key
-        if base_url:
-            kwargs["base_url"] = base_url
-        self.client = OpenAI(**kwargs) if kwargs else OpenAI()
-
-    def chat_completion(
-        self, messages: List[Dict[str, str]], options: GenerationOptions
-    ) -> LLMResponse:
-        if options.model.lower().startswith("gpt-5"):
-            prompt = "\n\n".join(message.get("content", "") for message in messages)
-            response = self.client.responses.create(
-                model=options.model,
-                input=prompt,
-                max_output_tokens=options.max_output_tokens,
-            )
-            content = str(getattr(response, "output_text", "") or "")
-        else:
-            response = self.client.chat.completions.create(
-                model=options.model,
-                messages=messages,
-                max_tokens=options.max_output_tokens,
-                temperature=options.temperature,
-                seed=options.seed,
-            )
-            content = str(response.choices[0].message.content or "")
-        if not content.strip():
-            raise ProviderError("empty_response", "OpenAI generated empty content")
-        if hasattr(response, "model_dump"):
-            raw = response.model_dump(mode="json")
-        else:
-            raw = {"text": str(response)}
-        return LLMResponse(
-            content=content,
-            raw_response=raw,
-            telemetry={"model": raw.get("model")},
-            provider=self.provider_name,
-        )
-
-
 def get_llm_client(provider: Optional[str] = None, **kwargs: Any) -> BaseLLMClient:
-    name = (provider or os.getenv("LLM_PROVIDER", "openai")).strip().lower()
-    if name in {"openai", "openai.com"}:
-        return OpenAIAdapter(
-            api_key=kwargs.get("api_key") or os.getenv("OPENAI_API_KEY"),
-            base_url=kwargs.get("base_url"),
-        )
+    name = (provider or os.getenv("LLM_PROVIDER", "ollama")).strip().lower()
     if name == "ollama":
         return OllamaAdapter(
             base_url=kwargs.get("base_url") or os.getenv("OLLAMA_BASE_URL"),

@@ -1,0 +1,4 @@
+method,variants,paired_n,excluded_pairs,statistic,degrees_of_freedom,p_value,status
+ontogenia,P0;P1;P2,17,0,0.2,2,0.9048374180359595,estimated
+domain-ontogen,P0;P1;P2,17,0,2.0,2,0.36787944117144245,estimated
+neon-gpt,P0;P1;P2,17,0,1.2727272727272727,2,0.5292133415000504,estimated

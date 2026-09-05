@@ -1,8 +1,7 @@
-import os
 import re
 from typing import Any, Dict, List, Tuple
 
-from openai import OpenAI
+from app.utils.llm_clients import GenerationOptions, get_llm_client
 
 
 def _load_prompt_template(path: str) -> str:
@@ -49,26 +48,21 @@ def _extract_sparql(text: str) -> str:
     return ""
 
 
-def _call_openai(prompt: str, model: str, max_tokens: int) -> str:
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    if model.startswith("gpt-5"):
-        response = client.responses.create(
-            model=model,
-            input=prompt,
-            max_output_tokens=max_tokens,
-            instructions="You are an ontology evaluation assistant.",
-        )
-        return response.output_text or ""
-    completion = client.chat.completions.create(
-        model=model,
-        messages=[
+def _call_model(prompt: str, model: str, max_tokens: int) -> str:
+    client = get_llm_client("ollama")
+    response = client.chat_completion(
+        [
             {"role": "system", "content": "You are an ontology evaluation assistant."},
             {"role": "user", "content": prompt},
         ],
-        temperature=0,
-        max_tokens=max_tokens,
+        GenerationOptions(
+            model=model,
+            temperature=0,
+            seed=42,
+            max_output_tokens=max_tokens,
+        ),
     )
-    return completion.choices[0].message.content or ""
+    return response.content
 
 
 def evaluate_ontology_with_llm(
@@ -87,7 +81,7 @@ def evaluate_ontology_with_llm(
     for cq in competency_questions:
         prompt = _build_prompt(template, cq, story, trimmed_ontology)
         try:
-            raw = _call_openai(prompt, model, max_tokens)
+            raw = _call_model(prompt, model, max_tokens)
             label = _extract_label(raw)
             sparql = _extract_sparql(raw)
             results.append(

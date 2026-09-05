@@ -1,0 +1,4 @@
+method,paired_n,excluded_pairs,zero_differences,positive_rank_sum,negative_rank_sum,statistic,p_value,median_difference_P0P2_minus_P0P1,matched_rank_biserial,bootstrap_ci_low,bootstrap_ci_high,implementation,status
+ontogenia,0,17,,,,,,,,,,scipy.stats.wilcoxon asymptotic Pratt; paired bootstrap 10000 seed 42,not_estimable_no_parseable_complete_pairs
+domain-ontogen,16,1,2,85.0,48.0,48.0,0.33795442469135184,0.019607843137254943,0.2781954887218045,-0.04608585858585856,0.125,scipy.stats.wilcoxon asymptotic Pratt; paired bootstrap 10000 seed 42,estimated
+neon-gpt,6,11,2,3.0,15.0,3.0,0.1956677425436415,-0.031746031746031744,-0.6666666666666666,-0.29210526315789476,0.016352549889135252,scipy.stats.wilcoxon asymptotic Pratt; paired bootstrap 10000 seed 42,estimated

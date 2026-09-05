@@ -28,7 +28,7 @@ class OntologyBenchmarkRequest(BaseModel):
     items: Optional[List[OntologyGenerationItem]] = None
     external_service_url: Optional[str] = None
     model: Optional[str] = None
-    provider: str = "openai"
+    provider: str = "ollama"
     temperature: float = 0.0
     seed: Optional[int] = 42
     num_ctx: Optional[int] = 8192

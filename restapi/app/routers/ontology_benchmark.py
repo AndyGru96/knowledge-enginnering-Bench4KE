@@ -1,4 +1,5 @@
 import json
+import hashlib
 import re
 import time
 import uuid
@@ -21,6 +22,7 @@ from app.config import (
     ONTOLOGY_LLM_EVAL_MAX_TOKENS,
     ONTOLOGY_LLM_EVAL_MODEL,
     ONTOLOGY_LLM_EVAL_PROMPT_PATH,
+    ROOT_DIR,
 )
 from app.models_ontology import (
     OntologyBenchmarkRequest,
@@ -48,13 +50,24 @@ from app.utils.ontology_artifacts import (
 
 router = APIRouter()
 _CONFIGURED_RUNS_DIR = ONTOLOGY_RUNS_DIR
-_FROZEN_PROMPT_HASHES = {
-    "ontogenia": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965",
-    "domain-ontogen": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e",
-    "neon-gpt": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
+def _prompt_file_hash(method: str) -> str:
+    path = (
+        Path(ROOT_DIR)
+        / "datasets"
+        / "ontology_generation"
+        / "prompts"
+        / method
+        / "P0_original.txt"
+    )
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+_BASE_PROMPT_HASHES = {
+    method: _prompt_file_hash(method)
+    for method in ("ontogenia", "domain-ontogen", "neon-gpt")
 }
-_DATASET_MANIFEST_HASH = "e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf"
-_PR_BASELINE_COMMIT = "1488aed14b41305495d27435174d635e2ba2ebb4"
+_DATASET_MANIFEST_HASH = None
+_REPOSITORY_COMMIT = None
 
 
 def _safe_filename(value: Optional[str]) -> str:
@@ -208,7 +221,7 @@ def run_ontology_benchmark(
         runtime_prompt_hash = (
             request_metadata.get("prompt_hash")
             if is_a2_identity
-            else _FROZEN_PROMPT_HASHES.get(str(item_system))
+            else _BASE_PROMPT_HASHES.get(str(item_system))
         )
         cache_values = {
             CACHE_SCHEMA_FIELD: request_metadata.get(CACHE_SCHEMA_FIELD),
@@ -225,7 +238,7 @@ def run_ontology_benchmark(
             "procedure_hash": request_metadata.get("procedure_hash"),
             "odp_manifest_hash": request_metadata.get("odp_manifest_hash"),
             "repair_policy": request_metadata.get("repair_policy", "adapter-approved"),
-            "repository_commit": _PR_BASELINE_COMMIT,
+            "repository_commit": _REPOSITORY_COMMIT,
             "dataset_manifest_hash": _DATASET_MANIFEST_HASH,
             "experiment_config_hash": request_metadata.get("experiment_config_hash"),
         }
@@ -386,8 +399,8 @@ def run_ontology_benchmark(
                         "original_story_id": (item.metadata or {}).get("original_story_id"),
                         "original_cq_ids": (item.metadata or {}).get("original_cq_ids"),
                         "method_family": str(item_system or "unknown"),
-                        "repository_commit": _PR_BASELINE_COMMIT,
-                        "PR_baseline_commit": _PR_BASELINE_COMMIT,
+                        "repository_commit": _REPOSITORY_COMMIT,
+                        "PR_baseline_commit": _REPOSITORY_COMMIT,
                         "dataset_manifest_hash": _DATASET_MANIFEST_HASH,
                     },
                 )

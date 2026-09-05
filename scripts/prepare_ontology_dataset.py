@@ -793,7 +793,7 @@ def sheet_audit(sheet: WorkbookSheet) -> dict[str, Any]:
 
 
 def normalize_identifier(value: Any) -> tuple[str, bool]:
-    """Apply only the Phase 2B-approved representation normalizations."""
+    """Apply only the approved representation normalizations."""
 
     if value is None:
         return "", False
@@ -1272,11 +1272,11 @@ def build_dataset_records(
     return normalized_items, mapping_rows, audit, errors
 
 
-def build_dataset_records_phase2b(
+def build_dataset_records(
     workbook_path: Path,
     gold_records: list[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any], list[dict[str, Any]]]:
-    """Build explicit full-generation and exact-gold scopes for Phase 2B."""
+    """Build explicit full-generation and exact-gold scopes."""
 
     sheets = read_xlsx(workbook_path)
     by_name = {sheet.name: sheet for sheet in sheets}
@@ -1884,7 +1884,7 @@ def prepare_dataset(
         )
         conversion_errors.extend(gold_errors)
         normalized_items, mapping_rows, audit, dataset_errors = (
-            build_dataset_records_phase2b(workbook_path, gold_records)
+            build_dataset_records(workbook_path, gold_records)
         )
         conversion_errors.extend(dataset_errors)
 
@@ -1909,7 +1909,7 @@ def prepare_dataset(
         else:
             odp_records = []
             odp_reason = (
-                "No approved Phase 2 course method calls _load_odps_text; "
+                "None of the selected methods calls _load_odps_text; "
                 "ontogenia-mp is explicitly excluded from the approved three."
             )
             applicable_methods = []
@@ -2153,7 +2153,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--approved-methods",
         default=",".join(DEFAULT_APPROVED_METHODS),
-        help="Comma-separated implementation IDs frozen by the owner decision.",
+        help="Comma-separated selected implementation IDs.",
     )
     parser.add_argument(
         "--archive-password",

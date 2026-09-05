@@ -5,7 +5,7 @@ load_dotenv()
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Ontology benchmark configuration
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:30b-a3b-instruct-2507-q4_K_M")
 OUTPUTS_DIR = os.getenv(
     "OUTPUTS_DIR",
     os.path.join(ROOT_DIR, "restapi", "outputs"),
@@ -34,6 +34,6 @@ ONTOLOGY_LLM_EVAL_PROMPT_PATH = os.getenv(
     "ONTOLOGY_LLM_EVAL_PROMPT_PATH",
     os.path.join(ROOT_DIR, "datasets", "ontology_generation", "prompts", "oe_assist_prompt.txt"),
 )
-ONTOLOGY_LLM_EVAL_MODEL = os.getenv("ONTOLOGY_LLM_EVAL_MODEL", OPENAI_MODEL)
+ONTOLOGY_LLM_EVAL_MODEL = os.getenv("ONTOLOGY_LLM_EVAL_MODEL", OLLAMA_MODEL)
 ONTOLOGY_LLM_EVAL_MAX_TOKENS = int(os.getenv("ONTOLOGY_LLM_EVAL_MAX_TOKENS", "800"))
 ONTOLOGY_LLM_EVAL_MAX_CHARS = int(os.getenv("ONTOLOGY_LLM_EVAL_MAX_CHARS", "12000"))

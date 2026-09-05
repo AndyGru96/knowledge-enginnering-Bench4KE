@@ -64,31 +64,28 @@
 \vspace{0.25cm}
 
 \begin{abstract}
-This project evaluates three ontology-generation pipelines---Ontogenia,
-Domain-OntoGen, and NeOn-GPT---using one fully local Ollama model and an
-evidence-preserving execution contract. The experiment covers 17
+This project evaluates three ontology-generation pipelines---the
+Ontogenia-labelled Memoryless CQ-by-CQ baseline, Domain-OntoGen, and
+NeOn-GPT---using one local Ollama model. The experiment covers 17
 ontology-engineering scenarios, 74 source-ordered competency questions (CQs),
 and three prompt variants: the recovered baseline P0, serialization-only P1,
-and syntax-verification P2. Across 153 admitted tasks, 101 final ontologies were
-parseable. Final parse success was 14/51 for Ontogenia, 50/51 for
-Domain-OntoGen, and 37/51 for NeOn-GPT. Repair-aware paired analysis found no
+and syntax-verification P2. Across 153 tasks, 101 final ontologies were
+parseable. Final parse success was 14/51 for the Memoryless baseline, 50/51 for
+Domain-OntoGen, and 37/51 for NeOn-GPT. Paired analysis found no
 statistically significant parse-success difference among P0, P1, and P2 for
 any method. This result does not imply prompt invariance: descriptive
 term-Jaccard summaries show substantial ontology-content drift from P0 where
 comparisons are available. Documentation completeness and parse robustness
-also varied materially by method. The contribution is both empirical and
-methodological: it supplies the mandatory open-model execution path and two
-new evaluation components while keeping model behavior, transformations, and
-evidence governance separately auditable.
+also varied materially by method. The project supplies the mandatory local
+model execution path and two new evaluation components.
 \end{abstract}
 
 \section{Introduction}
 
 Large language models can turn scenarios and competency questions into candidate
-ontologies, but a defensible benchmark must evaluate more than whether a final
-file exists. Prompts, intermediate outputs, parsing transformations, model
-telemetry, and cache identity must be preserved so that errors and later
-analytical decisions remain auditable. Bench4KE provides a starting point for
+ontologies, but a useful benchmark must evaluate more than whether a final file
+exists. This project records prompts, intermediate outputs, parsing results, and
+model telemetry to support analysis of generation failures. Bench4KE provides a starting point for
 standardized knowledge-engineering evaluation \cite{ciancarini2026bench4ke},
 while Ontogenia and related work establish three generation procedures used in
 this project \cite{lippolis2024ontogenia,lippolis2025ontology}.
@@ -98,7 +95,7 @@ evaluation components, and testing on the entire executable normalized dataset
 with the three methods already connected to Bench4KE. This submission implements
 all three requirements.
 It compares the methods under one exact local model and adds documentation
-completeness and prompt sensitivity as deterministic, reproducible analyses.
+completeness and prompt sensitivity analyses.
 
 \section{Related Work}
 
@@ -156,19 +153,16 @@ rephrasing.
 
 The project specification additionally identifies local open-model execution
 as a missing benchmark capability. Local execution can reduce dependence on
-paid proprietary APIs, but locality alone does not guarantee reproducibility.
-A reproducible evaluation must also preserve the runtime version, exact model
-tag and digest, generation controls, prompts, responses, telemetry, parse
-stages, repair behavior, and cache identity. The Ollama integration in this
-project adds this evidence-preserving execution layer to the three generation
-methods. The empirical conclusions remain limited to one quantized Qwen model,
+paid services. The implementation records the runtime version, model tag,
+generation controls, prompts, responses, telemetry, parse stages, and repair
+behavior. The empirical conclusions remain limited to one quantized Qwen model,
 one seed, and one fixed context and output budget, and therefore should not be
 generalized to all open models.
 
 In summary, the project brings together three complementary concerns:
 LLM-based ontology generation, ontology documentation, and prompt robustness.
 Its contribution is an extension of the project benchmark with local Ollama
-execution, deterministic documentation-completeness metrics, and a narrowly
+execution, documentation-completeness metrics, and a narrowly
 controlled prompt-sensitivity analysis. It does not claim to solve general
 ontology-quality evaluation or broad prompt robustness.
 
@@ -177,22 +171,21 @@ ontology-quality evaluation or broad prompt robustness.
 The project delivers three benchmark extensions:
 
 \begin{enumerate}
-  \item \textbf{C1---native local Ollama execution and evidence preservation.}
-  The provider records exact model identity, fixed generation controls, requests,
-  responses, per-step telemetry, parsing stages, errors, and versioned cache keys.
+  \item \textbf{C1---native local Ollama execution.}
+  The provider records model information, generation controls, requests,
+  responses, per-step telemetry, parsing stages, and errors.
 
   \item \textbf{C2---documentation completeness.}
-  A deterministic evaluation measures labels, comments or definitions, ontology
+  The evaluation measures labels, comments or definitions, ontology
   metadata, documentation length, and nontrivial documentation for parseable
   generated ontologies.
 
   \item \textbf{C3---prompt sensitivity.}
-  Frozen P0/P1/P2 variants are compared through paired parse-success tests and
+  P0/P1/P2 variants are compared through paired parse-success tests and
   ontology-term Jaccard overlap under a prespecified statistical policy.
 \end{enumerate}
 
-All model generation used a local open model. No paid API was required, and no
-model call was made during final statistical analysis or report preparation.
+All experimental generation used the local Ollama model described below.
 
 \section{Dataset Construction}
 
@@ -202,27 +195,23 @@ retained in audit records but excluded from executable generation because they
 lack reliable StoryID or scenario linkage. The pipeline does not infer or
 fuzzily reconstruct missing links.
 
-Scenarios, user stories, and CQs were recovered from the fixed workbook through
+Scenarios, user stories, and CQs were recovered from the source workbook through
 explicit source relationships. CQ wording and source order are preserved. Every
 managed data file was validated with its expected parser and encoding, and the
-normalized JSONL was explicitly audited for UTF-8 integrity. The frozen dataset
-manifest is:
-
-\begin{center}
-\small\ttfamily
-e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf
-\end{center}
+normalized JSONL was checked for UTF-8 integrity.
 
 This conservative construction favors traceability over maximizing row count.
 It also makes missingness visible instead of silently inventing relationships.
 
 \section{Compared Generation Methods}
 
-\subsection{Ontogenia}
+\subsection{Ontogenia-labelled Memoryless CQ-by-CQ baseline}
 
-Ontogenia generates CQ-level ontology fragments and combines them into a
-task-level ontology. Its multi-call structure makes previous-output propagation
-and call order part of the executable method definition.
+Each competency question is processed independently under the Memoryless
+CQ-by-CQ procedure. Previous model outputs are not passed to later CQ calls.
+The normalized fragments are combined into a task-level ontology after all CQ
+calls finish. The separate metacognitive \code{ontogenia-mp} implementation was
+not used in this experiment.
 
 \subsection{Domain-OntoGen}
 
@@ -235,8 +224,8 @@ conceptual correctness.
 
 \subsection{NeOn-GPT}
 
-NeOn-GPT follows the frozen staged NeOn procedure. After a parse failure it may
-invoke deterministic syntax-repair prompts. Those repair calls are recorded as
+NeOn-GPT follows the staged NeOn procedure. After a parse failure it may
+invoke syntax-repair prompts. Those repair calls are recorded as
 variant-agnostic post-processing rather than hidden generation steps.
 
 \subsection{Prompt variants}
@@ -249,69 +238,50 @@ normalization, repair logic, and generation controls are otherwise unchanged.
 
 \section{Local Ollama Infrastructure}
 
-All admitted A1 and A2 evidence uses the following frozen configuration:
+All experiments use the following configuration:
 
 \begin{itemize}
   \item Ollama version 0.32.0;
   \item model \code{qwen3:30b-a3b-instruct-2507-q4\_K\_M};
-  \item digest \code{19e422b0231392335cfc49cfd172de7034bb1aeabb08aa307cce745c60b272fe};
   \item temperature 0 and seed 42;
   \item \code{num\_ctx=32768}, \code{num\_predict=8192},
         \code{keep\_alive=30m}, and non-streaming responses.
 \end{itemize}
 
-The preserved A1 and A2 preflight records provide hardware context for the
-runtime measurements: they identify one NVIDIA GeForce RTX 5090 with
+The runtime measurements were collected on one NVIDIA GeForce RTX 5090 with
 32,607 MiB total GPU memory and 100,555,055,104 bytes of total system RAM.
-Available memory varied between checks. The records do not preserve the CPU
+Available memory varied between checks. The records do not include the CPU
 model, exact operating-system release, or GPU-placement telemetry for the
-admitted calls at \code{num\_ctx=32768}; no claims are therefore made about
+calls at \code{num\_ctx=32768}; no claims are therefore made about
 those properties or about hardware-independent performance.
 
-The provider verifies the Ollama version and exact model tag/digest before a run.
-For every executed internal call, the evidence contract preserves the executed
-prompt, serialized request and response, raw text, normalized text, final text,
+The provider checks the Ollama version and model name before a run. For every
+internal call, it stores the prompt, request and response, raw text, normalized text, final text,
 parse status, error record, prompt and completion counts, timing, completion
 reason, HTTP attempt, and previous-output input when applicable. Resume behavior
-uses cache identity and holds failed tasks unless an explicitly authorized retry
-mode is selected.
+holds failed tasks unless retry mode is selected.
 
-Across admitted A1 and A2 evidence, 576 internal calls and HTTP attempts were
+Across A1 and A2, 576 internal calls and HTTP attempts were
 recorded, with zero retries. Telemetry totals were 1,467,185 prompt tokens,
 1,167,385 completion tokens, and 4,462.483 summed task seconds. These are local
 measurements, not monetary API costs.
 
-\section{Output Contract and Evidence Admission}
-\label{sec:evidence-admission}
+\section{Output Handling and A2 Metadata Issue}
 
-In this report, a \emph{result envelope} is the persisted per-task bundle of
-status, outputs, parse records, telemetry, and cache-identity metadata. A
-\emph{sidecar} is a separate audit record that preserves the original envelope
-while recording identity differences and an analytical decision.
-\emph{Evidence admission} means that immutable artifacts satisfy an explicit
-rule for downstream analysis; it does not convert a historical cache-identity
-failure into a successful execution contract.
+Each task stores its assembled prompt, requests, responses, raw and normalized
+text, final ontology, parse result, and telemetry. These files make it possible
+to distinguish model output from later normalization and repair.
 
-Execution success and analytical usability are distinct. Stage A1 failed its
-original schema-v1 cache-identity contract because numerically equivalent
-generation parameters had different serialized representations. Its immutable
-evidence was subsequently admitted through a schema-v2 semantic-equivalence
-audit.
+An A2 writer error affected 94 P1/P2 task metadata files. The writer stored the
+P0 prompt identifier in the \code{prompt\_hash} field even though the saved
+prompts and request files contained the intended P1 or P2 instruction. The
+original task files were not edited. The analysis used the saved request text to
+verify the executed variant. One complete P1 example and the task-level
+verification table are included with the repository.
 
-Stage A2 retains three explicitly distinct historical layers:
-
-\begin{itemize}
-  \item historical Stage A2 strict schema-v2 identity: \textbf{FAIL};
-  \item Phase 12 strict sidecar admission: \textbf{PARTIALLY ADMITTED};
-  \item Phase 12B repair-aware sidecar admission: \textbf{ADMITTED}.
-\end{itemize}
-
-The A2 defect was a success-path metadata overwrite: preserved executed P1/P2
-prompts were correct, but 94 successful envelopes stored the corresponding method
-P0 \code{prompt\_hash}. The repair-aware ruling separately classifies 53 exact
-frozen NeOn syntax-repair calls as variant-agnostic post-processing. Historical
-envelopes and raw outputs were never rewritten. Thus downstream admission does
-not retroactively turn the strict execution contract into a pass.
+NeOn-GPT also made 53 syntax-repair calls after invalid initial responses. Those
+calls used the common repair prompt rather than the P1/P2 generation suffix and
+are counted separately from the initial generation calls.
 
 \section{Evaluation Metrics}
 
@@ -335,23 +305,21 @@ reported over all 153 tasks.
 \subsection{C3 prompt sensitivity}
 
 C3 uses paired final-parse outcomes. Cochran's Q is the omnibus test. Pairwise
-McNemar tests with Holm correction are interpreted only under the frozen
-gatekeeping policy. Content sensitivity compares P0 with P1 and P2 through
+McNemar tests use Holm correction. Content sensitivity compares P0 with P1 and P2 through
 ontology-term Jaccard overlap. Paired Pratt Wilcoxon tests compare whether P1 and
 P2 have different drift magnitudes from P0 where enough complete cases exist.
 The latter test does not test whether either variant differs from P0.
 
 \section{Experimental Design}
 
-Stage A1 contains 51 admitted P0 tasks: 17 dataset items multiplied by three
-methods. Stage A2 contains 102 repair-aware-admitted tasks: the same 17 items and
+The P0 baseline contains 51 tasks: 17 dataset items multiplied by three
+methods. P1 and P2 add 102 tasks using the same 17 items and
 three methods for P1 and P2. Together, the analysis panel contains 153 tasks.
 
-The model, digest, seed, temperature, context budget, output budget, prompt/CQ
-order, method procedures, normalization, parsing, and repair policy were frozen
-before execution. A1 P0 serves as the admitted baseline. A2 changes only the
-approved instruction-level suffix. This design supports within-item comparisons
-while preserving the original P0 evidence.
+The model, seed, temperature, context budget, output budget, prompt/CQ order,
+method procedures, normalization, parsing, and repair settings remain the same
+across the three prompt variants. P1 and P2 change only the instruction-level
+suffix, which supports within-item comparisons.
 
 \section{Results}
 
@@ -446,7 +414,7 @@ NeOn-GPT & 17 & 0.5292 & 6 & 0.1957 & No significant parse difference; small pai
 \end{table}
 
 Cochran Q p-values are 0.9048 for Ontogenia, 0.3679 for Domain-OntoGen, and
-0.5292 for NeOn-GPT. Every Holm-adjusted McNemar p-value is 1.0. Under the frozen
+0.5292 for NeOn-GPT. Every Holm-adjusted McNemar p-value is 1.0. Under the stated
 policy, none of the methods shows a statistically significant P0/P1/P2 final
 parse-success difference.
 
@@ -476,7 +444,7 @@ descriptive ontology-content drift from P0. Ontogenia has no P0/P1 comparison
 and only one P0/P2 value, so no distributional conclusion is justified for that
 method. Domain-OntoGen has 16 complete P1/P2 drift pairs (Wilcoxon p=0.3380),
 NeOn-GPT has six (p=0.1957), and Ontogenia has none. The NeOn-GPT test uses the
-frozen asymptotic Pratt approximation and has low power.
+asymptotic Pratt approximation and has low power.
 
 \begin{figure}[H]
   \centering
@@ -485,11 +453,10 @@ frozen asymptotic Pratt approximation and has low power.
   \label{fig:c3}
 \end{figure}
 
-The correct conclusion is deliberately scoped: prompt variants did not show
-statistically significant parse-success differences under the repair-aware
-admitted analysis, but term overlap still indicates substantial descriptive
-content drift. The absence of parse significance is not evidence of prompt
-invariance or superiority of P1/P2.
+Prompt variants did not show statistically significant parse-success
+differences, but term overlap still indicates substantial descriptive content
+drift. The absence of parse significance is not evidence of prompt invariance or
+superiority of P1/P2.
 
 \section{Discussion}
 
@@ -498,39 +465,32 @@ but its generated ontologies provide little class or property documentation.
 NeOn-GPT has intermediate parse robustness and richer documentation, with
 additional repair cost and truncation exposure. Ontogenia has the lowest
 task-level parse robustness because many CQ fragments contain invalid Turtle.
-The remaining Ontogenia issue is monitored as model-output quality risk rather
-than a demonstrated deterministic prompt-assembly defect.
+The Ontogenia failures are associated with invalid generated Turtle rather than
+the prompt-assembly code.
 
 P1 and P2 show small descriptive increases in parse success for some cells,
 especially NeOn-GPT P2, but the paired tests do not distinguish these changes
-from chance under the frozen policy. Independently, low term-Jaccard overlap
+from chance under the stated analysis policy. Independently, low term-Jaccard overlap
 shows that content can change substantially even when parse-success differences
 are not statistically significant. Prompt sensitivity therefore cannot be
 reduced to syntax alone.
 
-The evidence history also demonstrates why a benchmark needs explicit data and
-execution contracts. A valid model response can coexist with an invalid cache
-identity; a repaired ontology can be parseable without being a raw parse
-success; and an analytically admitted artifact can retain a historical execution
-failure. Keeping these concepts separate prevents silent overclaiming.
+A repaired ontology can be parseable even when the original response is not.
+For this reason, the report presents raw, normalized, and final parse results
+separately.
 
 \section{Failure Analysis}
 
-Three failure classes should not be conflated:
+The observed failures fall into three groups:
 
 \begin{enumerate}
   \item \textbf{Model-output quality:} malformed Turtle, incompatible CQ
   fragments, or truncated responses.
-  \item \textbf{Post-processing and repair:} normalization and frozen syntax
-  repair may recover parseability but must remain visible in telemetry.
-  \item \textbf{Evidence identity:} A1 numeric canonicalization and A2
-  prompt-hash substitution affected cache/audit contracts even where requests
-  and responses were preserved.
+  \item \textbf{Post-processing and repair:} normalization and syntax repair
+  may recover parseability and are therefore reported separately.
+  \item \textbf{Metadata:} the A2 prompt identifier error affected task
+  metadata but not the saved request text or response.
 \end{enumerate}
-
-The evidence-identity failures are handled under the rules in
-Section~\ref{sec:evidence-admission}; neither analytical admission nor the
-writer correction altered preserved requests, responses, or outputs.
 
 \section{Limitations}
 
@@ -544,56 +504,49 @@ writer correction altered preserved requests, responses, or outputs.
   \item C2 is conditional on syntactically parseable output and does not judge
   semantic quality of documentation.
   \item Normalization and repair affect observed final parseability.
-  \item Repair-aware admission is an analysis-governance decision and does not
-  make the historical strict Stage A2 contract pass.
+  \item The A2 metadata error required verification from the saved request text.
   \item Public source ontologies may create contamination risk; the current work
   does not claim to eliminate that risk.
 \end{itemize}
 
 \section{Reproducibility and Submission Artifacts}
 
-The full research workspace retains the frozen dataset, recovered prompts, model
-digest, generation controls, task plans, requests, raw responses, parse stages,
-telemetry, cache keys, and admission sidecars. The clean submission deliberately
-excludes large raw-output trees while retaining the implementation and compact
-final aggregates required to inspect the experiment.
+The full research workspace retains the dataset, prompts, model settings,
+requests, responses, parse stages, and telemetry. The repository includes the
+implementation, final tables, statistical outputs, and one complete A2 P1
+example. The full A1/A2 output trees are stored separately because of their
+size.
 
 Key submitted artifacts include:
 
 \begin{itemize}
   \item \code{restapi/}: provider, adapter, API, metrics, and artifact logic;
-  \item \code{scripts/}: deterministic preparation, execution, and analysis tools;
-  \item \code{datasets/ontology\_generation/}: frozen normalized data and prompts;
-  \item \code{config/}: frozen experiment and statistical policies;
-  \item \code{results/final\_experiment\_manifest.json}: integrated hashes and counts;
+  \item \code{scripts/}: preparation, execution, and analysis tools;
+  \item \code{datasets/ontology\_generation/}: normalized data and prompts;
+  \item \code{config/}: experiment and statistical settings;
   \item \code{results/final\_c2\_c3\_summary.csv}: final method-level results;
-  \item \code{report/figures/figure\_manifest.json}: figure provenance;
+  \item \code{evidence/}: one complete A2 P1 request example;
 \end{itemize}
 
-Re-running model generation requires the exact Ollama model and constitutes a
-new execution. Deterministic code and results can be inspected without a live
-model or proprietary provider. The repository implementation is based on and
+Re-running model generation requires the same Ollama model and constitutes a
+new execution. The existing results can be inspected without a live model. The repository implementation is based on and
 extends the Bench4KE project \cite{bench4ke_repository}.
 
 \section{Conclusion}
 
 The project satisfies the course scope by implementing mandatory local Ollama
 support and two additional evaluation components, then applying the three
-required ontology-generation methods to the complete frozen 17-item dataset.
-The infrastructure produced auditable local evidence and a deterministic final
-analysis.
+required ontology-generation methods to the 17-item executable dataset.
 
 Domain-OntoGen achieved the highest parse robustness, NeOn-GPT combined
 intermediate parseability with richer documentation and higher repair exposure,
 and Ontogenia remained the least robust at task-level Turtle parsing. P0/P1/P2
 did not differ significantly in paired parse-success tests. However, descriptive
 term-Jaccard overlap showed substantial content drift, especially for NeOn-GPT,
-so non-significance must not be read as prompt invariance.
+so non-significance does not establish prompt invariance.
 
-The strongest contribution is a reproducible evaluation framework that keeps
-model behavior, transformation behavior, and evidence-governance decisions
-separate and reviewable. This supports more credible future comparisons across
-models, prompts, and ontology-engineering tasks.
+The implementation provides a practical basis for comparing local models,
+prompt variants, and ontology-generation methods in future experiments.
 
 \clearpage
 \appendix
@@ -649,25 +602,6 @@ NeOn-GPT & P2 & 43 & 146,715 & 197,692 & 344,407 & 760.189 \\
 \bottomrule
 \end{longtable}
 }
-
-\section{Evidence Status Summary}
-
-\begin{table}[H]
-\centering
-\caption{Historical status and downstream disposition.}
-\small
-\begin{tabularx}{\textwidth}{p{0.22\textwidth}p{0.30\textwidth}X}
-\toprule
-Item & Historical or strict status & Downstream disposition \\
-\midrule
-Stage A1 & Schema-v1 identity: \textbf{FAIL} & Immutable evidence admitted through schema-v2 semantic-equivalence audit. \\
-Stage A2 & Strict schema-v2 identity: \textbf{FAIL} & Historical failure preserved. \\
-Phase 12 sidecar & \textbf{PARTIALLY ADMITTED} & 75/102 tasks under the stricter all-call suffix criterion. \\
-Phase 12B sidecar & \textbf{ADMITTED} & 102/102 tasks under the repair-aware governance ruling. \\
-Ontogenia risk & Open, non-blocking & Monitored model-output quality risk. \\
-\bottomrule
-\end{tabularx}
-\end{table}
 
 \bibliographystyle{plain}
 \bibliography{references}

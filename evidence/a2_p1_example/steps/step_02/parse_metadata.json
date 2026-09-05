@@ -1,0 +1,18 @@
+{
+  "final_parse_error": null,
+  "final_parse_format": "turtle",
+  "final_parse_success": true,
+  "llm_repair_used": false,
+  "markdown_fence_removed": false,
+  "normalization_used": true,
+  "normalized_parse_error": null,
+  "normalized_parse_format": "turtle",
+  "normalized_parse_success": true,
+  "prefix_repair_used": false,
+  "raw_parse_error": null,
+  "raw_parse_format": "turtle",
+  "raw_parse_success": true,
+  "repair_attempt_count": 0,
+  "repair_prompt_path": null,
+  "repair_response_path": null
+}

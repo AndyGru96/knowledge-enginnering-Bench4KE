@@ -158,13 +158,7 @@ def cache_identity_v2(values: Dict[str, Any]) -> tuple[str, Dict[str, Any]]:
 def cache_identity_v2_for_fields(
     values: Dict[str, Any], fields: Iterable[str]
 ) -> tuple[str, Dict[str, Any]]:
-    """Build a schema-v2 key for an explicit, versioned identity contract.
-
-    The Phase 9 fixed-field function remains unchanged so its approved A1
-    admission keys stay reproducible.  New experiment contracts may enumerate
-    additional identity fields, but planning and runtime must pass the same
-    ordered field set and include an explicit contract identifier.
-    """
+    """Build a schema-v2 key for an explicit, versioned identity contract."""
     ordered_fields = tuple(fields)
     if len(ordered_fields) != len(set(ordered_fields)):
         raise ValueError("cache identity fields must be unique")

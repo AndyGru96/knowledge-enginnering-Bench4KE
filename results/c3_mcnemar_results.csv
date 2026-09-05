@@ -1,0 +1,10 @@
+method,comparison,paired_n,left_success_right_failure,left_failure_right_success,test,statistic,p_value_raw,p_value_holm,risk_difference_right_minus_left,matched_odds_ratio_right_over_left,status
+ontogenia,P0_vs_P1,17,4,5,exact_binomial_two_sided,,1.0,1.0,0.058823529411764705,1.25,estimated
+ontogenia,P0_vs_P2,17,3,4,exact_binomial_two_sided,,1.0,1.0,0.058823529411764705,1.3333333333333333,estimated
+ontogenia,P1_vs_P2,17,2,2,exact_binomial_two_sided,,1.0,1.0,0.0,1.0,estimated
+domain-ontogen,P0_vs_P1,17,0,1,exact_binomial_two_sided,,1.0,1.0,0.058823529411764705,infinite,estimated
+domain-ontogen,P0_vs_P2,17,0,1,exact_binomial_two_sided,,1.0,1.0,0.058823529411764705,infinite,estimated
+domain-ontogen,P1_vs_P2,17,0,0,exact_no_discordance,,1.0,1.0,0.0,undefined_0_over_0,estimated
+neon-gpt,P0_vs_P1,17,3,4,exact_binomial_two_sided,,1.0,1.0,0.058823529411764705,1.3333333333333333,estimated
+neon-gpt,P0_vs_P2,17,3,6,exact_binomial_two_sided,,0.5078125,1.0,0.17647058823529413,2.0,estimated
+neon-gpt,P1_vs_P2,17,2,4,exact_binomial_two_sided,,0.6875,1.0,0.11764705882352941,2.0,estimated

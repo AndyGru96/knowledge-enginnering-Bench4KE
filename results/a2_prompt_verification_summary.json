@@ -1,0 +1,29 @@
+{
+  "tasks_checked": 102,
+  "tasks_verified": 102,
+  "tasks_with_incorrect_prompt_hash_field": 94,
+  "initial_generation_calls": 330,
+  "syntax_repair_calls": 53,
+  "total_internal_calls": 383,
+  "verification": {
+    "saved_prompt_matches_variant": true,
+    "saved_requests_match_variant": true,
+    "scenario_unchanged": true,
+    "competency_questions_unchanged": true
+  },
+  "supporting_files": {
+    "task_table": "a2_prompt_task_verification.csv",
+    "complete_example": "../evidence/a2_p1_example"
+  },
+  "full_archive": {
+    "included_in_repository": false,
+    "a1": {
+      "files": 2243,
+      "bytes": 41602395
+    },
+    "a2": {
+      "files": 4663,
+      "bytes": 82263585
+    }
+  }
+}

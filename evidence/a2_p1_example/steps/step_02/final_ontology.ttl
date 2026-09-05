@@ -1,0 +1,64 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <http://www.example.org/test#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+<http://www.example.org/test#> a owl:Ontology .
+:Material a owl:Class ;
+	rdfs:label "Material" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasChemicalComposition ;
+    	owl:someValuesFrom :ChemicalComposition
+	] .
+:ChemicalComposition a owl:Class ;
+	rdfs:label "Chemical Composition" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :comprisesElement ;
+    	owl:onClass :ChemicalElement ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasConcentration ;
+    	owl:onDataRange xsd:float ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] .
+:ChemicalElement a owl:Class ;
+	rdfs:label "Chemical Element" .
+:hasChemicalComposition a owl:ObjectProperty ;
+	rdfs:label "hasChemicalComposition" ;
+	rdfs:domain :Material ;
+	rdfs:range :ChemicalComposition .
+:comprisesElement a owl:ObjectProperty ;
+	rdfs:label "comprisesElement" ;
+	rdfs:domain :ChemicalComposition ;
+	rdfs:range :ChemicalElement .
+:hasConcentration a owl:DatatypeProperty ;
+	rdfs:label "hasConcentration" ;
+	rdfs:domain :ChemicalComposition ;
+	rdfs:range xsd:float .
+
+<http://www.example.org/test#> a owl:Ontology .
+:Component a owl:Class ;
+	rdfs:label "Component" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasMaterialComposition ;
+    	owl:someValuesFrom :Material ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] .
+:Product a owl:Class ;
+	rdfs:label "Product" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasMaterialComposition ;
+    	owl:someValuesFrom :Material ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] .
+:Material a owl:Class ;
+	rdfs:label "Material" .
+:hasMaterialComposition a owl:ObjectProperty ;
+	rdfs:label "hasMaterialComposition" ;
+	rdfs:domain :Component, :Product ;
+	rdfs:range :Material .

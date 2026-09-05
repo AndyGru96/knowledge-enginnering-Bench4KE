@@ -61,7 +61,7 @@ def mock_ollama(responses):
 
 def options(**updates):
     values = {
-        "model": "phase4-model",
+        "model": "test-model",
         "temperature": 0,
         "seed": 42,
         "num_ctx": 8192,
@@ -76,7 +76,7 @@ def options(**updates):
 
 def valid_response():
     return {
-        "model": "phase4-model",
+        "model": "test-model",
         "created_at": "2026-07-15T00:00:00Z",
         "message": {"role": "assistant", "content": "valid turtle"},
         "done": True,
@@ -98,7 +98,7 @@ def test_native_chat_schema_options_and_telemetry():
     request = state["requests"][0]
     assert request["path"] == "/api/chat"
     assert request["json"] == {
-        "model": "phase4-model",
+        "model": "test-model",
         "messages": [{"role": "user", "content": "prompt"}],
         "stream": False,
         "keep_alive": "30m",
@@ -213,14 +213,14 @@ def test_health_version_model_listing_and_digest_preflight():
         {
             "body": {
                 "models": [
-                    {"name": "phase4-model", "digest": "sha256:abc"},
+                    {"name": "test-model", "digest": "sha256:abc"},
                     {"name": "other", "digest": "sha256:def"},
                 ]
             }
         },
     ]
     with mock_ollama(responses) as (url, state):
-        result = OllamaAdapter(url).preflight("phase4-model")
+        result = OllamaAdapter(url).preflight("test-model")
     assert [request["path"] for request in state["requests"]] == [
         "/api/version",
         "/api/tags",

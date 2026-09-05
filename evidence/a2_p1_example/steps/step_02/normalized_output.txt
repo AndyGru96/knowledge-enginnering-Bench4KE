@@ -1,0 +1,27 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <http://www.example.org/test#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+<http://www.example.org/test#> a owl:Ontology .
+:Component a owl:Class ;
+	rdfs:label "Component" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasMaterialComposition ;
+    	owl:someValuesFrom :Material ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] .
+:Product a owl:Class ;
+	rdfs:label "Product" ;
+	rdfs:subClassOf [
+    	a owl:Restriction ;
+    	owl:onProperty :hasMaterialComposition ;
+    	owl:someValuesFrom :Material ;
+    	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+	] .
+:Material a owl:Class ;
+	rdfs:label "Material" .
+:hasMaterialComposition a owl:ObjectProperty ;
+	rdfs:label "hasMaterialComposition" ;
+	rdfs:domain :Component, :Product ;
+	rdfs:range :Material .

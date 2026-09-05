@@ -21,7 +21,7 @@ cd restapi
 python ontology_adapter.py
 ```
 
-The adapter exposes `POST /generate_ontology` on port `8020`. Requests identify one of the three methods and include the scenario, ordered competency questions, optional user stories, constraints, and frozen generation metadata.
+The adapter exposes `POST /generate_ontology` on port `8020`. Requests identify one of the three methods and include the scenario, ordered competency questions, optional user stories, constraints, and generation settings.
 
 ## Start the benchmark API
 
@@ -36,7 +36,7 @@ The API exposes `POST /ontology/run`. It can load the normalized JSONL dataset o
 
 ## Core files
 
-- `ontology_adapter.py`: prompt assembly, method pipelines, Ollama/OpenAI-compatible provider selection, normalization, repair, and per-call telemetry.
+- `ontology_adapter.py`: prompt assembly, method pipelines, Ollama requests, normalization, repair, and per-call telemetry.
 - `app/routers/ontology_benchmark.py`: dataset execution, cache identity, artifact persistence, and metric orchestration.
 - `app/utils/llm_clients.py`: deterministic provider interface and native Ollama client.
 - `app/utils/ontology_artifacts.py`: result-envelope, parsing, cache, and resume contracts.

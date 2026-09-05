@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-07-15T21:13:05.3364509Z",
+  "done": true,
+  "done_reason": "stop",
+  "eval_count": 318,
+  "eval_duration": 1283036000,
+  "load_duration": 126417100,
+  "message": {
+    "content": "@prefix : <http://www.example.org/test#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<http://www.example.org/test#> a owl:Ontology .\n:Component a owl:Class ;\n\trdfs:label \"Component\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Product a owl:Class ;\n\trdfs:label \"Product\" ;\n\trdfs:subClassOf [\n    \ta owl:Restriction ;\n    \towl:onProperty :hasMaterialComposition ;\n    \towl:someValuesFrom :Material ;\n    \towl:minQualifiedCardinality \"1\"^^xsd:nonNegativeInteger\n\t] .\n:Material a owl:Class ;\n\trdfs:label \"Material\" .\n:hasMaterialComposition a owl:ObjectProperty ;\n\trdfs:label \"hasMaterialComposition\" ;\n\trdfs:domain :Component, :Product ;\n\trdfs:range :Material .",
+    "role": "assistant"
+  },
+  "model": "qwen3:30b-a3b-instruct-2507-q4_K_M",
+  "prompt_eval_count": 2112,
+  "prompt_eval_duration": 51789000,
+  "total_duration": 1470197100
+}

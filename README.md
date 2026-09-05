@@ -1,52 +1,45 @@
-# Bench4KE: Local LLM Ontology-Generation Evaluation
+# Bench4KE: Local Ontology Generation Evaluation
 
-Knowledge Engineering course project extending Bench4KE with local Ollama execution, documentation-completeness metrics, and prompt-sensitivity analysis.
+Knowledge Engineering course project by Gu Mingxuan (`mingxuan.gu@studio.unibo.it`) and Chayan Talukder (`chayan.talukder@studio.unibo.it`).
 
-**Authors:** Gu Mingxuan (`mingxuan.gu@studio.unibo.it`) and Chayan Talukder (`chayan.talukder@studio.unibo.it`)
+The project extends Bench4KE with local ontology generation through Ollama, documentation-completeness measurements, and prompt-sensitivity analysis.
 
-## Project scope
+The experiments use 17 scenarios and 74 competency questions. The compared methods are the Ontogenia-labelled Memoryless CQ-by-CQ baseline, Domain-OntoGen, and NeOn-GPT. The local model is `qwen3:30b-a3b-instruct-2507-q4_K_M`.
 
-The repository implements and evaluates:
+The method called `ontogenia` in the experiment is the Memoryless CQ-by-CQ baseline: each competency question is processed independently, previous model outputs are not passed to later calls, and the resulting fragments are combined at task level. The separate metacognitive `ontogenia-mp` implementation was not used.
 
-- **local Ollama support**, including frozen model identity, generation controls, telemetry, parsing, caching, and resumable execution;
-- **C2 documentation completeness**, measuring labels, comments or definitions, ontology metadata, documentation length, and nontrivial documentation;
-- **C3 prompt sensitivity**, comparing the approved P0, P1, and P2 instruction variants through paired parse-success tests and ontology-term Jaccard similarity.
+## Results
 
-The experiment covers all 17 frozen dataset items with the three required methods: **Ontogenia**, **Domain-OntoGen**, and **NeOn-GPT**. Reported generation used the local model `qwen3:30b-a3b-instruct-2507-q4_K_M` through Ollama; no paid API was used.
+The table reports final pipeline parse success after the recorded normalization and repair steps.
 
-## Main results
-
-The admitted analysis contains 153 tasks: 51 P0 tasks and 102 P1/P2 tasks.
-
-| Method | P0 parse | P1 parse | P2 parse | Total |
+| Method | P0 | P1 | P2 | Total |
 |---|---:|---:|---:|---:|
-| Ontogenia | 4/17 | 5/17 | 5/17 | 14/51 |
+| Ontogenia-labelled Memoryless CQ-by-CQ | 4/17 | 5/17 | 5/17 | 14/51 |
 | Domain-OntoGen | 16/17 | 17/17 | 17/17 | 50/51 |
 | NeOn-GPT | 11/17 | 12/17 | 14/17 | 37/51 |
 
-Overall, 101/153 final ontologies were parseable. C2 metrics are reported only for those 101 outputs. Under the frozen C3 policy, no method showed a statistically significant P0/P1/P2 difference in final parse success. This does not establish prompt invariance: paired parseable outputs still show descriptive term drift.
+Overall, 101 of 153 final ontologies were parseable. Documentation metrics are available for those 101 outputs. The paired tests did not detect a significant parse-success difference among P0, P1, and P2, while term overlap showed that ontology content could still change substantially.
 
-See the [final report](report/FINAL_REPORT.pdf) for the complete methodology, results, statistical interpretation, and limitations.
+The full discussion is in [report/FINAL_REPORT.pdf](report/FINAL_REPORT.pdf).
 
-## Repository contents
+## Repository structure
 
 ```text
-config/                         Frozen experiment and analysis policies
-datasets/ontology_generation/   Normalized dataset, prompts, audits, and gold modules
-docs/                           Technical and reproducibility documentation
-external_resources/             Minimal authoritative source fixtures
-report/                         LaTeX source, bibliography, figures, and final PDF
-restapi/                        FastAPI service, Ollama adapter, metrics, and artifact logic
-results/                        Compact final results and manifests
-scripts/                        Dataset, execution, and analysis tools
+config/                         Experiment and analysis settings
+datasets/ontology_generation/   Dataset, prompts, mappings, and gold modules
+docs/                           Method, dataset, and reproducibility notes
+evidence/                       One complete A2 P1 request example
+external_resources/             Source material used by the project
+report/                         LaTeX source, figures, bibliography, and PDF
+restapi/                        FastAPI service and Ollama integration
+results/                        Tables and statistical outputs
+scripts/                        Dataset, prompt-validation, and analysis scripts
 tests/                          Automated tests
 ```
 
-Large immutable A1/A2 raw-response trees are not included in this lightweight repository. The committed package contains the code, frozen inputs, compact results, hashes, and report. Restoring the separately preserved evidence archive is required to rerun every final analysis from raw model responses.
-
 ## Installation
 
-Python 3.13 is the validated development profile.
+Python 3.13 was used for the submitted version.
 
 ```powershell
 python -m venv .venv
@@ -55,8 +48,6 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-`requirements.txt` contains the validated direct dependencies for the API, analysis scripts, dataset preparation, and tests.
-
 ## Tests
 
 ```powershell
@@ -64,7 +55,7 @@ python -m pytest -q
 python -m compileall restapi scripts tests
 ```
 
-The submitted suite has been validated with all tests passing. Provider tests use deterministic mocks and do not contact Ollama, OpenAI, or another model service.
+The current repository test suite contains 47 passing tests. Provider tests use local recording objects and do not contact an Ollama server.
 
 ## Running the services
 
@@ -82,62 +73,53 @@ cd restapi
 python ontology_adapter.py
 ```
 
-The adapter defaults to port `8020`. Ollama is needed only for a newly authorized generation run; inspecting the repository and running the tests requires no model call.
+The adapter uses Ollama at `http://localhost:11434` by default and listens on port `8020`.
 
-## Rebuilding the report
+## Report
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File report/build_report.ps1
 ```
 
-The script supports Tectonic, `latexmk`, or `pdflatex` with BibTeX. Report files are:
+Report files:
 
 - [FINAL_REPORT.pdf](report/FINAL_REPORT.pdf)
 - [main.tex](report/main.tex)
 - [references.bib](report/references.bib)
 
-## Data, results, and reproducibility
+## Data and evidence
 
-The normalized execution dataset contains 17 scenarios and 74 source-ordered competency questions. Dataset construction preserves explicit source relationships and does not use fuzzy story matching.
+The executable dataset contains 17 scenarios and 74 source-ordered competency questions. The source workbook contains 112 nonempty CQ rows; 38 rows without a reliable story or scenario link are listed in the reconciliation table but are not used for generation.
 
-Key entry points:
+Important files:
 
 - [normalized dataset](datasets/ontology_generation/normalized/project2_full_generation.jsonl)
 - [dataset preparation](docs/DATASET_PREPARATION.md)
 - [method mapping](docs/METHOD_MAPPING.md)
-- [output contract](docs/OUTPUT_CONTRACT.md)
-- [reproducibility guide](docs/REPRODUCIBILITY.md)
-- [final experiment manifest](results/final_experiment_manifest.json)
+- [A2 request example](evidence/README.md)
 - [final C2/C3 summary](results/final_c2_c3_summary.csv)
-- [C3 statistical policy](config/c3_analysis_policy.yaml)
+- [C2 task-level results](results/c2_documentation_completeness.csv)
+- [C2 method and variant summary](results/c2_documentation_summary.csv)
+- [C3 parse-success panel](results/c3_parse_success_panel.csv)
+- [Cochran Q results](results/c3_cochran_q_results.csv)
+- [McNemar results](results/c3_mcnemar_results.csv)
+- [Wilcoxon results](results/c3_wilcoxon_results.csv)
+- [effect sizes](results/c3_effect_sizes.csv)
 
-Historical cache failures and repair-aware evidence admission are documented without rewriting the original records.
+The C2 implementation is in
+[`scripts/analyze_documentation_completeness.py`](scripts/analyze_documentation_completeness.py).
+The complete C3 implementation is in
+[`scripts/analyze_prompt_sensitivity.py`](scripts/analyze_prompt_sensitivity.py).
 
-## Main dependencies
-
-Exact versions are listed in `requirements.txt`.
-
-| Area | Libraries and tools |
-|---|---|
-| API and HTTP | FastAPI, Uvicorn, Pydantic, HTTPX, Requests, python-dotenv |
-| Ontology processing | RDFLib |
-| Data and analysis | NumPy, SciPy, PyYAML, openpyxl |
-| Visualization | Matplotlib |
-| Testing | pytest |
-| Optional provider compatibility | OpenAI Python SDK; not used in the reported experiment |
-| Local model execution | Ollama |
-| Report | LaTeX/BibTeX, Tectonic or another supported LaTeX engine |
-
-Authoritative prompt and dataset fixtures are retained under `external_resources/`; frozen copies and source hashes are under `datasets/ontology_generation/`.
+One A2 writer error stored the P0 prompt identifier in 94 P1/P2 task metadata files. The saved prompts and request files contain the intended P1/P2 instructions. The original task files were not edited; a complete P1 example and the task-level verification table are included in this repository.
 
 ## Limitations
 
-- The evaluation uses one quantized local model, one seed, and one frozen generation configuration.
-- The dataset has 17 scenarios, limiting some paired statistical comparisons.
-- Parseability does not prove conceptual correctness, CQ coverage, logical consistency, or practical usefulness.
-- C2 measures documentation presence and coverage, not semantic documentation quality.
-- Public source ontologies may introduce contamination risk.
-- Full raw-response regeneration requires the separately preserved evidence archive.
+- The evaluation uses one quantized local model, one seed, and one generation configuration.
+- Some paired comparisons have small sample sizes.
+- Parse success does not establish conceptual correctness, CQ coverage, logical consistency, or practical usefulness.
+- Documentation measurements describe the parseable outputs and do not assess the semantic quality of their text.
+- Normalization and syntax repair affect final parse success.
 
 ## References
 
@@ -150,8 +132,8 @@ Authoritative prompt and dataset fixtures are retained under `external_resources
 7. Zhu, K., et al. “PromptBench: Towards Evaluating the Robustness of Large Language Models on Adversarial Prompts.” 2023. [arXiv](https://arxiv.org/abs/2306.04528)
 8. FOSSr Project. [Bench4KE / Ontogenia-CINI repository](https://github.com/fossr-project/ontogenia-cini).
 
-The complete BibTeX records are in [report/references.bib](report/references.bib). Core implementation resources also include [Ollama](https://ollama.com/), [RDFLib](https://rdflib.readthedocs.io/), [FastAPI](https://fastapi.tiangolo.com/), [RDF 1.1 Turtle](https://www.w3.org/TR/turtle/), and [OWL 2](https://www.w3.org/TR/owl2-overview/).
+The complete BibTeX records are in [report/references.bib](report/references.bib). The implementation also uses [Ollama](https://ollama.com/), [RDFLib](https://rdflib.readthedocs.io/), [FastAPI](https://fastapi.tiangolo.com/), [RDF 1.1 Turtle](https://www.w3.org/TR/turtle/), and [OWL 2](https://www.w3.org/TR/owl2-overview/).
 
 ## License
 
-This repository retains the upstream [Apache License 2.0](LICENSE). External resources remain subject to their original licenses and attribution requirements.
+Upstream Apache-2.0 material is distributed under the terms in [LICENSE](LICENSE). External resources remain subject to their original terms.
