@@ -1,7 +1,5 @@
 # Bench4KE: Local Ontology Generation Evaluation
 
-Knowledge Engineering course project by Gu Mingxuan (`mingxuan.gu@studio.unibo.it`) and Chayan Talukder (`chayan.talukder@studio.unibo.it`).
-
 The project extends Bench4KE with local ontology generation through Ollama, documentation-completeness measurements, and prompt-sensitivity analysis.
 
 The experiments use 17 scenarios and 74 competency questions. The compared methods are the Ontogenia-labelled Memoryless CQ-by-CQ baseline, Domain-OntoGen, and NeOn-GPT. The local model is `qwen3:30b-a3b-instruct-2507-q4_K_M`.
