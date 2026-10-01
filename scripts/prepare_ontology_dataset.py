@@ -1,31 +1,12 @@
-"""Prepare the Project 2 ontology-generation dataset and resource manifests.
-
-The conversion is intentionally conservative:
-
-* only explicit StoryID values are used to group competency questions;
-* semicolon-separated StoryIDs are accepted only when every referenced ID
-  exists in the Story sheet;
-* gold modules are matched by the dataset README's explicit CQID == filename
-  stem rule, case-insensitively;
-* missing stories, mappings, prompts, and parse failures are reported rather
-  than repaired or inferred.
-
-The script uses only the Python standard library for XLSX/ZIP processing and
-RDFLib (already required by the PR #10 baseline) for RDF syntax checks.
-"""
-
+"""Prepare source-ordered CQs using explicit workbook story links."""
 from __future__ import annotations
-
 import argparse
 import ast
-import csv
 import hashlib
 import json
 import os
 import posixpath
 import re
-import shutil
-import tempfile
 import unicodedata
 import zipfile
 from collections import Counter, OrderedDict
@@ -33,81 +14,15 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Sequence
 from xml.etree import ElementTree as ET
-
 from rdflib import Graph
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+from restapi.app.utils.ontology_artifacts import write_bytes as atomic_write_bytes, write_text as atomic_write_text, write_json, write_csv as artifact_write_csv, sha256 as sha256_bytes
 
-
-DEFAULT_ARCHIVE_PASSWORD = "28mRFhW6wVnu7Wh"
-DEFAULT_APPROVED_METHODS = ("ontogenia", "domain-ontogen", "neon-gpt")
-
-AUTHORITATIVE_PROMPT_REPOSITORIES = {
-    "domain-ontogen": {
-        "repository": "https://github.com/dersuchendee/Domain-OntoGen",
-        "local_path": "external_resources/Domain-OntoGen",
-        "branch": "main",
-        "commit_sha": "894441e367acdbbd1ea662b6f1a6919d13533051",
-        "retrieval_date": "2026-07-15",
-        "licence": "Not declared in the repository (no licence file or README statement)",
-    },
-    "neon-gpt": {
-        "repository": "https://github.com/andreamust/NEON-GPT",
-        "local_path": "external_resources/NEON-GPT",
-        "branch": "main",
-        "commit_sha": "bce7a6a805faa23dc169f691afb5aaaacad3d99d",
-        "retrieval_date": "2026-07-15",
-        "licence": "MIT (repository LICENSE)",
-    },
-}
-
+ROOT = Path(__file__).resolve().parents[1]
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 DOC_REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PKG_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
-
-PROMPT_SPECS = {
-    "ontogenia": {
-        "expected_adapter_path": (
-            "datasets/ontology_generation/raw/ontogenia/"
-            "memoryless_cqbycq_prompt.txt"
-        ),
-        "canonical_path": (
-            "datasets/ontology_generation/prompts/ontogenia/P0_original.txt"
-        ),
-        "required_placeholders": ["{story}", "{CQ}", "{rdf}"],
-        "source_kind": "memoryless_readme",
-    },
-    "domain-ontogen": {
-        "expected_adapter_path": (
-            "datasets/ontology_generation/raw/domain-ontogen/prompt.txt"
-        ),
-        "canonical_path": (
-            "datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt"
-        ),
-        "required_placeholders": ["{OS}", "{CQ}"],
-        "source_kind": "domain_readme",
-        "source_relative_path": "external_resources/Domain-OntoGen/README.md",
-        "extraction_boundaries": (
-            "README.md section 'Prompt used for ontology generation', "
-            "Python fenced string literal"
-        ),
-    },
-    "neon-gpt": {
-        "expected_adapter_path": (
-            "datasets/ontology_generation/raw/neon-gpt/day1_gpt_prompt_list.txt"
-        ),
-        "canonical_path": (
-            "datasets/ontology_generation/prompts/neon-gpt/P0_original.txt"
-        ),
-        "required_placeholders": [],
-        "source_kind": "byte_copy",
-        "source_relative_path": (
-            "external_resources/NEON-GPT/gpt_wine_ont_day1/"
-            "day1_gpt_prompt_list.txt"
-        ),
-    },
-}
-
 
 @dataclass(frozen=True)
 class WorkbookSheet:
@@ -115,10 +30,6 @@ class WorkbookSheet:
     max_row: int
     max_col: int
     rows: dict[int, list[Any]]
-
-
-def sha256_bytes(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
 
 
 def sha256_file(path: Path) -> str:
@@ -129,57 +40,8 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def canonical_json_hash(value: Any) -> str:
-    payload = json.dumps(
-        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
-    return sha256_bytes(payload)
-
-
-def atomic_write_bytes(path: Path, data: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(data)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except Exception:
-        try:
-            os.unlink(temporary)
-        except FileNotFoundError:
-            pass
-        raise
-
-
-def atomic_write_text(path: Path, text: str) -> None:
-    atomic_write_bytes(path, text.encode("utf-8"))
-
-
-def write_json(path: Path, value: Any) -> None:
-    atomic_write_text(
-        path, json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    )
-
-
 def write_csv(path: Path, fieldnames: Sequence[str], rows: Iterable[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
-            writer.writeheader()
-            writer.writerows(rows)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except Exception:
-        try:
-            os.unlink(temporary)
-        except FileNotFoundError:
-            pass
-        raise
+    artifact_write_csv(path, list(rows), list(fieldnames))
 
 
 def column_index(reference: str) -> int:
@@ -523,258 +385,6 @@ def extract_domain_ontogen_prompt(markdown_path: Path) -> str:
     return prompt
 
 
-def prepare_prompts(
-    repo_root: Path,
-    staging_root: Path,
-    approved_methods: Sequence[str],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    prompt_records: list[dict[str, Any]] = []
-    errors: list[dict[str, Any]] = []
-    source_readme = (
-        repo_root
-        / "external_resources"
-        / "Onto-Generation"
-        / "PromptingTechniques"
-        / "README.md"
-    )
-    for method in approved_methods:
-        spec = PROMPT_SPECS.get(method)
-        if not spec:
-            errors.append(
-                {
-                    "category": "unknown_approved_method",
-                    "source": "config/course_methods.yaml",
-                    "identifier": method,
-                    "detail": "No prompt preparation specification exists.",
-                }
-            )
-            continue
-
-        prompt_bytes: bytes | None = None
-        source_path: Path | None = None
-        provenance: dict[str, Any] = {}
-        if spec["source_kind"] == "memoryless_readme":
-            source_path = source_readme
-            try:
-                prompt_bytes = extract_memoryless_prompt(source_readme).encode("utf-8")
-                provenance = {
-                    "classification": "published_exact",
-                    "extraction_boundaries": (
-                        "README.md section 'Memoryless CQbyCQ', Python fenced string literal"
-                    ),
-                    "transformations": {
-                        "markdown_fence_removed": True,
-                        "python_string_delimiters_removed": True,
-                        "python_escape_sequences_decoded": True,
-                        "semantic_modification": False,
-                    },
-                }
-            except Exception as exc:
-                errors.append(
-                    {
-                        "category": "prompt_extraction_error",
-                        "source": str(source_readme),
-                        "identifier": method,
-                        "detail": str(exc),
-                    }
-                )
-        elif spec["source_kind"] == "domain_readme":
-            source_path = repo_root / spec["source_relative_path"]
-            try:
-                prompt_bytes = extract_domain_ontogen_prompt(source_path).encode("utf-8")
-                provenance = {
-                    **AUTHORITATIVE_PROMPT_REPOSITORIES[method],
-                    "classification": "published_exact",
-                    "source_file": spec["source_relative_path"],
-                    "source_readme_sha256": sha256_file(source_path),
-                    "extraction_boundaries": spec["extraction_boundaries"],
-                    "only_markdown_indentation_or_fence_removed": False,
-                    "transformations": {
-                        "markdown_fence_removed": True,
-                        "python_string_delimiters_removed": True,
-                        "python_escape_sequences_decoded": True,
-                        "semantic_modification": False,
-                    },
-                }
-            except Exception as exc:
-                errors.append(
-                    {
-                        "category": "prompt_extraction_error",
-                        "source": str(source_path),
-                        "identifier": method,
-                        "detail": str(exc),
-                    }
-                )
-        elif spec["source_kind"] == "byte_copy":
-            source_path = repo_root / spec["source_relative_path"]
-            try:
-                prompt_bytes = source_path.read_bytes()
-                provenance = {
-                    **AUTHORITATIVE_PROMPT_REPOSITORIES[method],
-                    "classification": "published_exact",
-                    "source_file": spec["source_relative_path"],
-                    "copy_mode": "byte-for-byte",
-                    "source_sha256": sha256_bytes(prompt_bytes),
-                }
-            except Exception as exc:
-                errors.append(
-                    {
-                        "category": "prompt_copy_error",
-                        "source": str(source_path),
-                        "identifier": method,
-                        "detail": str(exc),
-                    }
-                )
-        else:
-            errors.append(
-                {
-                    "category": "unsupported_prompt_source_kind",
-                    "source": "scripts/prepare_ontology_dataset.py",
-                    "identifier": method,
-                    "detail": spec["source_kind"],
-                }
-            )
-
-        if prompt_bytes is None:
-            expected_source = spec.get("source_relative_path", "authoritative README")
-            errors.append(
-                {
-                    "category": "missing_prompt",
-                    "source": "authoritative repositories",
-                    "identifier": method,
-                    "detail": (
-                        f"Expected {spec['expected_adapter_path']}; source: "
-                        f"{expected_source}"
-                    ),
-                }
-            )
-            prompt_records.append(
-                {
-                    "method": method,
-                    "status": "missing",
-                    "expected_adapter_path": spec["expected_adapter_path"],
-                    "canonical_path": spec["canonical_path"],
-                    "source_path": None,
-                    "sha256": None,
-                    "required_placeholders": spec["required_placeholders"],
-                    "missing_placeholders": spec["required_placeholders"],
-                }
-            )
-            continue
-
-        prompt_text = prompt_bytes.decode("utf-8")
-        missing_placeholders = [
-            placeholder
-            for placeholder in spec["required_placeholders"]
-            if placeholder not in prompt_text
-        ]
-        if missing_placeholders:
-            errors.append(
-                {
-                    "category": "prompt_placeholder_error",
-                    "source": str(source_path),
-                    "identifier": method,
-                    "detail": f"Missing placeholders: {missing_placeholders}",
-                }
-            )
-        canonical_relative = Path(spec["canonical_path"]).relative_to(
-            "datasets/ontology_generation"
-        )
-        adapter_relative = Path(spec["expected_adapter_path"]).relative_to(
-            "datasets/ontology_generation"
-        )
-        canonical_output = staging_root / canonical_relative
-        adapter_output = staging_root / adapter_relative
-        atomic_write_bytes(canonical_output, prompt_bytes)
-        atomic_write_bytes(adapter_output, prompt_bytes)
-        copied_sha256 = sha256_file(adapter_output)
-        prompt_records.append(
-            {
-                "method": method,
-                "status": "ready" if not missing_placeholders else "invalid",
-                "expected_adapter_path": spec["expected_adapter_path"],
-                "canonical_path": spec["canonical_path"],
-                "source_path": str(source_path),
-                "source_sha256": sha256_file(source_path),
-                "sha256": sha256_file(canonical_output),
-                "copied_sha256": copied_sha256,
-                "source_and_copy_hashes_match": (
-                    sha256_file(source_path) == copied_sha256
-                    if spec["source_kind"] == "byte_copy"
-                    else None
-                ),
-                "required_placeholders": spec["required_placeholders"],
-                "missing_placeholders": missing_placeholders,
-                "placeholder_counts": {
-                    placeholder: prompt_text.count(placeholder)
-                    for placeholder in spec["required_placeholders"]
-                },
-                "provenance": provenance,
-            }
-        )
-    return prompt_records, errors
-
-
-def convert_patterns_to_odps(
-    patterns_csv: Path,
-    output_dir: Path,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Preserve each Pattern_owl cell as a separately loadable `.owl` file."""
-
-    records: list[dict[str, Any]] = []
-    errors: list[dict[str, Any]] = []
-    used_names: Counter[str] = Counter()
-    with patterns_csv.open("r", encoding="utf-8-sig", newline="") as handle:
-        reader = csv.DictReader(handle)
-        required = {"Name", "Pattern_owl"}
-        if not reader.fieldnames or not required.issubset(reader.fieldnames):
-            raise ValueError(
-                f"patterns CSV requires columns {sorted(required)}; got {reader.fieldnames}"
-            )
-        for source_row, row in enumerate(reader, start=2):
-            original_name = cell_text(row.get("Name"))
-            content = cell_text(row.get("Pattern_owl"))
-            base = sanitize_filename(original_name, f"pattern_{source_row}")
-            used_names[base.casefold()] += 1
-            occurrence = used_names[base.casefold()]
-            filename = f"{base}.owl" if occurrence == 1 else f"{base}_{occurrence}.owl"
-            output_path = output_dir / filename
-            if not content:
-                parse_success, parse_error, triple_count = (
-                    False,
-                    "Empty Pattern_owl value",
-                    None,
-                )
-                atomic_write_text(output_path, "")
-            else:
-                atomic_write_text(output_path, content.rstrip() + "\n")
-            parse_success, parse_error, triple_count, parse_format = parse_rdf(
-                output_path
-            )
-            record = {
-                "source_row": source_row,
-                "original_name": original_name,
-                "sanitized_filename": filename,
-                "output_path": str(output_path),
-                "sha256": sha256_file(output_path),
-                "parse_success": parse_success,
-                    "parse_error": parse_error,
-                    "parse_format": parse_format,
-                    "triple_count": triple_count,
-            }
-            records.append(record)
-            if not parse_success:
-                errors.append(
-                    {
-                        "category": "unparseable_odp_file",
-                        "source": str(patterns_csv),
-                        "identifier": original_name or str(source_row),
-                        "detail": parse_error or "Unknown RDF parse error",
-                    }
-                )
-    return records, errors
-
-
 def sheet_audit(sheet: WorkbookSheet) -> dict[str, Any]:
     headers = [cell_text(value) for value in sheet.rows.get(1, [])]
     missing = {header: 0 for header in headers if header}
@@ -793,7 +403,7 @@ def sheet_audit(sheet: WorkbookSheet) -> dict[str, Any]:
 
 
 def normalize_identifier(value: Any) -> tuple[str, bool]:
-    """Apply only the approved representation normalizations."""
+    """Normalize workbook identifiers without inferring missing links."""
 
     if value is None:
         return "", False
@@ -941,335 +551,6 @@ def inspect_workbook_with_openpyxl(
             "normalization_applied": normalization_applied,
         }
     return result
-
-
-def build_dataset_records(
-    workbook_path: Path,
-    gold_records: list[dict[str, Any]],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any], list[dict[str, Any]]]:
-    sheets = read_xlsx(workbook_path)
-    by_name = {sheet.name: sheet for sheet in sheets}
-    if "CQs" not in by_name or "Story" not in by_name:
-        raise ValueError(
-            f"Workbook must contain CQs and Story sheets; found {sorted(by_name)}"
-        )
-    cq_sheet = by_name["CQs"]
-    story_sheet = by_name["Story"]
-    cq_headers = [cell_text(value) for value in cq_sheet.rows.get(1, [])]
-    story_headers = [cell_text(value) for value in story_sheet.rows.get(1, [])]
-    required_cq = {"StoryID", "CQID", "CQText", "Category of CQ"}
-    required_story = {"StoryID", "StoryText"}
-    if not required_cq.issubset(cq_headers):
-        raise ValueError(f"CQs sheet missing columns: {sorted(required_cq - set(cq_headers))}")
-    if not required_story.issubset(story_headers):
-        raise ValueError(
-            f"Story sheet missing columns: {sorted(required_story - set(story_headers))}"
-        )
-
-    stories: OrderedDict[str, dict[str, Any]] = OrderedDict()
-    story_id_rows: dict[str, list[int]] = {}
-    blank_story_rows: list[int] = []
-    for source_row in range(2, story_sheet.max_row + 1):
-        source = row_dict(story_sheet, source_row)
-        story_id = cell_text(source.get("StoryID"))
-        story_text = cell_text(source.get("StoryText"))
-        if not story_id and not story_text:
-            blank_story_rows.append(source_row)
-            continue
-        if story_id:
-            story_id_rows.setdefault(story_id.casefold(), []).append(source_row)
-            stories.setdefault(
-                story_id.casefold(),
-                {
-                    "story_id": story_id,
-                    "story_text": story_text,
-                    "source_row": source_row,
-                },
-            )
-
-    duplicate_story_ids = [
-        {"story_id": stories[key]["story_id"], "source_rows": rows}
-        for key, rows in story_id_rows.items()
-        if len(rows) > 1
-    ]
-
-    raw_cq_rows: list[dict[str, Any]] = []
-    blank_cq_rows: list[int] = []
-    for source_row in range(2, cq_sheet.max_row + 1):
-        source = row_dict(cq_sheet, source_row)
-        record = {
-            "source_row": source_row,
-            "story_id": cell_text(source.get("StoryID")),
-            "cq_id": cell_text(source.get("CQID")),
-            "cq_text": cell_text(source.get("CQText")),
-            "category": cell_text(source.get("Category of CQ")),
-        }
-        if not any(record[key] for key in ("story_id", "cq_id", "cq_text", "category")):
-            blank_cq_rows.append(source_row)
-        raw_cq_rows.append(record)
-
-    cq_counts = Counter(
-        row["cq_id"].casefold() for row in raw_cq_rows if row["cq_id"]
-    )
-    duplicate_cq_ids = [
-        {
-            "cq_id": next(
-                row["cq_id"]
-                for row in raw_cq_rows
-                if row["cq_id"] and row["cq_id"].casefold() == key
-            ),
-            "source_rows": [
-                row["source_row"]
-                for row in raw_cq_rows
-                if row["cq_id"] and row["cq_id"].casefold() == key
-            ],
-        }
-        for key, count in sorted(cq_counts.items())
-        if count > 1
-    ]
-
-    gold_by_stem: dict[str, list[dict[str, Any]]] = {}
-    for record in gold_records:
-        gold_by_stem.setdefault(record["stem"].casefold(), []).append(record)
-
-    excluded: list[dict[str, Any]] = []
-    errors: list[dict[str, Any]] = []
-    valid_rows: list[dict[str, Any]] = []
-    all_source_cq_ids = {
-        row["cq_id"].casefold() for row in raw_cq_rows if row["cq_id"]
-    }
-    mapping_rows: list[dict[str, Any]] = []
-
-    for row in raw_cq_rows:
-        reasons: list[str] = []
-        if row["source_row"] in blank_cq_rows:
-            reasons.append("blank_row")
-        else:
-            if not row["cq_id"]:
-                reasons.append("missing_cq_id")
-            if not row["cq_text"]:
-                reasons.append("empty_cq_text")
-            if not row["story_id"]:
-                reasons.append("missing_story_id")
-            if row["cq_id"] and cq_counts[row["cq_id"].casefold()] > 1:
-                reasons.append("duplicate_cq_id")
-
-        story_ids = [
-            part.strip() for part in row["story_id"].split(";") if part.strip()
-        ]
-        missing_references = [
-            story_id
-            for story_id in story_ids
-            if story_id.casefold() not in stories
-        ]
-        if missing_references:
-            reasons.append("unresolved_story_id")
-
-        gold_candidates = gold_by_stem.get(row["cq_id"].casefold(), []) if row["cq_id"] else []
-        if len(gold_candidates) == 1:
-            gold = gold_candidates[0]
-            mapping_status = "mapped"
-            gold_path = str(gold["output_path"])
-            gold_sha = gold["source_sha256"]
-            gold_parse_success = gold["parse_success"]
-        elif len(gold_candidates) > 1:
-            mapping_status = "ambiguous"
-            gold_path = "|".join(str(candidate["output_path"]) for candidate in gold_candidates)
-            gold_sha = "|".join(candidate["source_sha256"] for candidate in gold_candidates)
-            gold_parse_success = False
-            reasons.append("ambiguous_gold_mapping")
-        else:
-            mapping_status = "missing"
-            gold_path = ""
-            gold_sha = ""
-            gold_parse_success = ""
-
-        included = not reasons
-        mapping_rows.append(
-            {
-                "source_workbook": workbook_path.name,
-                "source_sheet": "CQs",
-                "source_row": row["source_row"],
-                "story_id": row["story_id"],
-                "cq_id": row["cq_id"],
-                "included_in_normalized_dataset": str(included).lower(),
-                "mapping_rule": "case-insensitive exact CQID-to-filename-stem",
-                "mapping_status": mapping_status,
-                "gold_path": gold_path,
-                "gold_sha256": gold_sha,
-                "gold_parse_success": gold_parse_success,
-                "exclusion_reasons": "|".join(reasons),
-            }
-        )
-
-        enriched = {
-            **row,
-            "story_ids": story_ids,
-            "story_records": [stories[story_id.casefold()] for story_id in story_ids if story_id.casefold() in stories],
-            "gold_path": gold_path or None,
-            "gold_sha256": gold_sha or None,
-            "gold_parse_success": gold_parse_success if gold_path else None,
-            "mapping_status": mapping_status,
-        }
-        if reasons:
-            excluded_entry = {
-                "source_sheet": "CQs",
-                "source_row": row["source_row"],
-                "story_id": row["story_id"],
-                "cq_id": row["cq_id"],
-                "reasons": reasons,
-            }
-            excluded.append(excluded_entry)
-            errors.append(
-                {
-                    "category": "excluded_source_row",
-                    "source": f"{workbook_path.name}:CQs",
-                    "identifier": str(row["source_row"]),
-                    "detail": "|".join(reasons),
-                }
-            )
-        else:
-            valid_rows.append(enriched)
-
-    groups: OrderedDict[str, list[dict[str, Any]]] = OrderedDict()
-    for row in valid_rows:
-        groups.setdefault(row["story_id"], []).append(row)
-
-    normalized_items: list[dict[str, Any]] = []
-    for story_id, rows in groups.items():
-        story_records: OrderedDict[str, dict[str, Any]] = OrderedDict()
-        for row in rows:
-            for story in row["story_records"]:
-                story_records.setdefault(story["story_id"], story)
-        user_stories = [story["story_text"] for story in story_records.values()]
-        if len(story_records) == 1:
-            scenario = user_stories[0]
-        else:
-            scenario = "\n\n".join(
-                f"[{story['story_id']}]\n{story['story_text']}"
-                for story in story_records.values()
-            )
-        cq_metadata = [
-            {
-                "cq_id": row["cq_id"],
-                "cq_text": row["cq_text"],
-                "category": row["category"] or None,
-                "source_row": row["source_row"],
-                "gold_module": row["gold_path"],
-                "gold_sha256": row["gold_sha256"],
-                "gold_parse_success": row["gold_parse_success"],
-                "gold_mapping_status": row["mapping_status"],
-            }
-            for row in rows
-        ]
-        normalized_items.append(
-            {
-                "dataset_id": dataset_id_for_story(story_id),
-                "scenario_id": story_id,
-                "scenario": scenario,
-                "competency_questions": [row["cq_text"] for row in rows],
-                "user_stories": user_stories,
-                "constraints": {"output_format": "ttl"},
-                "metadata": {
-                    "original_story_id": story_id,
-                    "original_story_ids": list(story_records),
-                    "original_cq_ids": [row["cq_id"] for row in rows],
-                    "source_workbook": workbook_path.name,
-                    "source_sheet": "CQs",
-                    "source_rows": [row["source_row"] for row in rows],
-                    "story_source_rows": [story["source_row"] for story in story_records.values()],
-                    "domain_identifier": None,
-                    "domain_identifier_source": "not_provided_by_source_workbook",
-                    "ontology_identifiers": [row["cq_id"] for row in rows],
-                    "cq_records": cq_metadata,
-                },
-            }
-        )
-
-    mapped_gold_paths = {
-        Path(row["gold_path"]).resolve()
-        for row in mapping_rows
-        if row["mapping_status"] == "mapped" and row["gold_path"]
-    }
-    orphan_modules = [
-        {
-            "archive": record["archive"],
-            "archive_member": record["archive_member"],
-            "output_path": str(record["output_path"]),
-            "stem": record["stem"],
-            "reason": (
-                "No CQID with a case-insensitive exact stem match"
-                if record["stem"].casefold() not in all_source_cq_ids
-                else "Matched CQ exists but mapping was not unique"
-            ),
-        }
-        for record in gold_records
-        if record["output_path"].resolve() not in mapped_gold_paths
-    ]
-
-    audit = {
-        "source_workbooks": [
-            {
-                "path": str(workbook_path),
-                "sha256": sha256_file(workbook_path),
-            }
-        ],
-        "sheets": [sheet_audit(sheet) for sheet in sheets],
-        "source_row_count": max(0, cq_sheet.max_row - 1),
-        "story_count": len(stories),
-        "cq_count": sum(
-            1 for row in raw_cq_rows if row["cq_id"] and row["cq_text"]
-        ),
-        "normalized_item_count": len(normalized_items),
-        "normalized_cq_count": sum(
-            len(item["competency_questions"]) for item in normalized_items
-        ),
-        "gold_module_count": len(gold_records),
-        "duplicate_ids": {
-            "cq_ids": duplicate_cq_ids,
-            "story_ids": duplicate_story_ids,
-        },
-        "missing_ids": {
-            "cq_id_source_rows": [row["source_row"] for row in raw_cq_rows if not row["cq_id"]],
-            "story_id_source_rows": [row["source_row"] for row in raw_cq_rows if not row["story_id"]],
-        },
-        "empty_cqs": [row["source_row"] for row in raw_cq_rows if not row["cq_text"]],
-        "missing_stories": [
-            {
-                "source_row": row["source_row"],
-                "cq_id": row["cq_id"],
-                "story_id": row["story_id"],
-            }
-            for row in raw_cq_rows
-            if row["cq_id"]
-            and (
-                not row["story_id"]
-                or any(
-                    part.strip().casefold() not in stories
-                    for part in row["story_id"].split(";")
-                    if part.strip()
-                )
-            )
-        ],
-        "blank_story_rows": blank_story_rows,
-        "missing_mappings": [
-            {
-                "source_row": row["source_row"],
-                "story_id": row["story_id"],
-                "cq_id": row["cq_id"],
-            }
-            for row in mapping_rows
-            if row["cq_id"] and row["mapping_status"] == "missing"
-        ],
-        "orphan_modules": orphan_modules,
-        "excluded_rows_and_reasons": excluded,
-        "domain_identifier_column_present": False,
-        "gold_mapping_rule": (
-            "Dataset README explicitly states module filename is CQID.ttl; "
-            "matching is case-insensitive exact filename stem equality."
-        ),
-    }
-    return normalized_items, mapping_rows, audit, errors
 
 
 def build_dataset_records(
@@ -1768,7 +1049,7 @@ def build_dataset_records(
         ),
         "gold_evaluable_scope": (
             "Rows in full generation scope with one parseable exact CQID-to-gold-stem match; "
-            "gold_mapping.csv is the authoritative subset representation."
+            "source_row_reconciliation.csv identifies the subset."
         ),
         "gold_mapping_rule": (
             "Dataset README states module filename is CQID.ttl; matching uses "
@@ -1778,436 +1059,103 @@ def build_dataset_records(
     return normalized_items, mapping_rows, audit, errors
 
 
-def logicalize_paths(
-    value: Any,
-    staging_root: Path,
-    output_root: Path,
-    repo_root: Path,
-) -> Any:
-    if isinstance(value, dict):
-        return {
-            key: logicalize_paths(item, staging_root, output_root, repo_root)
-            for key, item in value.items()
-        }
-    if isinstance(value, list):
-        return [
-            logicalize_paths(item, staging_root, output_root, repo_root)
-            for item in value
-        ]
-    if isinstance(value, Path):
-        return logicalize_paths(str(value), staging_root, output_root, repo_root)
-    if isinstance(value, str):
-        staging_text = str(staging_root)
-        if value.startswith(staging_text):
-            suffix = Path(value).relative_to(staging_root)
-            return portable_path(output_root / suffix, repo_root)
-        candidate = Path(value)
-        if candidate.is_absolute():
-            return portable_path(candidate, repo_root)
-    return value
-
-
-def enumerate_output_hashes(root: Path) -> list[dict[str, Any]]:
+def existing_gold_records(directory: Path) -> list[dict[str, Any]]:
     records = []
-    for path in sorted(candidate for candidate in root.rglob("*") if candidate.is_file()):
-        records.append(
-            {
-                "path": str(path.relative_to(root)).replace("\\", "/"),
-                "sha256": sha256_file(path),
-                "bytes": path.stat().st_size,
-            }
-        )
+    for path in sorted(directory.rglob("*")):
+        if path.is_file() and path.suffix.lower() in {".ttl", ".rdf", ".owl"}:
+            success, error, triples, rdf_format = parse_rdf(path)
+            records.append({
+                "archive": path.parent.name, "archive_member": path.name,
+                "source_sha256": sha256_file(path), "filename": path.name, "stem": path.stem,
+                "output_path": path, "parse_success": success, "parse_error": error,
+                "parse_format": rdf_format, "triple_count": triples,
+            })
     return records
 
 
-def replace_managed_outputs(staging_root: Path, output_root: Path) -> None:
-    output_root.mkdir(parents=True, exist_ok=True)
-    managed = [
-        "normalized",
-        "gold",
-        "prompts",
-        "odps",
-        "raw",
-        "dataset_audit.json",
-        "gold_mapping.csv",
-        "source_row_reconciliation.csv",
-        "conversion_errors.csv",
-        "resource_manifest.json",
-        "odp_manifest.json",
+def relative_paths(value: Any, root: Path) -> Any:
+    if isinstance(value, dict):
+        return {key: relative_paths(child, root) for key, child in value.items()}
+    if isinstance(value, list):
+        return [relative_paths(child, root) for child in value]
+    if isinstance(value, Path):
+        return portable_path(value, root)
+    if isinstance(value, str) and value.startswith(str(root)):
+        return portable_path(Path(value), root)
+    return value
+
+
+def prepare_prompts(directory: Path) -> None:
+    import yaml
+    from restapi.ontology_adapter import OUTPUT_PROTOCOL
+
+    canonical = ROOT / "datasets/ontology_generation/prompts"
+    settings = yaml.safe_load((ROOT / "config/course_methods.yaml").read_text(encoding="utf-8"))
+    sources = {
+        "ontogenia": extract_memoryless_prompt(ROOT / "external_resources/Onto-Generation/PromptingTechniques/README.md"),
+        "domain-ontogen": extract_domain_ontogen_prompt(ROOT / "external_resources/Domain-OntoGen/README.md"),
+        "neon-gpt": (canonical / "neon-gpt/P0_original.txt").read_bytes().decode("utf-8").split("\n\nOutput protocol:\n\n", 1)[0],
+    }
+    filenames = {"P0": "P0_original.txt", "P1": "P1_candidate.txt", "P2": "P2_candidate.txt"}
+    for method, base in sources.items():
+        for variant, filename in filenames.items():
+            text = base + "\n\nOutput protocol:\n\n" + OUTPUT_PROTOCOL
+            if variant != "P0":
+                text += "\n\nAdditional instruction:\n\n" + settings["prompt_variant_instructions"][variant]
+            atomic_write_text(directory / method / filename, text)
+
+
+def prepare_dataset(output_root: Path, *, extract_gold: bool = False) -> dict[str, Any]:
+    source = ROOT / "external_resources/Onto-Generation/Dataset_OntoGen"
+    gold_directory = ROOT / "datasets/ontology_generation/gold"
+    errors = []
+    if extract_gold:
+        if not list(source.glob("*.zip")):
+            raise FileNotFoundError("Place the course gold ZIP archives beside Dataset.xlsx first")
+        records, errors = extract_gold_archives(
+            source, gold_directory, os.getenv("GOLD_ARCHIVE_PASSWORD", "")
+        )
+    else:
+        records = existing_gold_records(gold_directory)
+    items, mapping, audit, workbook_errors = build_dataset_records(source / "Dataset.xlsx", records)
+    errors.extend(workbook_errors)
+    items = relative_paths(items, ROOT)
+    mapping = relative_paths(mapping, ROOT)
+    errors = relative_paths(errors, ROOT)
+    atomic_write_text(
+        output_root / "normalized/project2_full_generation.jsonl",
+        "".join(json.dumps(item, ensure_ascii=False, sort_keys=True) + "\n" for item in items),
+    )
+    write_csv(output_root / "source_row_reconciliation.csv", list(mapping[0]), mapping)
+    gold_fields = ["source_row", "cq_id", "story_id", "gold_path", "gold_sha256", "gold_parse_success", "mapping_status", "gold_mapping_method"]
+    write_csv(output_root / "gold_mapping.csv", gold_fields, [{key: row.get(key) for key in gold_fields} for row in mapping])
+    write_csv(output_root / "conversion_errors.csv", ["category", "source", "identifier", "detail"], errors)
+    sources = [
+        source / "Dataset.xlsx",
+        ROOT / "external_resources/Onto-Generation/PromptingTechniques/README.md",
+        ROOT / "external_resources/Domain-OntoGen/README.md",
+        ROOT / "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
+        ROOT / "datasets/ontology_generation/raw/ontogenia/memoryless_cqbycq_prompt.txt",
+        ROOT / "datasets/ontology_generation/raw/domain-ontogen/prompt.txt",
+        ROOT / "datasets/ontology_generation/raw/neon-gpt/day1_gpt_prompt_list.txt",
     ]
-    resolved_root = output_root.resolve()
-    for name in managed:
-        source = staging_root / name
-        destination = output_root / name
-        if destination.exists():
-            resolved_destination = destination.resolve()
-            if resolved_root not in resolved_destination.parents:
-                raise RuntimeError(f"Refusing to replace path outside output root: {destination}")
-            if destination.is_dir():
-                shutil.rmtree(destination)
-            else:
-                destination.unlink()
-        if source.exists():
-            os.replace(source, destination)
-
-
-def prepare_dataset(
-    repo_root: Path,
-    dataset_source: Path,
-    output_root: Path,
-    approved_methods: Sequence[str] = DEFAULT_APPROVED_METHODS,
-    password: str = DEFAULT_ARCHIVE_PASSWORD,
-    enable_odps: bool = False,
-) -> dict[str, Any]:
-    repo_root = repo_root.resolve()
-    dataset_source = dataset_source.resolve()
-    output_root = output_root.resolve()
-    workbook_files = sorted(dataset_source.glob("*.xlsx"))
-    if len(workbook_files) != 1:
-        raise ValueError(
-            f"Expected exactly one XLSX in {dataset_source}; found {len(workbook_files)}"
-        )
-    workbook_path = workbook_files[0]
-
-    staging_parent = output_root.parent
-    staging_parent.mkdir(parents=True, exist_ok=True)
-    staging_root = Path(
-        tempfile.mkdtemp(prefix=f".{output_root.name}_prepare_", dir=staging_parent)
-    )
-    conversion_errors: list[dict[str, Any]] = []
-    try:
-        for directory in ("normalized", "gold", "prompts", "odps", "raw"):
-            (staging_root / directory).mkdir(parents=True, exist_ok=True)
-
-        gold_records, gold_errors = extract_gold_archives(
-            dataset_source, staging_root / "gold", password
-        )
-        conversion_errors.extend(gold_errors)
-        normalized_items, mapping_rows, audit, dataset_errors = (
-            build_dataset_records(workbook_path, gold_records)
-        )
-        conversion_errors.extend(dataset_errors)
-
-        prompt_records, prompt_errors = prepare_prompts(
-            repo_root, staging_root, approved_methods
-        )
-        conversion_errors.extend(prompt_errors)
-
-        patterns_path = (
-            repo_root / "external_resources" / "Ontogenia" / "data" / "patterns.csv"
-        )
-        procedure_path = (
-            repo_root / "external_resources" / "Ontogenia" / "data" / "procedure.txt"
-        )
-        if enable_odps:
-            odp_records, odp_errors = convert_patterns_to_odps(
-                patterns_path, staging_root / "odps"
-            )
-            conversion_errors.extend(odp_errors)
-            odp_reason = None
-            applicable_methods = ["ontogenia-mp"]
-        else:
-            odp_records = []
-            odp_reason = (
-                "None of the selected methods calls _load_odps_text; "
-                "ontogenia-mp is explicitly excluded from the approved three."
-            )
-            applicable_methods = []
-            atomic_write_text(
-                staging_root / "odps" / "README.md",
-                "# ODP preparation\n\n"
-                + odp_reason
-                + "\n",
-            )
-
-        logical_normalized_items = logicalize_paths(
-            normalized_items, staging_root, output_root, repo_root
-        )
-        normalized_payload = "".join(
-            json.dumps(item, ensure_ascii=False, sort_keys=True) + "\n"
-            for item in logical_normalized_items
-        )
-        atomic_write_text(
-            staging_root / "normalized" / "project2_full_generation.jsonl",
-            normalized_payload,
-        )
-        atomic_write_text(
-            staging_root / "normalized" / "project2.jsonl",
-            normalized_payload,
-        )
-
-        mapping_fields = [
-            "source_workbook",
-            "source_sheet",
-            "source_row",
-            "raw_story_id",
-            "story_id",
-            "cq_id",
-            "cq_text_nonempty",
-            "hidden_source_row",
-            "mapping_method",
-            "merged_source_range",
-            "full_generation_included",
-            "included_in_normalized_dataset",
-            "exclusion_reason",
-            "missing_gold_only",
-            "included_in_gold_evaluable_scope",
-            "mapping_rule",
-            "gold_mapping_method",
-            "mapping_status",
-            "gold_path",
-            "gold_sha256",
-            "gold_parse_success",
-            "exclusion_reasons",
-        ]
-        logical_mapping_rows = logicalize_paths(
-            mapping_rows, staging_root, output_root, repo_root
-        )
-        write_csv(staging_root / "gold_mapping.csv", mapping_fields, logical_mapping_rows)
-        reconciliation_fields = [
-            "source_workbook",
-            "source_sheet",
-            "source_row",
-            "raw_story_id",
-            "story_id",
-            "cq_id",
-            "cq_text_nonempty",
-            "hidden_source_row",
-            "mapping_method",
-            "merged_source_range",
-            "full_generation_included",
-            "exclusion_reason",
-            "missing_gold_only",
-            "included_in_gold_evaluable_scope",
-            "gold_mapping_method",
-            "mapping_status",
-        ]
-        write_csv(
-            staging_root / "source_row_reconciliation.csv",
-            reconciliation_fields,
-            logical_mapping_rows,
-        )
-
-        for mapping_row in mapping_rows:
-            if mapping_row["cq_id"] and mapping_row["mapping_status"] == "missing":
-                conversion_errors.append(
-                    {
-                        "category": "missing_gold_mapping",
-                        "source": f"{mapping_row['source_workbook']}:{mapping_row['source_sheet']}",
-                        "identifier": mapping_row["cq_id"],
-                        "detail": (
-                            "No case-insensitive exact CQID-to-filename-stem match; "
-                            "no identifier-prefix inference was attempted."
-                        ),
-                    }
-                )
-
-        error_fields = ["category", "source", "identifier", "detail"]
-        logical_errors = logicalize_paths(
-            conversion_errors, staging_root, output_root, repo_root
-        )
-        write_csv(
-            staging_root / "conversion_errors.csv",
-            error_fields,
-            logical_errors,
-        )
-
-        logical_gold = logicalize_paths(
-            gold_records, staging_root, output_root, repo_root
-        )
-        logical_odps = logicalize_paths(
-            odp_records, staging_root, output_root, repo_root
-        )
-        logical_prompts = logicalize_paths(
-            prompt_records, staging_root, output_root, repo_root
-        )
-        odp_manifest = {
-            "schema_version": 1,
-            "applicable_methods": applicable_methods,
-            "not_applicable_reason": odp_reason,
-            "source_patterns_csv": portable_path(patterns_path, repo_root),
-            "source_patterns_sha256": sha256_file(patterns_path),
-            "lookup_contract": {
-                "directory": "datasets/ontology_generation/raw/ontogenia/odps",
-                "candidate_order": ["name", "name.ttl", "name.owl", "name.rdf"],
-            },
-            "entries": logical_odps,
-        }
-        write_json(staging_root / "odp_manifest.json", odp_manifest)
-
-        audit["missing_prompts"] = [
-            record["method"] for record in prompt_records if record["status"] == "missing"
-        ]
-        audit["unparseable_gold_files"] = [
-            {
-                "archive": record["archive"],
-                "archive_member": record["archive_member"],
-                "error": record["parse_error"],
-            }
-            for record in gold_records
-            if not record["parse_success"]
-        ]
-        audit["unparseable_odp_files"] = [
-            {
-                "original_name": record["original_name"],
-                "filename": record["sanitized_filename"],
-                "error": record["parse_error"],
-            }
-            for record in odp_records
-            if not record["parse_success"]
-        ]
-        audit["approved_methods"] = list(approved_methods)
-        audit["prompt_resources"] = logical_prompts
-        audit["odp_applicable"] = enable_odps
-        audit["conversion_error_count"] = len(conversion_errors)
-
-        source_paths = [
-            workbook_path,
-            *sorted(dataset_source.glob("*.zip")),
-            repo_root
-            / "external_resources"
-            / "Onto-Generation"
-            / "PromptingTechniques"
-            / "README.md",
-            patterns_path,
-            procedure_path,
-        ]
-        if "domain-ontogen" in approved_methods:
-            source_paths.append(
-                repo_root / "external_resources" / "Domain-OntoGen" / "README.md"
-            )
-        if "neon-gpt" in approved_methods:
-            source_paths.extend(
-                [
-                    repo_root
-                    / "external_resources"
-                    / "NEON-GPT"
-                    / "gpt_wine_ont_day1"
-                    / "day1_gpt_prompt_list.txt",
-                    repo_root / "external_resources" / "NEON-GPT" / "LICENSE",
-                ]
-            )
-        source_files = []
-        for path in source_paths:
-            source_files.append(
-                {
-                    "path": portable_path(path, repo_root),
-                    "sha256": sha256_file(path),
-                    "bytes": path.stat().st_size,
-                }
-            )
-
-        pre_manifest_outputs = enumerate_output_hashes(staging_root)
-        manifest_basis = {
-            "approved_methods": list(approved_methods),
-            "authoritative_prompt_repositories": AUTHORITATIVE_PROMPT_REPOSITORIES,
-            "source_files": source_files,
-            "outputs": pre_manifest_outputs,
-            "normalized_item_count": len(normalized_items),
-            "gold_module_count": len(gold_records),
-        }
-        data_manifest_hash = canonical_json_hash(manifest_basis)
-        audit["data_manifest_hash"] = data_manifest_hash
-        logical_audit = logicalize_paths(
-            audit, staging_root, output_root, repo_root
-        )
-        write_json(staging_root / "dataset_audit.json", logical_audit)
-
-        resource_manifest = {
-            "schema_version": 1,
-            "data_manifest_hash": data_manifest_hash,
-            "approved_methods": list(approved_methods),
-            "authoritative_prompt_repositories": {
-                method: AUTHORITATIVE_PROMPT_REPOSITORIES[method]
-                for method in approved_methods
-                if method in AUTHORITATIVE_PROMPT_REPOSITORIES
-            },
-            "source_files": source_files,
-            "prompt_resources": logical_prompts,
-            "gold_modules": logical_gold,
-            "odp_manifest": "datasets/ontology_generation/odp_manifest.json",
-            "outputs": enumerate_output_hashes(staging_root),
-        }
-        write_json(staging_root / "resource_manifest.json", resource_manifest)
-
-        replace_managed_outputs(staging_root, output_root)
-        return logical_audit
-    finally:
-        if staging_root.exists():
-            shutil.rmtree(staging_root)
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument(
-        "--dataset-source",
-        type=Path,
-        default=Path("external_resources/Onto-Generation/Dataset_OntoGen"),
-    )
-    parser.add_argument(
-        "--output-root",
-        type=Path,
-        default=Path("datasets/ontology_generation"),
-    )
-    parser.add_argument(
-        "--approved-methods",
-        default=",".join(DEFAULT_APPROVED_METHODS),
-        help="Comma-separated selected implementation IDs.",
-    )
-    parser.add_argument(
-        "--archive-password",
-        default=DEFAULT_ARCHIVE_PASSWORD,
-    )
-    parser.add_argument(
-        "--enable-ontogenia-mp-odps",
-        action="store_true",
-        help="Prepare patterns.csv as ODP files only if ontogenia-mp is later approved.",
-    )
-    return parser.parse_args()
+    audit["sources"] = [
+        {"path": portable_path(path, ROOT), "sha256": sha256_file(path)} for path in sources
+    ]
+    write_json(output_root / "dataset_audit.json", relative_paths(audit, ROOT))
+    prepare_prompts(output_root / "prompts")
+    return {
+        "scenarios": len(items), "cqs": sum(len(item["competency_questions"]) for item in items),
+        "gold_modules": len(records), "excluded_rows": audit["exclusion_counts_by_reason"],
+    }
 
 
 def main() -> int:
-    args = parse_args()
-    repo_root = args.repo_root.resolve()
-    dataset_source = (
-        args.dataset_source
-        if args.dataset_source.is_absolute()
-        else repo_root / args.dataset_source
-    )
-    output_root = (
-        args.output_root if args.output_root.is_absolute() else repo_root / args.output_root
-    )
-    approved_methods = tuple(
-        method.strip() for method in args.approved_methods.split(",") if method.strip()
-    )
-    audit = prepare_dataset(
-        repo_root=repo_root,
-        dataset_source=dataset_source,
-        output_root=output_root,
-        approved_methods=approved_methods,
-        password=args.archive_password,
-        enable_odps=args.enable_ontogenia_mp_odps,
-    )
-    print(
-        json.dumps(
-            {
-                "status": "prepared_with_reported_issues"
-                if audit["conversion_error_count"]
-                else "prepared",
-                "full_generation_scenario_count": audit[
-                    "full_generation_scenario_count"
-                ],
-                "full_generation_cq_count": audit["full_generation_cq_count"],
-                "gold_evaluable_cq_count": audit["gold_evaluable_cq_count"],
-                "gold_module_count": audit["gold_module_count"],
-                "missing_prompt_count": len(audit["missing_prompts"]),
-                "conversion_error_count": audit["conversion_error_count"],
-                "data_manifest_hash": audit["data_manifest_hash"],
-            },
-            indent=2,
-        )
-    )
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-root", type=Path, default=ROOT / "datasets/ontology_generation")
+    parser.add_argument("--extract-gold", action="store_true")
+    args = parser.parse_args()
+    print(json.dumps(prepare_dataset(args.output_root.resolve(), extract_gold=args.extract_gold), indent=2))
     return 0
 
 

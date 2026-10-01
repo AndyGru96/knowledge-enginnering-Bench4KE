@@ -90,7 +90,7 @@ def valid_response():
     }
 
 
-def test_native_chat_schema_options_and_telemetry():
+def test_chat_request_and_telemetry():
     with mock_ollama([{"body": valid_response()}]) as (url, state):
         result = OllamaAdapter(url).chat_completion(
             [{"role": "user", "content": "prompt"}], options()
@@ -128,7 +128,7 @@ def test_transient_500_retries_with_backoff():
     assert delays == [2.0]
 
 
-def test_permanent_404_model_not_found_is_not_retried():
+def test_missing_model_is_not_retried():
     with mock_ollama(
         [{"status": 404, "body": {"error": "model not found"}}]
     ) as (url, state):
@@ -141,7 +141,7 @@ def test_permanent_404_model_not_found_is_not_retried():
     assert len(state["requests"]) == 1
 
 
-def test_timeout_is_normalized_and_retried_three_times():
+def test_timeout_retry_limit():
     replies = [{"delay": 0.05, "body": valid_response()} for _ in range(3)]
     with mock_ollama(replies) as (url, state):
         with pytest.raises(ProviderError) as caught:
@@ -175,7 +175,7 @@ def test_http_error_categories_and_retry_limits(status, body, category, attempts
     assert len(state["requests"]) == attempts
 
 
-def test_connection_error_is_normalized_and_retried():
+def test_connection_error_retries():
     class DisconnectedSession:
         def request(self, *_args, **_kwargs):
             raise requests.ConnectionError("mock connection refused")
@@ -207,7 +207,7 @@ def test_malformed_and_empty_responses(body, category):
     assert caught.value.category == category
 
 
-def test_health_version_model_listing_and_digest_preflight():
+def test_preflight_model_and_version():
     responses = [
         {"body": {"version": "0.12.0"}},
         {
@@ -232,14 +232,14 @@ def test_health_version_model_listing_and_digest_preflight():
     assert result["missing_model_error"] is None
 
 
-def test_explicit_health_function_records_version():
+def test_health_reports_version():
     with mock_ollama([{"body": {"version": "0.12.0"}}]) as (url, state):
         result = OllamaAdapter(url).health()
     assert result == {"healthy": True, "version": "0.12.0"}
     assert state["requests"][0]["path"] == "/api/version"
 
 
-def test_missing_model_preflight_is_clear_and_never_pulls():
+def test_preflight_does_not_pull_models():
     with mock_ollama(
         [{"body": {"version": "0.12.0"}}, {"body": {"models": []}}]
     ) as (url, state):

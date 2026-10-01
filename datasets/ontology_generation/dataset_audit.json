@@ -1,16 +1,9 @@
 {
-  "approved_methods": [
-    "ontogenia",
-    "domain-ontogen",
-    "neon-gpt"
-  ],
   "blank_story_rows": [
     34,
     35
   ],
-  "conversion_error_count": 129,
   "cq_count": 112,
-  "data_manifest_hash": "e06831a155503aa5c2faa8312b7bd78eb6778b124f31dbfb1617bc63c6664caf",
   "domain_identifier_column_present": false,
   "duplicate_ids": {
     "cq_ids": [],
@@ -436,7 +429,7 @@
   "full_generation_scenario_count": 17,
   "full_generation_scope": "Every non-empty, non-duplicate CQ associated with story text by exact, normalized-exact, or merged-cell source evidence. Gold is optional.",
   "gold_evaluable_cq_count": 27,
-  "gold_evaluable_scope": "Rows in full generation scope with one parseable exact CQID-to-gold-stem match; gold_mapping.csv is the authoritative subset representation.",
+  "gold_evaluable_scope": "Rows in full generation scope with one parseable exact CQID-to-gold-stem match; source_row_reconciliation.csv identifies the subset.",
   "gold_mapping_rule": "Dataset README states module filename is CQID.ttl; matching uses normalized, case-insensitive exact filename stem equality.",
   "gold_module_count": 36,
   "mapping_method_counts": {
@@ -930,7 +923,6 @@
       "story_id": "HospitalS"
     }
   ],
-  "missing_prompts": [],
   "missing_stories": [
     {
       "cq_id": "JAMSCQ1",
@@ -1143,169 +1135,69 @@
   },
   "normalized_cq_count": 74,
   "normalized_item_count": 17,
-  "odp_applicable": false,
   "orphan_modules": [
     {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/theatre.ttl",
-      "output_path": "datasets/ontology_generation/gold/modules_part2/theatre.ttl",
-      "reason": "No CQID with a normalized case-insensitive exact stem match",
-      "stem": "theatre"
-    },
-    {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/theatrecq1.ttl",
-      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq1.ttl",
-      "reason": "No CQID with a normalized case-insensitive exact stem match",
-      "stem": "theatrecq1"
-    },
-    {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/MINSTCQ6.ttl",
-      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ6.ttl",
-      "reason": "No CQID with a normalized case-insensitive exact stem match",
-      "stem": "MINSTCQ6"
-    },
-    {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/theatrecq2.ttl",
-      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq2.ttl",
-      "reason": "No CQID with a normalized case-insensitive exact stem match",
-      "stem": "theatrecq2"
-    },
-    {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/hospitals.ttl",
+      "archive": "modules_part2",
+      "archive_member": "hospitals.ttl",
       "output_path": "datasets/ontology_generation/gold/modules_part2/hospitals.ttl",
       "reason": "No CQID with a normalized case-insensitive exact stem match",
       "stem": "hospitals"
     },
     {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/theatrecq4.ttl",
-      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq4.ttl",
+      "archive": "modules_part2",
+      "archive_member": "MINSTCQ6.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/MINSTCQ6.ttl",
       "reason": "No CQID with a normalized case-insensitive exact stem match",
-      "stem": "theatrecq4"
+      "stem": "MINSTCQ6"
     },
     {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/theatrecq3.ttl",
+      "archive": "modules_part2",
+      "archive_member": "theatre.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatre.ttl",
+      "reason": "No CQID with a normalized case-insensitive exact stem match",
+      "stem": "theatre"
+    },
+    {
+      "archive": "modules_part2",
+      "archive_member": "theatrecq1.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq1.ttl",
+      "reason": "No CQID with a normalized case-insensitive exact stem match",
+      "stem": "theatrecq1"
+    },
+    {
+      "archive": "modules_part2",
+      "archive_member": "theatrecq2.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq2.ttl",
+      "reason": "No CQID with a normalized case-insensitive exact stem match",
+      "stem": "theatrecq2"
+    },
+    {
+      "archive": "modules_part2",
+      "archive_member": "theatrecq3.ttl",
       "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq3.ttl",
       "reason": "No CQID with a normalized case-insensitive exact stem match",
       "stem": "theatrecq3"
     },
     {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/theatrecq5.ttl",
+      "archive": "modules_part2",
+      "archive_member": "theatrecq4.ttl",
+      "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq4.ttl",
+      "reason": "No CQID with a normalized case-insensitive exact stem match",
+      "stem": "theatrecq4"
+    },
+    {
+      "archive": "modules_part2",
+      "archive_member": "theatrecq5.ttl",
       "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq5.ttl",
       "reason": "No CQID with a normalized case-insensitive exact stem match",
       "stem": "theatrecq5"
     },
     {
-      "archive": "modules_part2.zip",
-      "archive_member": "modules_part2/theatrecq6.ttl",
+      "archive": "modules_part2",
+      "archive_member": "theatrecq6.ttl",
       "output_path": "datasets/ontology_generation/gold/modules_part2/theatrecq6.ttl",
       "reason": "No CQID with a normalized case-insensitive exact stem match",
       "stem": "theatrecq6"
-    }
-  ],
-  "prompt_resources": [
-    {
-      "canonical_path": "datasets/ontology_generation/prompts/ontogenia/P0_original.txt",
-      "copied_sha256": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965",
-      "expected_adapter_path": "datasets/ontology_generation/raw/ontogenia/memoryless_cqbycq_prompt.txt",
-      "method": "ontogenia",
-      "missing_placeholders": [],
-      "placeholder_counts": {
-        "{CQ}": 1,
-        "{rdf}": 1,
-        "{story}": 1
-      },
-      "provenance": {
-        "classification": "published_exact",
-        "extraction_boundaries": "README.md section 'Memoryless CQbyCQ', Python fenced string literal",
-        "transformations": {
-          "markdown_fence_removed": true,
-          "python_escape_sequences_decoded": true,
-          "python_string_delimiters_removed": true,
-          "semantic_modification": false
-        }
-      },
-      "required_placeholders": [
-        "{story}",
-        "{CQ}",
-        "{rdf}"
-      ],
-      "sha256": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965",
-      "source_and_copy_hashes_match": null,
-      "source_path": "external_resources/Onto-Generation/PromptingTechniques/README.md",
-      "source_sha256": "8547a3c9a3f2124e0634eeb5590ec81fef774f02906df53b5ce95ca38161cdae",
-      "status": "ready"
-    },
-    {
-      "canonical_path": "datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt",
-      "copied_sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e",
-      "expected_adapter_path": "datasets/ontology_generation/raw/domain-ontogen/prompt.txt",
-      "method": "domain-ontogen",
-      "missing_placeholders": [],
-      "placeholder_counts": {
-        "{CQ}": 1,
-        "{OS}": 1
-      },
-      "provenance": {
-        "branch": "main",
-        "classification": "published_exact",
-        "commit_sha": "894441e367acdbbd1ea662b6f1a6919d13533051",
-        "extraction_boundaries": "README.md section 'Prompt used for ontology generation', Python fenced string literal",
-        "licence": "Not declared in the repository (no licence file or README statement)",
-        "local_path": "external_resources/Domain-OntoGen",
-        "only_markdown_indentation_or_fence_removed": false,
-        "repository": "https://github.com/dersuchendee/Domain-OntoGen",
-        "retrieval_date": "2026-07-15",
-        "source_file": "external_resources/Domain-OntoGen/README.md",
-        "source_readme_sha256": "c99516fb4af75d7f414c550855a28b7ced90cfbb1b6fa5d73986e270cc3e4e17",
-        "transformations": {
-          "markdown_fence_removed": true,
-          "python_escape_sequences_decoded": true,
-          "python_string_delimiters_removed": true,
-          "semantic_modification": false
-        }
-      },
-      "required_placeholders": [
-        "{OS}",
-        "{CQ}"
-      ],
-      "sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e",
-      "source_and_copy_hashes_match": null,
-      "source_path": "external_resources/Domain-OntoGen/README.md",
-      "source_sha256": "c99516fb4af75d7f414c550855a28b7ced90cfbb1b6fa5d73986e270cc3e4e17",
-      "status": "ready"
-    },
-    {
-      "canonical_path": "datasets/ontology_generation/prompts/neon-gpt/P0_original.txt",
-      "copied_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
-      "expected_adapter_path": "datasets/ontology_generation/raw/neon-gpt/day1_gpt_prompt_list.txt",
-      "method": "neon-gpt",
-      "missing_placeholders": [],
-      "placeholder_counts": {},
-      "provenance": {
-        "branch": "main",
-        "classification": "published_exact",
-        "commit_sha": "bce7a6a805faa23dc169f691afb5aaaacad3d99d",
-        "copy_mode": "byte-for-byte",
-        "licence": "MIT (repository LICENSE)",
-        "local_path": "external_resources/NEON-GPT",
-        "repository": "https://github.com/andreamust/NEON-GPT",
-        "retrieval_date": "2026-07-15",
-        "source_file": "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
-        "source_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a"
-      },
-      "required_placeholders": [],
-      "sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
-      "source_and_copy_hashes_match": true,
-      "source_path": "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
-      "source_sha256": "40d0baf11f4945fc37f0a4d2f67a7efbbf3a249e0ae8e5b105672ee79a83f44a",
-      "status": "ready"
     }
   ],
   "sheets": [
@@ -1377,9 +1269,37 @@
       "sha256": "eb95f875fea9db67bd99096894d2dfbb9904d519a9d028287f502378aecd3625"
     }
   ],
+  "sources": [
+    {
+      "path": "external_resources/Onto-Generation/Dataset_OntoGen/Dataset.xlsx",
+      "sha256": "eb95f875fea9db67bd99096894d2dfbb9904d519a9d028287f502378aecd3625"
+    },
+    {
+      "path": "external_resources/Onto-Generation/PromptingTechniques/README.md",
+      "sha256": "418e62339c501af921e36ffc9bc11b0c04357adac9a2dbdc91318869bef40fe8"
+    },
+    {
+      "path": "external_resources/Domain-OntoGen/README.md",
+      "sha256": "46ce1cb6071cb05502aa22e60495bcee23a50d80e0456cd12307f095b9cbb0c4"
+    },
+    {
+      "path": "external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt",
+      "sha256": "11b411d2963a8ef686c5b027985df793753a3214801a142f3ee401f4e61891c6"
+    },
+    {
+      "path": "datasets/ontology_generation/raw/ontogenia/memoryless_cqbycq_prompt.txt",
+      "sha256": "f91ec50dd4d6e6a0219df892212c7beecbe74db4ef54a075d3b177d9194f7965"
+    },
+    {
+      "path": "datasets/ontology_generation/raw/domain-ontogen/prompt.txt",
+      "sha256": "f9e3945421508cd6a82613caf0d26fe802084178d950b2f1bd81b0446c2add4e"
+    },
+    {
+      "path": "datasets/ontology_generation/raw/neon-gpt/day1_gpt_prompt_list.txt",
+      "sha256": "11b411d2963a8ef686c5b027985df793753a3214801a142f3ee401f4e61891c6"
+    }
+  ],
   "story_count": 35,
-  "unparseable_gold_files": [],
-  "unparseable_odp_files": [],
   "unresolved_rows": [
     {
       "cq_id": "JAMSCQ1",

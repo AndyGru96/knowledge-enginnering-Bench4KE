@@ -1,42 +1,39 @@
-# Reproducing the Project
+# Runs and evaluation
 
-## Environment
 
-The project was tested with Python 3.13. Install the dependencies from the repository root:
+## Commands
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
+Install dependencies and start Ollama as described in the [README](../README.md). Run commands from the project root.
 
-Run the tests with:
+Offline checks use simulated responses, not model inference:
 
-```powershell
+```shell
 python -m pytest -q
-python -m compileall restapi scripts tests
+python -m compileall -q restapi scripts tests
+python -m scripts.validate_prompts
 ```
 
-The current repository contains 47 passing tests. Tests use local recording objects and do not contact an Ollama server.
+For data reconstruction, see [DATASET_PREPARATION.md](DATASET_PREPARATION.md).
+Set an installed model and generation settings in `config/course_methods.yaml`, then run:
 
-## Data and analysis
+```shell
+python -m restapi.ontology_adapter --config config/course_methods.yaml
+```
 
-The normalized dataset and prompt files are included under `datasets/ontology_generation/`. Final tables are under `results/`, and the report figures are under `report/figures/`.
+Use the returned run directory and a **new, previously unused analysis directory**:
 
-The complete A1 and A2 generation trees are stored separately because they contain 6,906 files and about 124 MB of responses and intermediate outputs. The repository includes one complete A2 P1 example under `evidence/` and the task-level A2 verification table under `results/`.
+```shell
+python -m scripts.analyze_prompt_sensitivity --run-dir outputs/RUN_ID --output-dir results/RUN_ID
+```
 
-The reported generation used:
+Replace `RUN_ID` with the actual identifier. This command computes both C2 and C3; use `scripts.analyze_documentation_completeness` with the same arguments for C2 alone. Do not overwrite the retained result tables or reuse an analysis directory: absent outputs can leave older tables behind. `--allow-partial` permits unfinished runs with explicit missing-task markers.
 
-- Ollama 0.32.0;
-- `qwen3:30b-a3b-instruct-2507-q4_K_M`;
-- temperature 0 and seed 42;
-- `num_ctx=32768` and `num_predict=8192`;
-- `keep_alive=30m`;
-- non-streaming responses.
+## Metric definitions
 
-New generation is performed through the API and ontology adapter. The existing CSV results can be inspected without running a model.
+**Parseability.** Every designated ontology response must parse directly as Turtle, using the document rules in [METHOD_MAPPING.md](METHOD_MAPPING.md). No code is extracted from prose or fences. Complete invalid responses count as parse failures; incomplete generation is missing. Empty, malformed, `done=false` and length-truncated model responses are rejected, with received HTTP evidence retained. Zero-triple graphs and missing evaluable entities are flagged separately.
 
-## Interpretation
+**C2.** Denominators use explicitly declared classes, object properties and datatype properties. Labels use `rdfs:label` or `skos:prefLabel`; documentation uses `rdfs:comment`, `skos:definition`, `dcterms:description` or `schema:description`. Only nonempty literals count. Nontrivial documentation requires at least 20 characters and three whitespace-delimited words. Ontology-header documentation requires a nonempty label or description on an `owl:Ontology` subject; imports alone do not qualify. Zero denominators stay unavailable. Coverage summaries pool known entity counts and separately report task availability and empty outputs.
 
-The experiment compares instruction-level suffixes rather than unrestricted prompt rephrasing. Parseability does not establish conceptual correctness, CQ coverage, logical consistency, or practical usefulness. Documentation measurements are conditional on parseable output, and some prompt-sensitivity comparisons have small paired samples.
+**C3.** Comparisons pair method and dataset ID within one run. Cochran's Q requires three complete variants; McNemar uses each selected pair independently, with Holm correction within method. Term Jaccard compares exact resolved RDF IRIs of declared classes, properties, named individuals and selected class/property relations. Built-in vocabulary, ontology document IRIs and blank nodes are excluded; no further URL normalization is applied. Unparseable outputs are missing, not empty sets. Empty term sets cannot establish stability and are excluded from Wilcoxon comparisons.
+
+Pratt Wilcoxon compares `J(P0,P1)` with `J(P0,P2)` on complete eligible triples, not either variant against P0. Effect sizes and median-difference bootstrap intervals use the policy in `config/c3_analysis_policy.yaml` (10,000 resamples, seed 42).

@@ -1,71 +1,61 @@
-from typing import Any, Dict, List, Optional
+"""The supported dataset and benchmark request formats."""
 
-from pydantic import BaseModel, Field
+from typing import Any, Literal
 
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-class OntologyConstraints(BaseModel):
-    output_format: Optional[str] = Field(default="ttl", description="ttl|rdfxml|owl|jsonld")
-    iri_base: Optional[str] = None
-    naming_policy: Optional[str] = None
-    language: Optional[str] = None
+from restapi.app.config import OLLAMA_MODEL
 
-
-class OntologyGenerationItem(BaseModel):
-    system: Optional[str] = None
-    dataset_id: Optional[str] = None
-    scenario_id: Optional[str] = None
-    scenario: Optional[str] = None
-    competency_questions: List[str]
-    user_stories: Optional[List[str]] = None
-    constraints: Optional[OntologyConstraints] = None
-    metadata: Optional[Dict[str, Any]] = None
+Variant = Literal["P0", "P1", "P2"]
 
 
-class OntologyBenchmarkRequest(BaseModel):
-    system: Optional[str] = Field(default=None, description="ontogenia|domain-ontogen|neon-gpt|all")
-    use_default_dataset: bool = False
-    dataset_path: Optional[str] = None
-    items: Optional[List[OntologyGenerationItem]] = None
-    external_service_url: Optional[str] = None
-    model: Optional[str] = None
-    provider: str = "ollama"
-    temperature: float = 0.0
-    seed: Optional[int] = 42
-    num_ctx: Optional[int] = 8192
-    max_output_tokens: int = 4096
-    timeout_seconds: float = 1800.0
+class TurtleConstraints(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    output_format: Literal["ttl"] = "ttl"
+
+
+class DatasetItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    dataset_id: str = Field(min_length=1)
+    scenario_id: str | None = None
+    scenario: str = Field(min_length=1)
+    competency_questions: list[str] = Field(min_length=1)
+    user_stories: list[str] | None = None
+    constraints: TurtleConstraints | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def require_content(self):
+        if not self.dataset_id.strip() or not self.scenario.strip():
+            raise ValueError("dataset_id and scenario must contain text")
+        if any(not cq.strip() for cq in self.competency_questions):
+            raise ValueError("competency_questions must contain nonempty text")
+        return self
+
+
+class BenchmarkRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    system: Literal["ontogenia", "domain-ontogen", "neon-gpt", "all"] = "all"
+    prompt_variants: list[Variant] = Field(default_factory=lambda: ["P0"], min_length=1)
+    dataset_path: str | None = None
+    items: list[DatasetItem] | None = None
+    model: str = Field(default=OLLAMA_MODEL, min_length=1)
+    temperature: float = Field(default=0.0, ge=0)
+    seed: int | None = 42
+    num_ctx: int = Field(default=32768, gt=0)
+    max_output_tokens: int = Field(default=8192, gt=0)
+    timeout_seconds: float = Field(default=1800, gt=0)
     keep_alive: str = "30m"
-    prompt_variant: str = "P0"
-    resume: bool = True
-    retry_failed: bool = False
-    evaluation_mode: str = Field(default="all", description="all|ontometrics|oops|llm or comma-separated")
-    llm_eval_model: Optional[str] = None
-    domain_ontogen_mode: str = Field(
-        default="per_item",
-        description="How to handle Domain-OntoGen items with multiple CQs: per_item (merge) or per_cq (independent ontology per CQ, paper-style).",
-    )
-    max_items: int = 0
-    save_results: bool = True
+    max_items: int = Field(default=0, ge=0)
 
-
-class OntologyRunItemResult(BaseModel):
-    dataset_id: Optional[str] = None
-    system: Optional[str] = None
-    ontology_file: Optional[str] = None
-    ontometrics_file: Optional[str] = None
-    oops_file: Optional[str] = None
-    llm_eval_file: Optional[str] = None
-    llm_eval_summary: Optional[Dict[str, Any]] = None
-    result_dir: Optional[str] = None
-    generation_metadata_file: Optional[str] = None
-    parse_metadata_file: Optional[str] = None
-    adapter_metadata: Optional[Dict[str, Any]] = None
-    cache_status: Optional[str] = None
-    error: Optional[str] = None
-
-
-class OntologyBenchmarkResponse(BaseModel):
-    message: str
-    run_dir: Optional[str] = None
-    results_saved_to: Optional[str] = None
-    results: List[OntologyRunItemResult]
+    @model_validator(mode="after")
+    def validate_selection(self):
+        if len(set(self.prompt_variants)) != len(self.prompt_variants):
+            raise ValueError("prompt_variants must not contain duplicates")
+        if self.items is not None and self.dataset_path is not None:
+            raise ValueError("Provide items or dataset_path, not both")
+        if self.items is not None and not self.items:
+            raise ValueError("items must not be empty")
+        if not self.model.strip():
+            raise ValueError("model must contain text")
+        return self

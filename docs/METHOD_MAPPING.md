@@ -1,19 +1,25 @@
-# Generation Method Mapping
+# Generation methods
 
-The experiment evaluates exactly three method IDs: `ontogenia`, `domain-ontogen`, and `neon-gpt`. Their selection is recorded in `config/course_methods.yaml`; their executable dispatch is implemented in `restapi/ontology_adapter.py`.
+These definitions describe the current implementation in `restapi/ontology_adapter.py`, not the earlier experiment retained under `report/` and `results/`. Equivalence to a specific instructor-issued baseline has not been established.
 
-| Method ID | Executed behavior | Prompt source | Call structure |
-|---|---|---|---|
-| `ontogenia` | Memoryless CQ-by-CQ generation; normalized fragments are combined into the task ontology | `datasets/ontology_generation/prompts/ontogenia/P0_original.txt` | One independent call per CQ |
-| `domain-ontogen` | Domain-oriented generation using the scenario and one CQ at a time | `datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt` | One independent call per CQ |
-| `neon-gpt` | Staged NeOn pipeline with recorded syntax and repair steps | `datasets/ontology_generation/prompts/neon-gpt/P0_original.txt` | Initial generation followed by the method's applicable validation/repair calls |
+| Method ID | Execution | Ontology documents |
+|---|---|---|
+| `ontogenia` | Memoryless: one independent call per CQ and story; previous RDF is empty | Every CQ response |
+| `domain-ontogen` | One independent call per CQ and story | Every CQ response |
+| `neon-gpt` | Ten ordered calls carrying preceding conversation history | Responses from steps 5–10 |
 
-P1 and P2 append their additional instruction to each method's P0 prompt. The prompt files are under `datasets/ontology_generation/prompts/<method>/`.
+`ontogenia` is not metacognitive Ontogenia. Its prompt comes from `external_resources/Onto-Generation/PromptingTechniques/README.md`; Domain-OntoGen uses `external_resources/Domain-OntoGen/README.md`.
 
-## Provenance
+NeOn uses the source list in `external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt`, adapted to the supplied scenario rather than wine. Steps 1–4 produce planning text using the fixed dataset CQs. Step 5 produces an initial ontology; steps 6–10 add independently valid Turtle documents. All ten responses are retained.
 
-- Ontogenia/Memoryless CQ-by-CQ prompt: `external_resources/Onto-Generation/PromptingTechniques/README.md`.
-- Domain-OntoGen prompt: `external_resources/Domain-OntoGen/README.md`, source commit `894441e367acdbbd1ea662b6f1a6919d13533051`.
-- NeOn-GPT prompt: `external_resources/NEON-GPT/gpt_wine_ont_day1/day1_gpt_prompt_list.txt`, source commit `bce7a6a805faa23dc169f691afb5aaaacad3d99d`.
+## Prompt variants
 
-Prompt assembly and internal call order are tested with local recording objects and the snapshots under `tests/snapshots/prompts/`.
+Templates remain under `datasets/ontology_generation/prompts/<method>/` as `P0_original.txt`, `P1_candidate.txt` and `P2_candidate.txt`.
+
+Despite its filename, P0 is an **adapted reference**: all ontology-producing prompts require standalone Turtle, explanations only as Turtle comments, and no Markdown fences. P1 adds serialization instructions; P2 adds silent syntax-check instructions. For NeOn, these instructions apply to steps 5–10 only.
+
+This measures instruction-suffix sensitivity, not unrestricted semantic rephrasing. Each task saves the template/hash; each call saves the assembled prompt and full request, including conversation history. No full model experiment has been rerun for this implementation.
+
+## Output handling
+
+Responses are preserved without cleaning or repair. Ontology responses are parsed separately, sharing a scenario-derived default base while respecting explicit `@base`. Blank nodes retain document-local scope during graph assembly. `ontology_transcript.txt` is a joined record, not the graph-merge input. C2/C3 read the separate response documents.

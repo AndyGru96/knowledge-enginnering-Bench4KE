@@ -1,54 +1,22 @@
-# Ontology Generation API
+# Ontology generation API
 
-This directory contains the ontology-generation implementation used by the course project. It supports the three evaluated methods (`ontogenia`, `domain-ontogen`, and `neon-gpt`), local Ollama execution, result envelopes, parse metadata, telemetry, and cache-aware resume behavior.
+Install the root requirements.txt, then start the single API from the repository root:
 
-## Install
+    python -m uvicorn restapi.app.main:app --host 127.0.0.1 --port 8000
 
-From the repository root:
+GET /health reports API readiness. POST /ontology/run accepts the BenchmarkRequest schema shown at /docs. Ollama must be running separately with the selected model installed.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
+For command-line generation, run :
 
-Copy `.env.example` to `.env` only when running a local service. The submitted tests do not require a live model.
+    python -m restapi.ontology_adapter --config config/course_methods.yaml
 
-## Start the ontology adapter
+ontology_adapter.py contains generation and prompt assembly. app/routers/ontology_benchmark.py provides the API and checks saved run evidence. app/services/ontology_metrics.py computes C2 documentation measures. app/utils/llm_clients.py talks to Ollama; app/utils/ontology_artifacts.py saves evidence atomically and parses documents with independent blank nodes.
 
-```powershell
-cd restapi
-python ontology_adapter.py
-```
+There is one API on port 8000. Responses are saved unchanged and invalid Turtle is recorded as a failure. Dataset and run paths resolve from the repository root.
 
-The adapter exposes `POST /generate_ontology` on port `8020`. Requests identify one of the three methods and include the scenario, ordered competency questions, optional user stories, constraints, and generation settings.
+Offline verification:
 
-## Start the benchmark API
+    python -m pytest -q
+    python -m scripts.validate_prompts
 
-In another terminal:
-
-```powershell
-cd restapi
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-The API exposes `POST /ontology/run`. It can load the normalized JSONL dataset or accept inline items, call the adapter, compute configured ontology metrics, and preserve task artifacts. Generation requires the exact Ollama model recorded in the experiment configuration.
-
-## Core files
-
-- `ontology_adapter.py`: prompt assembly, method pipelines, Ollama requests, normalization, repair, and per-call telemetry.
-- `app/routers/ontology_benchmark.py`: dataset execution, cache identity, artifact persistence, and metric orchestration.
-- `app/utils/llm_clients.py`: deterministic provider interface and native Ollama client.
-- `app/utils/ontology_artifacts.py`: result-envelope, parsing, cache, and resume contracts.
-- `app/services/ontology_metrics.py`: ontology structural and documentation-related metrics.
-
-## Safe verification
-
-From the repository root:
-
-```powershell
-python -m pytest -q
-python -m compileall restapi scripts tests
-```
-
-The provider tests use mocks and make no real model request.
+The tests use simulated model responses. Saved report/, results/ and evidence/ files are retained without regeneration.

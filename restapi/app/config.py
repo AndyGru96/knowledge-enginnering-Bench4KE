@@ -1,39 +1,27 @@
+"""Project-relative paths and local Ollama configuration."""
+
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
-load_dotenv()
 
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-
-# Ontology benchmark configuration
+ROOT = Path(__file__).resolve().parents[2]
+load_dotenv(ROOT / ".env")
+DATASET = ROOT / "datasets/ontology_generation/normalized/project2_full_generation.jsonl"
+OUTPUTS = ROOT / "outputs"
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:30b-a3b-instruct-2507-q4_K_M")
-OUTPUTS_DIR = os.getenv(
-    "OUTPUTS_DIR",
-    os.path.join(ROOT_DIR, "restapi", "outputs"),
-)
-ONTOLOGY_DATASET_DIR = os.getenv(
-    "ONTOLOGY_DATASET_DIR",
-    os.path.join(ROOT_DIR, "datasets", "ontology_generation", "normalized"),
-)
-ONTOLOGY_RUNS_DIR = os.getenv(
-    "ONTOLOGY_RUNS_DIR",
-    os.path.join(OUTPUTS_DIR, "ontology_benchmark", "runs"),
-)
-ONTOLOGY_PROJECT2_OUTPUT_DIR = os.getenv(
-    "ONTOLOGY_PROJECT2_OUTPUT_DIR",
-    os.path.join(ROOT_DIR, "outputs", "project2"),
-)
-EXTERNAL_ONTOLOGY_SERVICE_URL = os.getenv(
-    "EXTERNAL_ONTOLOGY_SERVICE_URL",
-    "http://127.0.0.1:8020/generate_ontology",
-)
-ONTOLOGY_EXTERNAL_TIMEOUT = float(os.getenv("ONTOLOGY_EXTERNAL_TIMEOUT", "300"))
-OOPS_API_URL = os.getenv("OOPS_API_URL", "")
-OOPS_API_MODE = os.getenv("OOPS_API_MODE", "text")  # text|file|url|xml
-OOPS_API_TIMEOUT = float(os.getenv("OOPS_API_TIMEOUT", "60"))
-ONTOLOGY_LLM_EVAL_PROMPT_PATH = os.getenv(
-    "ONTOLOGY_LLM_EVAL_PROMPT_PATH",
-    os.path.join(ROOT_DIR, "datasets", "ontology_generation", "prompts", "oe_assist_prompt.txt"),
-)
-ONTOLOGY_LLM_EVAL_MODEL = os.getenv("ONTOLOGY_LLM_EVAL_MODEL", OLLAMA_MODEL)
-ONTOLOGY_LLM_EVAL_MAX_TOKENS = int(os.getenv("ONTOLOGY_LLM_EVAL_MAX_TOKENS", "800"))
-ONTOLOGY_LLM_EVAL_MAX_CHARS = int(os.getenv("ONTOLOGY_LLM_EVAL_MAX_CHARS", "12000"))
+
+
+def project_path(value: str | Path) -> Path:
+    path = Path(value)
+    return path.resolve() if path.is_absolute() else (ROOT / path).resolve()
+
+
+METHODS = ("ontogenia", "domain-ontogen", "neon-gpt")
+VARIANTS = ("P0", "P1", "P2")
+PROCEDURES = {
+    "ontogenia": "memoryless_cq_by_cq_with_turtle_comment_protocol",
+    "domain-ontogen": "independent_cq_by_cq_with_turtle_comment_protocol",
+    "neon-gpt": "scenario_adapted_ten_step_conversation",
+}

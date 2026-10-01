@@ -1,21 +1,45 @@
+request:
+  system: all
+  prompt_variants:
+  - P0
+  - P1
+  - P2
+  dataset_path: datasets/ontology_generation/normalized/project2_full_generation.jsonl
+  model: qwen3:30b-a3b-instruct-2507-q4_K_M
+  temperature: 0
+  seed: 42
+  num_ctx: 32768
+  max_output_tokens: 8192
+  timeout_seconds: 1800
+  keep_alive: 30m
 methods:
   ontogenia:
-    display_name: Ontogenia-labelled Memoryless CQ-by-CQ baseline
-    system_id: ontogenia
-    behavior: one independent generation call per competency question
     implementation: restapi/ontology_adapter.py
     prompt: datasets/ontology_generation/prompts/ontogenia/P0_original.txt
-
-  domain_ontogen:
-    display_name: Domain-OntoGen
-    system_id: domain-ontogen
-    behavior: scenario plus independent competency-question generation
+  domain-ontogen:
     implementation: restapi/ontology_adapter.py
     prompt: datasets/ontology_generation/prompts/domain-ontogen/P0_original.txt
-
-  neon_gpt:
-    display_name: NeOn-GPT
-    system_id: neon-gpt
-    behavior: staged generation with recorded validation and repair calls
+  neon-gpt:
     implementation: restapi/ontology_adapter.py
     prompt: datasets/ontology_generation/prompts/neon-gpt/P0_original.txt
+prompt_variant_instructions:
+  P1: 'Follow all instructions in the base prompt exactly. Return only the requested
+
+    ontology serialization. Do not include explanations, reasoning, headings,
+
+    commentary, or Markdown code fences.
+
+    '
+  P2: 'Follow all instructions in the base prompt exactly. Before returning the
+
+    answer, silently verify that every used prefix is declared, every RDF
+
+    statement is syntactically complete, lists and blank nodes are well formed,
+
+    and class and property names are used consistently. Return only the verified
+
+    ontology serialization, without explanations, reasoning, headings,
+
+    commentary, or Markdown code fences.
+
+    '

@@ -1,9 +1,4 @@
-"""Common LLM providers for ontology generation.
-
-The interface is based on official main's small client abstraction, extended
-with native Ollama telemetry, deterministic options, preflight and typed
-errors.  No client performs model pulls.
-"""
+"""Ollama HTTP client with generation settings, telemetry and typed errors."""
 
 from __future__ import annotations
 
@@ -24,10 +19,11 @@ ERROR_CATEGORIES = {
     "server_error",
     "malformed_response",
     "empty_response",
+    "incomplete_response",
     "unknown_error",
 }
 TRANSIENT_STATUS_CODES = {429, 500, 502, 503, 504}
-BACKOFF_SECONDS = (2.0, 4.0, 8.0)
+BACKOFF_SECONDS = (2.0, 4.0)
 MAX_ATTEMPTS = 3
 OLLAMA_TELEMETRY_FIELDS = (
     "model",
@@ -53,6 +49,7 @@ class ProviderError(RuntimeError):
         attempts: int = 1,
         transient: bool = False,
         response_body: Optional[str] = None,
+        raw_response: Any = None,
     ) -> None:
         if category not in ERROR_CATEGORIES:
             category = "unknown_error"
@@ -62,6 +59,7 @@ class ProviderError(RuntimeError):
         self.attempts = attempts
         self.transient = transient
         self.response_body = response_body
+        self.raw_response = raw_response
 
     def as_dict(self) -> Dict[str, Any]:
         return {
@@ -71,6 +69,8 @@ class ProviderError(RuntimeError):
             "attempts": self.attempts,
             "transient": self.transient,
             "response_body": self.response_body,
+            "raw_response": self.raw_response,
+            "response_received": self.status_code is not None,
         }
 
 
@@ -79,8 +79,8 @@ class GenerationOptions:
     model: str
     temperature: float = 0.0
     seed: Optional[int] = 42
-    num_ctx: Optional[int] = 8192
-    max_output_tokens: int = 4096
+    num_ctx: Optional[int] = 32768
+    max_output_tokens: int = 8192
     timeout_seconds: float = 1800.0
     keep_alive: str = "30m"
     stream: bool = False
@@ -99,9 +99,24 @@ class BaseLLMClient:
     provider_name = "base"
 
     def chat_completion(
-        self, messages: List[Dict[str, str]], options: GenerationOptions
+        self, messages: List[Dict[str, str]], options: GenerationOptions, *, on_response=None
     ) -> LLMResponse:
         raise NotImplementedError
+
+
+def build_chat_request(messages: List[Dict[str, str]], options: GenerationOptions) -> Dict[str, Any]:
+    body = {
+        "model": options.model,
+        "messages": messages,
+        "stream": False,
+        "keep_alive": options.keep_alive,
+        "options": {"temperature": options.temperature, "num_predict": options.max_output_tokens},
+    }
+    if options.seed is not None:
+        body["options"]["seed"] = options.seed
+    if options.num_ctx is not None:
+        body["options"]["num_ctx"] = options.num_ctx
+    return body
 
 
 def _error_from_status(status_code: int, body: str, attempts: int) -> ProviderError:
@@ -150,6 +165,7 @@ class OllamaAdapter(BaseLLMClient):
         payload: Optional[Dict[str, Any]] = None,
         timeout_seconds: float = 30.0,
         retry: bool = True,
+        on_response: Callable[[dict], None] | None = None,
     ) -> tuple[Dict[str, Any], int]:
         maximum = MAX_ATTEMPTS if retry else 1
         for attempt in range(1, maximum + 1):
@@ -179,27 +195,35 @@ class OllamaAdapter(BaseLLMClient):
                     "unknown_error", f"Ollama request failed: {exc}", attempts=attempt
                 ) from exc
             else:
+                try:
+                    data = response.json()
+                except ValueError:
+                    data = None
+                if on_response:
+                    on_response({"attempt": attempt, "status_code": response.status_code,
+                                 "body": getattr(response, "content", response.text.encode("utf-8")),
+                                 "json": data})
                 if response.status_code >= 400:
                     error = _error_from_status(
                         response.status_code, response.text, attempt
                     )
                 else:
-                    try:
-                        data = response.json()
-                    except ValueError as exc:
+                    if data is None:
                         raise ProviderError(
                             "malformed_response",
                             "Ollama returned malformed JSON",
                             status_code=response.status_code,
                             attempts=attempt,
                             response_body=response.text,
-                        ) from exc
+                        )
                     if not isinstance(data, dict):
                         raise ProviderError(
                             "malformed_response",
                             "Ollama JSON response must be an object",
                             status_code=response.status_code,
                             attempts=attempt,
+                            response_body=response.text,
+                            raw_response=data,
                         )
                     return data, attempt
 
@@ -209,7 +233,7 @@ class OllamaAdapter(BaseLLMClient):
         raise ProviderError("unknown_error", "Unreachable retry state")
 
     def chat_completion(
-        self, messages: List[Dict[str, str]], options: GenerationOptions
+        self, messages: List[Dict[str, str]], options: GenerationOptions, *, on_response=None
     ) -> LLMResponse:
         if options.stream:
             raise ProviderError(
@@ -219,20 +243,7 @@ class OllamaAdapter(BaseLLMClient):
             raise ProviderError(
                 "invalid_request", "Ollama model and messages are required"
             )
-        body: Dict[str, Any] = {
-            "model": options.model,
-            "messages": messages,
-            "stream": False,
-            "keep_alive": options.keep_alive,
-            "options": {
-                "temperature": options.temperature,
-                "num_predict": options.max_output_tokens,
-            },
-        }
-        if options.seed is not None:
-            body["options"]["seed"] = options.seed
-        if options.num_ctx is not None:
-            body["options"]["num_ctx"] = options.num_ctx
+        body = build_chat_request(messages, options)
 
         data, attempts = self._request_json(
             "POST",
@@ -240,6 +251,7 @@ class OllamaAdapter(BaseLLMClient):
             payload=body,
             timeout_seconds=options.timeout_seconds,
             retry=True,
+            on_response=on_response,
         )
         message = data.get("message")
         if not isinstance(message, dict) or "content" not in message:
@@ -247,6 +259,7 @@ class OllamaAdapter(BaseLLMClient):
                 "malformed_response",
                 "Ollama response is missing message.content",
                 attempts=attempts,
+                status_code=200, raw_response=data,
             )
         content = message.get("content")
         if not isinstance(content, str):
@@ -254,10 +267,17 @@ class OllamaAdapter(BaseLLMClient):
                 "malformed_response",
                 "Ollama message.content must be a string",
                 attempts=attempts,
+                status_code=200, raw_response=data,
             )
         if not content.strip():
             raise ProviderError(
-                "empty_response", "Ollama generated empty content", attempts=attempts
+                "empty_response", "Ollama generated empty content", attempts=attempts,
+                status_code=200, raw_response=data,
+            )
+        if data.get("done") is not True or data.get("done_reason") == "length":
+            raise ProviderError(
+                "incomplete_response", "Ollama did not return a complete generation",
+                attempts=attempts, status_code=200, raw_response=data,
             )
         telemetry = {
             key: data[key] for key in OLLAMA_TELEMETRY_FIELDS if key in data
@@ -323,14 +343,3 @@ class OllamaAdapter(BaseLLMClient):
                 }
             ),
         }
-
-
-def get_llm_client(provider: Optional[str] = None, **kwargs: Any) -> BaseLLMClient:
-    name = (provider or os.getenv("LLM_PROVIDER", "ollama")).strip().lower()
-    if name == "ollama":
-        return OllamaAdapter(
-            base_url=kwargs.get("base_url") or os.getenv("OLLAMA_BASE_URL"),
-            session=kwargs.get("session"),
-            sleeper=kwargs.get("sleeper", time.sleep),
-        )
-    raise ProviderError("invalid_request", f"Unsupported LLM provider: {name}")

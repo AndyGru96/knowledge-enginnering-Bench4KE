@@ -212,6 +212,11 @@ CQ: {CQ}
 OS: {OS}
 O: 
 
+
+Output protocol:
+
+Return exactly one complete Turtle document without Markdown fences. Write any requested explanation or answerability discussion only as Turtle comments beginning with #. This serialization instruction takes precedence over conflicting prose-output instructions.
+
 Additional instruction:
 
 Follow all instructions in the base prompt exactly. Before returning the

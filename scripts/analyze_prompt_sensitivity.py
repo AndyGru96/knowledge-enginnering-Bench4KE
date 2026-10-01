@@ -3,30 +3,29 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import json
-import re
-import unicodedata
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Iterable
-from urllib.parse import urlsplit, urlunsplit
+from typing import Any
 
+import yaml
 import numpy as np
 from rdflib import Graph, URIRef
 from rdflib.namespace import OWL, RDF, RDFS, XSD
 from scipy import stats
 
 
-ROOT = Path(__file__).resolve().parents[1]
-RESULTS = ROOT / "results"
-DEFAULT_PANEL = RESULTS / "c3_parse_success_panel.csv"
-DEFAULT_TERMS = RESULTS / "c3_term_jaccard.csv"
-METHODS = ("ontogenia", "domain-ontogen", "neon-gpt")
-VARIANTS = ("P0", "P1", "P2")
+from restapi.app.config import METHODS, ROOT, VARIANTS
+from restapi.app.routers.ontology_benchmark import validate_run
+from scripts.analyze_documentation_completeness import analyze_tasks, summarize
+from restapi.app.utils.ontology_artifacts import (DEFAULT_BASE, as_bool, load_task_graph, parse_turtle, read_csv, write_csv, write_json)
+
+_POLICY = yaml.safe_load((ROOT / "config/c3_analysis_policy.yaml").read_text(encoding="utf-8"))
+BOOTSTRAP_SEED = int(_POLICY["term_endpoint"]["bootstrap_seed"])
+BOOTSTRAP_RESAMPLES = int(_POLICY["term_endpoint"]["bootstrap_resamples"])
+EXACT_DISCORDANT_THRESHOLD = int(_POLICY["binary_endpoint"]["exact_below_discordant"])
+
 COMPARISONS = (("P0", "P1"), ("P0", "P2"), ("P1", "P2"))
-UNRESERVED = set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
-PERCENT_ESCAPE = re.compile(r"%([0-9A-Fa-f]{2})")
 BUILT_INS = tuple(str(namespace) for namespace in (RDF, RDFS, OWL, XSD))
 DECLARED_TYPES = {
     OWL.Class,
@@ -47,65 +46,12 @@ RELATION_PREDICATES = {
 }
 
 
-def read_csv(path: Path) -> list[dict[str, str]]:
-    with path.open(encoding="utf-8", newline="") as handle:
-        return list(csv.DictReader(handle))
+def ontology_terms(path: Path, base: str = DEFAULT_BASE) -> tuple[set[str] | None, str | None]:
+    graph, error = parse_turtle(path.read_bytes().decode("utf-8"), base)
+    return (graph_terms(graph), None) if graph is not None else (None, error)
 
 
-def write_csv(path: Path, rows: Iterable[dict[str, Any]]) -> None:
-    rows = list(rows)
-    if not rows:
-        raise ValueError("Cannot write an empty result table")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
-
-
-def as_bool(value: Any) -> bool:
-    if isinstance(value, bool):
-        return value
-    return str(value).strip().lower() in {"1", "true", "yes"}
-
-
-def normalize_iri(value: str) -> str:
-    split = urlsplit(unicodedata.normalize("NFC", value))
-    host = split.hostname.lower() if split.hostname else ""
-    port = split.port
-    if (split.scheme.lower(), port) in {("http", 80), ("https", 443)}:
-        port = None
-    userinfo = ""
-    if split.username is not None:
-        userinfo = split.username
-        if split.password is not None:
-            userinfo += f":{split.password}"
-        userinfo += "@"
-    netloc = userinfo + host + (f":{port}" if port is not None else "")
-
-    def decode_unreserved(text: str) -> str:
-        def replace(match: re.Match[str]) -> str:
-            character = chr(int(match.group(1), 16))
-            return character if character in UNRESERVED else match.group(0).upper()
-
-        return PERCENT_ESCAPE.sub(replace, text)
-
-    return urlunsplit(
-        (
-            split.scheme.lower(),
-            netloc,
-            decode_unreserved(split.path),
-            decode_unreserved(split.query),
-            decode_unreserved(split.fragment),
-        )
-    )
-
-
-def ontology_terms(path: Path) -> tuple[set[str] | None, str | None]:
-    try:
-        graph = Graph().parse(path, format="turtle")
-    except Exception as exc:
-        return None, str(exc)
+def graph_terms(graph: Graph) -> set[str]:
     ontology_iris = {
         subject
         for subject in graph.subjects(RDF.type, OWL.Ontology)
@@ -121,14 +67,11 @@ def ontology_terms(path: Path) -> tuple[set[str] | None, str | None]:
                 terms.add(subject)
             if isinstance(object_value, URIRef):
                 terms.add(object_value)
-    return (
-        {
-            normalize_iri(str(term))
+    return {
+            str(term)
             for term in terms
             if term not in ontology_iris and not str(term).startswith(BUILT_INS)
-        },
-        None,
-    )
+        }
 
 
 def jaccard(left: set[str], right: set[str]) -> float:
@@ -140,7 +83,7 @@ def jaccard(left: set[str], right: set[str]) -> float:
 def build_term_jaccard_rows(
     index_rows: list[dict[str, str]], base_dir: Path
 ) -> list[dict[str, Any]]:
-    """Build the P0-centred term-Jaccard table from indexed ontology files."""
+    """Build all selected pairwise term overlaps; flag empty sets separately."""
     index = {
         (row["method"], row["dataset_id"], row["prompt_variant"]): row
         for row in index_rows
@@ -162,17 +105,14 @@ def build_term_jaccard_rows(
                 if (
                     row is None
                     or not as_bool(row.get("result_available", True))
-                    or not as_bool(row.get("final_parse_success", False))
+                    or not as_bool(row.get("parse_success", False))
                 ):
                     extracted[variant] = None
                     errors[variant] = "not_parseable_or_unavailable"
                     continue
-                ontology_path = Path(row["ontology_path"])
-                if not ontology_path.is_absolute():
-                    ontology_path = base_dir / ontology_path
-                terms, error = ontology_terms(ontology_path)
-                extracted[variant] = terms
-                errors[variant] = error or ""
+                graph, error = load_task_graph(row, base_dir)
+                extracted[variant] = graph_terms(graph) if graph is not None else None
+                errors[variant] = error or ("no_evaluable_terms" if not extracted[variant] else "")
             p0_p1 = (
                 jaccard(extracted["P0"], extracted["P1"])
                 if extracted["P0"] is not None and extracted["P1"] is not None
@@ -183,10 +123,18 @@ def build_term_jaccard_rows(
                 if extracted["P0"] is not None and extracted["P2"] is not None
                 else None
             )
+            p1_p2 = jaccard(extracted["P1"], extracted["P2"]) if extracted["P1"] is not None and extracted["P2"] is not None else None
             output.append(
                 {
                     "method": method,
                     "dataset_id": dataset,
+                    "J_P1_P2": p1_p2,
+                    "P0_has_evaluable_terms": bool(extracted["P0"]),
+                    "P1_has_evaluable_terms": bool(extracted["P1"]),
+                    "P2_has_evaluable_terms": bool(extracted["P2"]),
+                    "J_P0_P1_status": "available" if extracted["P0"] and extracted["P1"] else "unavailable_or_empty_terms",
+                    "J_P0_P2_status": "available" if extracted["P0"] and extracted["P2"] else "unavailable_or_empty_terms",
+                    "J_P1_P2_status": "available" if extracted["P1"] and extracted["P2"] else "unavailable_or_empty_terms",
                     "P0_term_count": len(extracted["P0"]) if extracted["P0"] is not None else None,
                     "P1_term_count": len(extracted["P1"]) if extracted["P1"] is not None else None,
                     "P2_term_count": len(extracted["P2"]) if extracted["P2"] is not None else None,
@@ -196,7 +144,7 @@ def build_term_jaccard_rows(
                     "P0_extraction_error": errors["P0"],
                     "P1_exclusion_or_error": errors["P1"],
                     "P2_exclusion_or_error": errors["P2"],
-                    "included_in_wilcoxon": p0_p1 is not None and p0_p2 is not None,
+                    "included_in_wilcoxon": all(bool(extracted[v]) for v in VARIANTS),
                 }
             )
     return output
@@ -208,7 +156,7 @@ def load_panel(path: Path) -> dict[str, dict[str, dict[str, int | None]]]:
     )
     for row in read_csv(path):
         value = (
-            int(row["final_parse_success"])
+            int(as_bool(row["parse_success"]))
             if as_bool(row["result_available"])
             else None
         )
@@ -274,10 +222,11 @@ def holm_adjust(p_values: list[float | None]) -> list[float | None]:
 def mcnemar_rows(
     method: str,
     method_rows: dict[str, dict[str, int | None]],
-    omnibus_estimable: bool,
 ) -> list[dict[str, Any]]:
     output: list[dict[str, Any]] = []
     for left, right in COMPARISONS:
+        if not any(left in values for values in method_rows.values()) or not any(right in values for values in method_rows.values()):
+            continue
         pairs = [
             (values.get(left), values.get(right))
             for values in method_rows.values()
@@ -298,10 +247,10 @@ def mcnemar_rows(
             "p_value_holm": None,
             "risk_difference_right_minus_left": None,
             "matched_odds_ratio_right_over_left": None,
-            "status": "not_estimated_omnibus_not_estimable" if not omnibus_estimable else "not_estimable_no_pairs",
+            "status": "not_estimable_no_pairs",
         }
-        if omnibus_estimable and pairs and discordant:
-            if discordant < 25:
+        if pairs and discordant:
+            if discordant < EXACT_DISCORDANT_THRESHOLD:
                 row["test"] = "exact_binomial_two_sided"
                 row["p_value_raw"] = float(
                     stats.binomtest(min(left_only, right_only), discordant, 0.5).pvalue
@@ -319,7 +268,7 @@ def mcnemar_rows(
             else:
                 row["matched_odds_ratio_right_over_left"] = right_only / left_only
             row["status"] = "estimated"
-        elif omnibus_estimable and pairs and discordant == 0:
+        elif pairs and discordant == 0:
             row.update(
                 {
                     "test": "exact_no_discordance",
@@ -339,6 +288,8 @@ def wilcoxon_rows(term_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     output: list[dict[str, Any]] = []
     for method in METHODS:
         method_rows = [row for row in term_rows if row["method"] == method]
+        if not method_rows:
+            continue
         usable = [
             row
             for row in method_rows
@@ -359,9 +310,11 @@ def wilcoxon_rows(term_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "matched_rank_biserial": None,
             "bootstrap_ci_low": None,
             "bootstrap_ci_high": None,
-            "implementation": "scipy.stats.wilcoxon asymptotic Pratt; paired bootstrap 10000 seed 42",
+            "implementation": f"scipy.stats.wilcoxon asymptotic Pratt; paired bootstrap {BOOTSTRAP_RESAMPLES} seed {BOOTSTRAP_SEED}",
             "status": "not_estimable_no_parseable_complete_pairs",
         }
+        if all(row.get("P0_term_count") is None or row.get("P1_term_count") is None or row.get("P2_term_count") is None for row in method_rows):
+            result["status"] = "not_estimable_requires_P0_P1_P2"
         if usable:
             left = np.asarray([float(row["J_P0_P1"]) for row in usable])
             right = np.asarray([float(row["J_P0_P2"]) for row in usable])
@@ -390,9 +343,9 @@ def wilcoxon_rows(term_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     method="approx",
                 )
                 result.update({"statistic": float(test.statistic), "p_value": float(test.pvalue), "status": "estimated"})
-            generator = np.random.default_rng(42)
+            generator = np.random.default_rng(BOOTSTRAP_SEED)
             samples = np.median(
-                differences[generator.integers(0, len(differences), size=(10000, len(differences)))],
+                differences[generator.integers(0, len(differences), size=(BOOTSTRAP_RESAMPLES, len(differences)))],
                 axis=1,
             )
             result["bootstrap_ci_low"], result["bootstrap_ci_high"] = [
@@ -407,7 +360,7 @@ def effect_size_rows(
 ) -> list[dict[str, Any]]:
     output = [
         {
-            "endpoint": "final_parse_success",
+            "endpoint": "parse_success",
             "method": row["method"],
             "comparison": row["comparison"],
             "paired_n": row["paired_n"],
@@ -435,16 +388,19 @@ def effect_size_rows(
 
 
 def analyze(
-    panel_path: Path = DEFAULT_PANEL,
-    term_path: Path = DEFAULT_TERMS,
-    term_rows: list[dict[str, Any]] | None = None,
+    panel_path: Path,
+    term_rows: list[dict[str, Any]],
 ) -> dict[str, list[dict[str, Any]]]:
     panel = load_panel(panel_path)
     cochran_rows: list[dict[str, Any]] = []
     mcnemar: list[dict[str, Any]] = []
     for method in METHODS:
+        if method not in panel:
+            continue
         triplets = complete_triplets(panel[method])
         q_result = cochran_q(triplets)
+        if not all(any(v in values for values in panel[method].values()) for v in VARIANTS):
+            q_result["status"] = "not_estimable_three_variants_not_selected"
         cochran_rows.append(
             {
                 "method": method,
@@ -457,8 +413,8 @@ def analyze(
                 "status": q_result["status"],
             }
         )
-        mcnemar.extend(mcnemar_rows(method, panel[method], q_result["status"] == "estimated"))
-    wilcoxon = wilcoxon_rows(term_rows if term_rows is not None else read_csv(term_path))
+        mcnemar.extend(mcnemar_rows(method, panel[method]))
+    wilcoxon = wilcoxon_rows(term_rows)
     return {
         "cochran": cochran_rows,
         "mcnemar": mcnemar,
@@ -475,29 +431,41 @@ def write_results(analysis: dict[str, list[dict[str, Any]]], output_dir: Path) -
         "effects": "c3_effect_sizes.csv",
     }
     for key, name in names.items():
-        write_csv(output_dir / name, analysis[key])
+        if analysis[key]:
+            write_csv(output_dir / name, analysis[key])
+
+
+def analyze_run(run_dir: Path, output_dir: Path, *, allow_partial: bool = False) -> dict:
+    manifest, rows = validate_run(run_dir, allow_partial)
+    index_path = run_dir / "task_index.csv"
+    detail = analyze_tasks(rows, run_dir)
+    terms = build_term_jaccard_rows(rows, run_dir)
+    write_csv(output_dir / "c2_documentation_completeness.csv", detail)
+    write_csv(output_dir / "c2_documentation_summary.csv", summarize(detail))
+    if terms:
+        write_csv(output_dir / "c3_term_jaccard.csv", terms)
+    write_results(analyze(index_path, term_rows=terms), output_dir)
+    summary = {
+        "run_id": manifest["run_id"], "tasks": len(rows),
+        "run_status": manifest["status"],
+        "unfinished_tasks": sum(r["status"] != "completed" for r in rows),
+        "empty_ontology_tasks": sum(as_bool(r["empty_ontology"]) for r in rows),
+        "tasks_with_evaluable_entities": sum(as_bool(r["has_evaluable_entities"]) for r in rows),
+        "generation_complete_tasks": sum(r["result_available"].lower() == "true" for r in rows),
+        "parseable_tasks": sum(r["parse_success"].lower() == "true" for r in rows),
+        "source": "Original response documents, independently parsed; whole-response Turtle endpoint",
+    }
+    write_json(output_dir / "analysis_summary.json", summary)
+    return summary
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--panel", type=Path, default=DEFAULT_PANEL)
-    parser.add_argument("--terms", type=Path, default=DEFAULT_TERMS)
-    parser.add_argument("--ontology-index", type=Path)
-    parser.add_argument("--ontology-base", type=Path, default=ROOT)
-    parser.add_argument("--write-results", type=Path)
+    parser.add_argument("--run-dir", type=Path, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--allow-partial", action="store_true", help="Explicitly include an unfinished run with missing-task markers")
     args = parser.parse_args()
-    term_rows = (
-        build_term_jaccard_rows(read_csv(args.ontology_index), args.ontology_base)
-        if args.ontology_index
-        else None
-    )
-    result = analyze(args.panel, args.terms, term_rows)
-    if args.write_results:
-        write_results(result, args.write_results)
-        if term_rows is not None:
-            write_csv(args.write_results / "c3_term_jaccard.csv", term_rows)
-    else:
-        print(json.dumps(result, indent=2, sort_keys=True))
+    print(json.dumps(analyze_run(args.run_dir.resolve(), args.output_dir.resolve(), allow_partial=args.allow_partial), indent=2))
     return 0
 
 

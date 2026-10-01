@@ -1,16 +1,14 @@
-# app/main.py
+"""Single FastAPI application for the local benchmark."""
+
 from fastapi import FastAPI
 
-from app.routers import ontology_benchmark
+from restapi.app.routers.ontology_benchmark import router
 
-app = FastAPI(
-    title="Bench4KE Ontology Generation API",
-    description="Local ontology generation and evaluation with the three course methods",
-    version="1.0.0"
-)
+app = FastAPI(title="Bench4KE Ontology Generation",
+              description="Ollama generation with unmodified responses and offline C2/C3 analysis")
+app.include_router(router)
 
-app.include_router(ontology_benchmark.router, prefix="/ontology", tags=["Ontology Benchmark"])
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
+@app.get("/health")
+def health():
+    return {"status": "ok"}
